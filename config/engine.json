@@ -14,7 +14,16 @@
     ],
     "fpc_enabled": true
   },
-  "llm_engine": { "enabled": false, "note": "다음 PR" },
+  "llm_engine": {
+    "enabled": true,
+    "model_primary": "claude-sonnet-4-6",
+    "model_fallback": "claude-haiku-4-5-20251001",
+    "max_calls_per_law": 80,
+    "timeout_seconds": 30,
+    "token_budget": 150000,
+    "judge_patterns": ["F-04", "F-05", "E-05"],
+    "fallback": "MockClient when ANTHROPIC_API_KEY missing"
+  },
   "mcp_engine": {
     "enabled": true,
     "local_db_path": "data/indexes/law_index.json",

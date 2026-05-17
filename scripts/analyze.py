@@ -18,6 +18,12 @@ from engine import fpc, recommender, scorer  # noqa: E402
 from engine.parser import parse_law  # noqa: E402
 from engine.rules import run_all  # noqa: E402
 
+try:
+    from engine.llm import generate_recommendations, judge_findings  # noqa: E402
+except ImportError:  # 의존성 없을 때 비활성화
+    generate_recommendations = None  # type: ignore[assignment]
+    judge_findings = None  # type: ignore[assignment]
+
 
 def _detect_law_category(name: str) -> str:
     if any(k in name for k in ("금융", "은행", "보험", "투자", "신용", "증권", "여신")):
@@ -38,6 +44,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--law-type", default="법률")
     parser.add_argument("--category", default=None, help="미지정 시 자동 판정")
     parser.add_argument("--output", default="-", help="결과 JSON 경로 (기본 stdout)")
+    parser.add_argument("--use-llm", action="store_true",
+                        help="LLM 정밀 판단 + Layer 3 권고안 (ANTHROPIC_API_KEY 필요)")
     args = parser.parse_args(argv)
 
     text = Path(args.input).read_text(encoding="utf-8")
@@ -48,6 +56,13 @@ def main(argv: list[str] | None = None) -> int:
     findings = fpc.correct(law, findings)
     result = scorer.compute(law, findings)
     result = recommender.apply(result)
+
+    if args.use_llm and judge_findings and generate_recommendations:
+        result = judge_findings(result)
+        # 등급 변화 반영 후 점수 재계산
+        result = scorer.compute(law, result.findings)
+        result = recommender.apply(result)
+        result = generate_recommendations(result)
 
     out_json = json.dumps(result.to_dict(), ensure_ascii=False, indent=2)
     if args.output == "-":
