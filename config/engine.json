@@ -5,7 +5,13 @@
     "skip_addendum": true
   },
   "rule_engine": {
-    "enabled_patterns": ["S-02", "S-03", "F-05", "L-01", "G-03", "G-04", "G-05", "E-01"],
+    "enabled_patterns": [
+      "S-01", "S-02", "S-03", "S-04",
+      "F-01", "F-02", "F-03", "F-04", "F-05",
+      "L-01",
+      "G-01", "G-02", "G-03", "G-04", "G-05",
+      "E-01", "E-02", "E-03", "E-04", "E-05"
+    ],
     "fpc_enabled": true
   },
   "llm_engine": { "enabled": false, "note": "다음 PR" },
