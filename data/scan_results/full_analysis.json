@@ -1,0 +1,129 @@
+{
+  "total_analyzed": 65607,
+  "total_real": 51583,
+  "total_false": 14024,
+  "false_rate": 21.4,
+  "by_pattern": {
+    "S-03": {
+      "total": 23149,
+      "real": 14157,
+      "false": 8992,
+      "false_rate": 38.8,
+      "false_reasons": {
+        "위임중복": 6996,
+        "정책선언": 2689,
+        "선언적적절": 305,
+        "목적조항": 107
+      }
+    },
+    "E-05": {
+      "total": 16258,
+      "real": 12890,
+      "false": 3368,
+      "false_rate": 20.7,
+      "false_reasons": {
+        "정책의무": 1359,
+        "내부행정": 671,
+        "민사의무": 575,
+        "조직구성": 155,
+        "세법": 679
+      }
+    },
+    "F-01": {
+      "total": 9301,
+      "real": 9108,
+      "false": 193,
+      "false_rate": 2.1,
+      "false_reasons": {
+        "적용배제": 175,
+        "무효선언": 19
+      }
+    },
+    "G-05": {
+      "total": 4208,
+      "real": 4208,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "F-05": {
+      "total": 2740,
+      "real": 2428,
+      "false": 312,
+      "false_rate": 11.4,
+      "false_reasons": {
+        "협조요청": 137,
+        "수익적재량": 178
+      }
+    },
+    "L-01": {
+      "total": 1714,
+      "real": 1714,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "E-01": {
+      "total": 1697,
+      "real": 1697,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "G-04": {
+      "total": 1691,
+      "real": 532,
+      "false": 1159,
+      "false_rate": 68.5,
+      "false_reasons": {
+        "비기관법": 759,
+        "지원법": 308,
+        "절차법": 34,
+        "형사특례": 41,
+        "세법": 17
+      }
+    },
+    "E-03": {
+      "total": 1499,
+      "real": 1499,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "S-02": {
+      "total": 1240,
+      "real": 1240,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "S-01": {
+      "total": 1132,
+      "real": 1132,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "G-03": {
+      "total": 829,
+      "real": 829,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "F-02": {
+      "total": 76,
+      "real": 76,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    },
+    "F-04": {
+      "total": 73,
+      "real": 73,
+      "false": 0,
+      "false_rate": 0.0,
+      "false_reasons": {}
+    }
+  }
+}

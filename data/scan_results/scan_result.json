@@ -1,0 +1,218 @@
+{
+  "law_name": "주택도시기금법",
+  "total_articles": 30,
+  "law_score": 47.0,
+  "law_grade": "C",
+  "total_findings": 17,
+  "category_scores": {
+    "구조": {
+      "crd": 116.7,
+      "count": 10
+    },
+    "공정성": {
+      "crd": 33.3,
+      "count": 1
+    },
+    "적법성": {
+      "crd": 0.0,
+      "count": 0
+    },
+    "거버넌스": {
+      "crd": 113.3,
+      "count": 4
+    },
+    "효율성": {
+      "crd": 46.7,
+      "count": 2
+    }
+  },
+  "findings": [
+    {
+      "pattern": "F-05",
+      "sub_check": "F-05-b",
+      "article": "제9조",
+      "severity": "심각",
+      "score": 10,
+      "summary": "자의적 재량: 행정청 + 포괄요건 + 기준 없음",
+      "fix_type": "replace",
+      "agency_basis": "금감원 검사제재 기준 — 재량 남용 판단",
+      "real_case": "감사원 2024.8 — 국토부 감독 소홀 지적 (16차례 요청 무시)"
+    },
+    {
+      "pattern": "G-03",
+      "sub_check": "G-03-a",
+      "article": "제12조",
+      "severity": "심각",
+      "score": 10,
+      "summary": "감독 규정 0/5 충족. 미충족: 감독 범위, 감독 주기, 감독 방법, 결과 공개, 시정 명령권",
+      "fix_type": null,
+      "agency_basis": "감사원 — '감독기관 점검이 제대로 이뤄지지 않았다' (2024.8 HUG 건)",
+      "real_case": "감사원 2024.8 — 국토부가 HUG 위험관리 요청 16차례 무시"
+    },
+    {
+      "pattern": "G-04",
+      "sub_check": "G-04-a",
+      "article": "제22조",
+      "severity": "심각",
+      "score": 10,
+      "summary": "내부통제 0/5 충족. 미충족: 통제환경, 위험평가, 통제활동, 정보소통, 모니터링",
+      "fix_type": "add_paragraph",
+      "agency_basis": "감사원 내부통제 가이드라인 5대 요소 + 금감원 지배구조법 시행령 §19",
+      "real_case": "감사원 2024.8 — HUG 위험관리체계 미흡 지적 (대위변제 34억→4.4조 폭증)"
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제7조",
+      "severity": "경고",
+      "score": 7,
+      "summary": "모호 표현 2건: 필요한 경우, 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "G-05",
+      "sub_check": "G-05-b",
+      "article": "제14조",
+      "severity": "경고",
+      "score": 7,
+      "summary": "보고 규정 2/6 충족. 미충족: 보고 주기, 보고 양식, 보고 방법, 지연 제재",
+      "fix_type": null,
+      "agency_basis": "감사원 내부통제 가이드라인 4요소 (정보·의사소통)",
+      "real_case": null
+    },
+    {
+      "pattern": "G-05",
+      "sub_check": "G-05-c",
+      "article": "제15조",
+      "severity": "경고",
+      "score": 7,
+      "summary": "보고 규정 3/6 충족. 미충족: 보고 양식, 보고 방법, 지연 제재",
+      "fix_type": null,
+      "agency_basis": "감사원 내부통제 가이드라인 4요소 (정보·의사소통)",
+      "real_case": null
+    },
+    {
+      "pattern": "E-01",
+      "sub_check": "E-01-a",
+      "article": "제10조",
+      "severity": "경고",
+      "score": 7,
+      "summary": "조건 4단계 중첩",
+      "fix_type": "replace",
+      "agency_basis": "권익위 규제개혁 — 조건 단순화",
+      "real_case": null
+    },
+    {
+      "pattern": "E-05",
+      "sub_check": "E-05-a",
+      "article": "제10조",
+      "severity": "경고",
+      "score": 7,
+      "summary": "제재 공백: '대출' 의무에 대응하는 벌칙 미확인",
+      "fix_type": null,
+      "agency_basis": "법제처 입안길잡이 — 의무↔벌칙 대응 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-02",
+      "sub_check": "S-02-c",
+      "article": "법령 전체",
+      "severity": "주의",
+      "score": 4,
+      "summary": "포괄위임 13건: '필요한 사항은 대통령령으로 정한다' 유형이 다수. 위임 범위를 구체화할 여지 있음",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 §23 위임 입법의 한계",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제6조",
+      "severity": "주의",
+      "score": 4,
+      "summary": "모호 표현 1건: 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제9조",
+      "severity": "주의",
+      "score": 4,
+      "summary": "모호 표현 1건: 필요하다고 인정",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제10조",
+      "severity": "주의",
+      "score": 4,
+      "summary": "모호 표현 1건: 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제26조",
+      "severity": "주의",
+      "score": 4,
+      "summary": "모호 표현 1건: 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제5조",
+      "severity": "개선",
+      "score": 2,
+      "summary": "모호 표현 1건: 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제8조",
+      "severity": "개선",
+      "score": 2,
+      "summary": "모호 표현 1건: 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제20조",
+      "severity": "개선",
+      "score": 2,
+      "summary": "모호 표현 1건: 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    },
+    {
+      "pattern": "S-03",
+      "sub_check": "S-03-a",
+      "article": "제25조",
+      "severity": "개선",
+      "score": 2,
+      "summary": "모호 표현 1건: 그 밖에",
+      "fix_type": "replace",
+      "agency_basis": "법제처 입안길잡이 명확성 원칙",
+      "real_case": null
+    }
+  ]
+}

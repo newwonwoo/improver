@@ -1,0 +1,98 @@
+{
+  "deleg_type_rates": {
+    "기타": {
+      "matched": 3759,
+      "unmatched": 400
+    },
+    "그밖에": {
+      "matched": 2059,
+      "unmatched": 284
+    },
+    "기준위임": {
+      "matched": 891,
+      "unmatched": 61
+    },
+    "바에따라": {
+      "matched": 8848,
+      "unmatched": 703
+    },
+    "일반위임": {
+      "matched": 337,
+      "unmatched": 18
+    },
+    "필요사항": {
+      "matched": 2328,
+      "unmatched": 130
+    },
+    "범위위임": {
+      "matched": 130,
+      "unmatched": 8
+    }
+  },
+  "content_type_rates": {
+    "정의": {
+      "matched": 1161,
+      "unmatched": 291
+    },
+    "신고등록": {
+      "matched": 1453,
+      "unmatched": 108
+    },
+    "기타": {
+      "matched": 2335,
+      "unmatched": 287
+    },
+    "권한위탁": {
+      "matched": 801,
+      "unmatched": 137
+    },
+    "벌칙제재": {
+      "matched": 237,
+      "unmatched": 31
+    },
+    "보고공시": {
+      "matched": 726,
+      "unmatched": 53
+    },
+    "금액기한": {
+      "matched": 1827,
+      "unmatched": 117
+    },
+    "조직구성": {
+      "matched": 1394,
+      "unmatched": 126
+    },
+    "자격요건": {
+      "matched": 5616,
+      "unmatched": 268
+    },
+    "절차": {
+      "matched": 2802,
+      "unmatched": 186
+    }
+  },
+  "field_unmatched": {
+    "일반": 956,
+    "ICT": 117,
+    "교육": 94,
+    "건설주택": 93,
+    "농수산": 84,
+    "금융": 76,
+    "보건복지": 67,
+    "환경": 43,
+    "국방": 33,
+    "세법": 30,
+    "노동": 11
+  },
+  "no_decree_by_field": {
+    "일반": 36,
+    "교육": 7,
+    "ICT": 4,
+    "농수산": 3,
+    "국방": 2,
+    "보건복지": 2,
+    "건설주택": 1,
+    "세법": 1,
+    "금융": 1
+  }
+}
