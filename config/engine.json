@@ -1,0 +1,19 @@
+{
+  "parser": {
+    "mode": "raw-legal",
+    "min_article_length": 10,
+    "skip_addendum": true
+  },
+  "rule_engine": {
+    "enabled_patterns": ["S-02", "S-03", "F-05", "L-01", "G-03", "G-04", "G-05", "E-01"],
+    "fpc_enabled": true
+  },
+  "llm_engine": { "enabled": false, "note": "다음 PR" },
+  "mcp_engine": { "enabled": false, "note": "다음 PR" },
+  "scoring": {
+    "complexity_bonus_per_pattern": 1.5,
+    "complexity_bonus_cap": 6.0,
+    "law_score_density_weight": 0.7,
+    "law_score_worst_weight": 0.3
+  }
+}

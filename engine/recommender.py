@@ -1,0 +1,27 @@
+"""Layer 1 표준 권고안 적용 (핵심 설계서 §2.3).
+
+config/recommendations.json에서 {pattern_id, severity} → 권고 문장 조회.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from .schema import AnalysisResult
+
+_CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "recommendations.json"
+
+
+def _load_templates() -> dict[str, dict[str, str]]:
+    with _CONFIG_PATH.open(encoding="utf-8") as fp:
+        return json.load(fp)
+
+
+def apply(result: AnalysisResult) -> AnalysisResult:
+    templates = _load_templates()
+    for f in result.findings:
+        per_pattern = templates.get(f.pattern_id, {})
+        text = per_pattern.get(f.severity)
+        if text:
+            f.recommendation = {"template": text, "layer": 1}
+    return result
