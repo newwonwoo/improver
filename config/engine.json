@@ -8,14 +8,20 @@
     "enabled_patterns": [
       "S-01", "S-02", "S-03", "S-04",
       "F-01", "F-02", "F-03", "F-04", "F-05",
-      "L-01",
+      "L-01", "L-02", "L-03",
       "G-01", "G-02", "G-03", "G-04", "G-05",
       "E-01", "E-02", "E-03", "E-04", "E-05"
     ],
     "fpc_enabled": true
   },
   "llm_engine": { "enabled": false, "note": "다음 PR" },
-  "mcp_engine": { "enabled": false, "note": "다음 PR" },
+  "mcp_engine": {
+    "enabled": true,
+    "local_db_path": "data/indexes/law_index.json",
+    "repealed_db_path": "data/indexes/repealed_laws.json",
+    "api_fallback": false,
+    "api_daily_limit": 100
+  },
   "scoring": {
     "complexity_bonus_per_pattern": 1.5,
     "complexity_bonus_cap": 6.0,

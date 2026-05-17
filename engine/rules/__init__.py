@@ -26,6 +26,8 @@ from .g03_supervision import G03Supervision
 from .g04_internal import G04InternalControl
 from .g05_report import G05Report
 from .l01_citation import L01Citation
+from .l02_cross_ref import L02CrossRef
+from .l03_broken_ref import L03BrokenRef
 from .s01_insertion import S01Insertion
 from .s02_delegation import S02Delegation
 from .s03_vague import S03Vague
@@ -43,6 +45,8 @@ ALL_RULES: list[Rule] = [
     F04Deemed(),
     F05Discretion(),
     L01Citation(),
+    L02CrossRef(),
+    L03BrokenRef(),
     G01Exception(),
     G02Permit(),
     G03Supervision(),
@@ -85,6 +89,8 @@ __all__ = [
     "G04InternalControl",
     "G05Report",
     "L01Citation",
+    "L02CrossRef",
+    "L03BrokenRef",
     "S01Insertion",
     "S02Delegation",
     "S03Vague",

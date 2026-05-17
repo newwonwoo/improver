@@ -1,0 +1,69 @@
+from engine.mcp import (
+    LawIndex,
+    check_article_exists,
+    check_enforcement_decree,
+    load_default_index,
+)
+
+
+def test_load_default_index_has_housing_fund():
+    idx = load_default_index()
+    assert idx.find("주택도시기금법") is not None
+    assert idx.find("주기법") is not None  # 약칭 매칭
+
+
+def test_check_article_exists_positive():
+    res = check_article_exists("주택도시기금법", "10")
+    assert res.exists is True
+    assert res.status == "exists"
+
+
+def test_check_article_exists_not_found():
+    res = check_article_exists("주택도시기금법", "999")
+    assert res.exists is False
+    assert res.status == "not_found"
+
+
+def test_check_article_exists_repealed():
+    res = check_article_exists("주택건설촉진법", "1")
+    assert res.status == "law_repealed"
+    assert res.current_law_name == "주택법"
+
+
+def test_check_article_exists_renamed():
+    res = check_article_exists("정보통신망이용촉진및정보보호등에관한법률", "1")
+    assert res.status == "law_renamed"
+
+
+def test_check_article_exists_unknown():
+    res = check_article_exists("가공의 법", "1")
+    assert res.status == "unknown"
+
+
+def test_check_enforcement_decree_full():
+    res = check_enforcement_decree("주택도시기금법", "10")
+    assert res.decree_exists is True
+    assert res.decree_name == "주택도시기금법 시행령"
+    assert res.coverage == "full"
+
+
+def test_check_enforcement_decree_no_decree():
+    res = check_enforcement_decree("민법", "1")
+    assert res.coverage == "none"
+
+
+def test_check_enforcement_decree_partial():
+    # 주택법 시행령은 인덱스에 없음 (수록 안 함) → 인덱스 미수록 케이스
+    res = check_enforcement_decree("주택법", "10")
+    assert res.note and "미수록" in res.note
+
+
+def test_law_index_custom_construction():
+    idx = LawIndex(
+        laws=[
+            {"name": "테스트법", "short_names": ["테법"], "article_numbers": ["1", "2"]}
+        ]
+    )
+    assert idx.find("테법")["name"] == "테스트법"
+    assert idx.has_article("테스트법", "1").exists is True
+    assert idx.has_article("테스트법", "3").exists is False
