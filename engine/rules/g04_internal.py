@@ -19,6 +19,14 @@ _FIVE_ELEMENTS = {
     "모니터링": re.compile(r"(자체점검|자체평가|내부감사|모니터링|경영실적평가)"),
 }
 
+_SUBCHECK_MAP = {
+    "통제환경": "G-04-a",
+    "위험평가": "G-04-b",
+    "통제활동": "G-04-c",
+    "정보소통": "G-04-d",
+    "모니터링": "G-04-e",
+}
+
 # 내부통제 적용 대상 법령 키워드
 _APPLICABLE_HINTS = (
     "금융", "은행", "보험", "증권", "투자", "신용", "여신",
@@ -68,6 +76,7 @@ class G04InternalControl:
                     matched_text=f"5요소 중 {met}개 충족",
                     summary=f"내부통제 {met}/5 충족. 미충족: {', '.join(missing) or '없음'}",
                     fix_type="add_paragraph",
+                    sub_check_id=_SUBCHECK_MAP[missing[0]] if missing else None,
                 ),
             )
         ]

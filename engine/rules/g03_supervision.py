@@ -19,6 +19,18 @@ _ELEMENTS = {
     "시정 명령권": re.compile(r"(시정명령|시정을 명할|시정을 요구|개선명령)"),
 }
 
+_SUBCHECK_MAP = {
+    "감독 범위": "G-03-a",
+    "감독 주기": "G-03-b",
+    "감독 방법": "G-03-c",
+    "결과 공개": "G-03-d",
+    "시정 명령권": "G-03-e",
+}
+
+
+def _subcheck_for_missing(missing: list[str]) -> str | None:
+    return _SUBCHECK_MAP[missing[0]] if missing else None
+
 
 class G03Supervision:
     pattern_id = "G-03"
@@ -47,12 +59,14 @@ class G03Supervision:
                 make_finding(
                     self,
                     idx,
+                    # 첫 미충족 항목을 sub_check_id로 매핑
                     PatternResult(
                         article=art,
                         severity=severity,
                         matched_text="감독한다",
                         summary=f"감독 규정 {met}/5 충족. 미충족: {', '.join(missing)}",
                         fix_type="add_paragraph",
+                        sub_check_id=_subcheck_for_missing(missing),
                     ),
                 )
             )

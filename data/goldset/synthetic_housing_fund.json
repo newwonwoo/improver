@@ -1,0 +1,31 @@
+{
+  "doc": "합성 fixture 기반 골드셋. 룰 회귀 검증용. 실제 골드셋 250건과는 별개.",
+  "law_files": {
+    "주택도시기금법": "synthetic_housing_fund.txt"
+  },
+  "schema": {
+    "label_values": ["TP", "FP", "BORDER"]
+  },
+  "items": [
+    {"law": "주택도시기금법", "article": "제22조", "pattern_id": "G-04", "label": "TP",
+     "rationale": "기금법 + 내부통제 5요소 0개 매칭 → 심각"},
+    {"law": "주택도시기금법", "article": "제12조", "pattern_id": "G-03", "label": "TP",
+     "rationale": "감독 5요소 모두 미충족"},
+    {"law": "주택도시기금법", "article": "제10조", "pattern_id": "F-05", "label": "TP",
+     "rationale": "행정청 + 필요하다고 인정 + 침익적 재량"},
+    {"law": "주택도시기금법", "article": "제34조의2", "pattern_id": "F-05", "label": "TP",
+     "rationale": "행정청 + 필요하다고 인정 + 기준 없음"},
+    {"law": "주택도시기금법", "article": "제9조", "pattern_id": "L-01", "label": "TP",
+     "rationale": "한 조문에 14개 법령 인용"},
+    {"law": "주택도시기금법", "article": "제14조", "pattern_id": "G-05", "label": "TP",
+     "rationale": "보고하여야 한다 + 주기/양식/방법/제재 미규정"},
+    {"law": "주택도시기금법", "article": "제15조", "pattern_id": "G-05", "label": "TP",
+     "rationale": "보고하여야 한다 + 매년만 명시, 양식/방법/제재 부재"},
+    {"law": "주택도시기금법", "article": "제2조", "pattern_id": "S-03", "label": "FP",
+     "rationale": "용어정의 조문 — FPC-02로 제외되어야"},
+    {"law": "주택도시기금법", "article": "제25조", "pattern_id": "F-01", "label": "TP",
+     "rationale": "'아니 된다' 권리 제한 + 구제수단 부재"},
+    {"law": "주택도시기금법", "article": "제10조", "pattern_id": "E-01", "label": "TP",
+     "rationale": "다음 각 호 모두 충족 + 조건 다단계"}
+  ]
+}

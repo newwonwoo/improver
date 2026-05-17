@@ -59,6 +59,7 @@ class F05Discretion:
                         matched_text=triggered,
                         summary=f"자의적 재량: 행정청 + 포괄요건 ({triggered}) + 기준 없음",
                         fix_type="replace",
+                        sub_check_id="F-05-b",
                     ),
                 )
             )

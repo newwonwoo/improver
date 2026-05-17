@@ -22,6 +22,9 @@ def apply(result: AnalysisResult) -> AnalysisResult:
     for f in result.findings:
         per_pattern = templates.get(f.pattern_id, {})
         text = per_pattern.get(f.severity)
+        existing = f.recommendation or {}
         if text:
-            f.recommendation = {"template": text, "layer": 1}
+            existing["template"] = text
+            existing["layer"] = 1
+            f.recommendation = existing
     return result

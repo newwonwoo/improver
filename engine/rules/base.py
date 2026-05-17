@@ -15,6 +15,7 @@ class PatternResult:
     matched_text: str
     summary: str
     fix_type: str | None = None
+    sub_check_id: str | None = None
 
 
 class Rule(Protocol):
@@ -27,6 +28,9 @@ class Rule(Protocol):
 
 def make_finding(rule: Rule, idx: int, result: PatternResult) -> Finding:
     finding_id = f"{rule.pattern_id}-{idx:03d}"
+    rec: dict = {}
+    if result.sub_check_id:
+        rec["sub_check_id"] = result.sub_check_id
     return Finding(
         finding_id=finding_id,
         pattern_id=rule.pattern_id,
@@ -39,4 +43,5 @@ def make_finding(rule: Rule, idx: int, result: PatternResult) -> Finding:
         severity_score=score_of(result.severity),
         summary=result.summary,
         fix_type=result.fix_type,
+        recommendation=rec,
     )

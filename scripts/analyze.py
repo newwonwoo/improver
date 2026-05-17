@@ -14,7 +14,7 @@ from pathlib import Path
 # 패키지 import 위해 프로젝트 루트를 path에 추가
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from engine import fpc, recommender, scorer  # noqa: E402
+from engine import cases, fpc, html_report, recommender, scorer  # noqa: E402
 from engine.parser import parse_law  # noqa: E402
 from engine.rules import run_all  # noqa: E402
 
@@ -46,6 +46,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", default="-", help="결과 JSON 경로 (기본 stdout)")
     parser.add_argument("--use-llm", action="store_true",
                         help="LLM 정밀 판단 + Layer 3 권고안 (ANTHROPIC_API_KEY 필요)")
+    parser.add_argument("--html", default=None,
+                        help="정적 HTML 리포트 출력 경로 (선택)")
     args = parser.parse_args(argv)
 
     text = Path(args.input).read_text(encoding="utf-8")
@@ -56,12 +58,14 @@ def main(argv: list[str] | None = None) -> int:
     findings = fpc.correct(law, findings)
     result = scorer.compute(law, findings)
     result = recommender.apply(result)
+    result = cases.attach(result)
 
     if args.use_llm and judge_findings and generate_recommendations:
         result = judge_findings(result)
         # 등급 변화 반영 후 점수 재계산
         result = scorer.compute(law, result.findings)
         result = recommender.apply(result)
+        result = cases.attach(result)
         result = generate_recommendations(result)
 
     out_json = json.dumps(result.to_dict(), ensure_ascii=False, indent=2)
@@ -70,6 +74,10 @@ def main(argv: list[str] | None = None) -> int:
     else:
         Path(args.output).write_text(out_json, encoding="utf-8")
         print(f"Wrote {args.output}", file=sys.stderr)
+
+    if args.html:
+        Path(args.html).write_text(html_report.render(result), encoding="utf-8")
+        print(f"Wrote {args.html}", file=sys.stderr)
     return 0
 
 

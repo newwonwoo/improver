@@ -75,6 +75,7 @@ class S03Vague:
                         matched_text=", ".join(hits),
                         summary=f"모호 표현 {count}건: {', '.join(hits)}",
                         fix_type="replace",
+                        sub_check_id="S-03-a",
                     ),
                 )
             )
