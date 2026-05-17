@@ -1,0 +1,51 @@
+{
+  "law_files": {
+    "주택도시기금법": "synthetic_housing_fund.txt"
+  },
+  "schema": {
+    "doc": "각 항목은 (법령, 조문, 패턴, 라벨)의 4-tuple. 라벨은 사람이 판정.",
+    "label_values": ["TP", "FP", "BORDER"],
+    "label_description": {
+      "TP": "True Positive — 룰/LLM이 정확히 잡았고 실제 결함",
+      "FP": "False Positive — 룰/LLM이 잡았으나 결함 아님 (오탐)",
+      "BORDER": "경계 사례 — 판정 보류, 평가에서 제외"
+    }
+  },
+  "items": [
+    {
+      "law": "주택도시기금법",
+      "article": "제22조",
+      "pattern_id": "G-04",
+      "label": "TP",
+      "rationale": "감사원 2024.8 HUG 위험관리체계 미흡 지적과 일치"
+    },
+    {
+      "law": "주택도시기금법",
+      "article": "제12조",
+      "pattern_id": "G-03",
+      "label": "TP",
+      "rationale": "감독 범위·주기·방법·공개·시정권 5요소 모두 없음"
+    },
+    {
+      "law": "주택도시기금법",
+      "article": "제2조",
+      "pattern_id": "S-03",
+      "label": "FP",
+      "rationale": "용어정의 조문이라 '그 밖에' 정상 사용 — FPC-02로 제외되어야"
+    },
+    {
+      "law": "주택도시기금법",
+      "article": "제10조",
+      "pattern_id": "F-05",
+      "label": "TP",
+      "rationale": "'필요하다고 인정' + 행정청 + 침익적 재량 + 기준 없음"
+    },
+    {
+      "law": "테스트법",
+      "article": "벌칙조문",
+      "pattern_id": "F-01",
+      "label": "FP",
+      "rationale": "벌칙 조문은 제재 규정이므로 권리 제한 패턴에서 제외되어야"
+    }
+  ]
+}
