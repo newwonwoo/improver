@@ -1,0 +1,1090 @@
+{
+  "law": {
+    "law_id": "act_주택도시기금법",
+    "name": "주택도시기금법",
+    "short_name": null,
+    "type": "법률",
+    "law_category": "공공기관법",
+    "enacted_date": null,
+    "last_amended_date": null,
+    "effective_date": null,
+    "articles": [
+      {
+        "article_id": "art_1",
+        "number": "제1조",
+        "number_raw": "1",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "목적",
+        "full_text": "제1조(목적) 이 법은 주택도시기금을 설치하여 국민의 주거안정과 주거수준 향상을 도모함을 목적으로 한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_1_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_2",
+        "number": "제2조",
+        "number_raw": "2",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "정의",
+        "full_text": "제2조(정의) 이 법에서 사용하는 용어의 뜻은 다음과 같다.\n  1. \"주택도시기금\"이란 「주택법」 및 이 법에 따라 설치되는 기금을 말한다.\n  2. \"수탁기관\"이란 기금의 운용을 위탁받은 기관을 말한다.\n  3. 그 밖에 필요한 용어는 대통령령으로 정한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_2_p1",
+            "number": null,
+            "text": "1. \"주택도시기금\"이란 「주택법」 및 이 법에 따라 설치되는 기금을 말한다.\n  2. \"수탁기관\"이란 기금의 운용을 위탁받은 기관을 말한다.\n  3. 그 밖에 필요한 용어는 대통령령으로 정한다.",
+            "items": [
+              {
+                "item_id": "i1",
+                "number": "2.",
+                "text": "2. \"수탁기관\"이란 기금의 운용을 위탁받은 기관을 말한다.",
+                "sub_items": []
+              },
+              {
+                "item_id": "i2",
+                "number": "3.",
+                "text": "3. 그 밖에 필요한 용어는 대통령령으로 정한다.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_3",
+        "number": "제3조",
+        "number_raw": "3",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "기금의 설치",
+        "full_text": "제3조(기금의 설치) 국토교통부장관은 주택도시기금을 설치하여 운용한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_3_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_5",
+        "number": "제5조",
+        "number_raw": "5",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "기금의 조성",
+        "full_text": "제5조(기금의 조성) 기금은 「주택법」, 「민간임대주택에 관한 특별법」, 「공공주택 특별법」, 「도시 및 주거환경정비법」, 「소득세법」 및 그 밖에 대통령령으로 정하는 재원으로 조성한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_5_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_6",
+        "number": "제6조",
+        "number_raw": "6",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "기금의 용도",
+        "full_text": "제6조(기금의 용도) 기금은 다음 각 호의 용도에 사용한다.\n  1. 주택의 건설 및 구입\n  2. 임대주택의 공급 및 관리\n  3. 도시재생 사업\n  4. 그 밖에 주거복지 향상을 위하여 필요한 사업",
+        "paragraphs": [
+          {
+            "para_id": "art_6_p1",
+            "number": null,
+            "text": "1. 주택의 건설 및 구입\n  2. 임대주택의 공급 및 관리\n  3. 도시재생 사업\n  4. 그 밖에 주거복지 향상을 위하여 필요한 사업",
+            "items": [
+              {
+                "item_id": "i1",
+                "number": "2.",
+                "text": "2. 임대주택의 공급 및 관리",
+                "sub_items": []
+              },
+              {
+                "item_id": "i2",
+                "number": "3.",
+                "text": "3. 도시재생 사업",
+                "sub_items": []
+              },
+              {
+                "item_id": "i3",
+                "number": "4.",
+                "text": "4. 그 밖에 주거복지 향상을 위하여 필요한 사업",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_7",
+        "number": "제7조",
+        "number_raw": "7",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "운용계획",
+        "full_text": "제7조(운용계획) ① 국토교통부장관은 매년 기금운용계획을 수립하여야 한다.\n② 운용계획에는 필요한 사항을 포함하여 그 밖에 필요한 사항을 대통령령으로 정한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_7_p1",
+            "number": "②",
+            "text": "② 운용계획에는 필요한 사항을 포함하여 그 밖에 필요한 사항을 대통령령으로 정한다.",
+            "items": []
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_9",
+        "number": "제9조",
+        "number_raw": "9",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "인용 법령",
+        "full_text": "제9조(인용 법령) 기금의 운용에 관하여는 「주택법」, 「민간임대주택에 관한 특별법」, 「공공주택 특별법」, 「도시 및 주거환경정비법」, 「소득세법」, 「법인세법」, 「국가재정법」, 「국유재산법」, 「공공기관의 운영에 관한 법률」, 「자본시장과 금융투자업에 관한 법률」, 「국토의 계획 및 이용에 관한 법률」, 「건축법」, 「주택임대차보호법」, 「부동산 거래신고 등에 관한 법률」에 따른다.",
+        "paragraphs": [
+          {
+            "para_id": "art_9_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_10",
+        "number": "제10조",
+        "number_raw": "10",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "기금의 운용",
+        "full_text": "제10조(기금의 운용) ① 국토교통부장관은 필요하다고 인정하는 경우에는 기금의 운용방법을 변경할 수 있다.\n② 운용 방법은 안정성·수익성·공공성을 모두 충족하는 경우로서 다음 각 호의 요건을 모두 갖추어야 하며 운용위원회의 심의를 거치고 국회에 보고하여야 한다.\n  1. 안정성 기준에 부합할 것\n  2. 수익성 기준에 부합할 것\n  3. 공공성 기준에 부합할 것\n\n제2장 감독",
+        "paragraphs": [
+          {
+            "para_id": "art_10_p1",
+            "number": "②",
+            "text": "② 운용 방법은 안정성·수익성·공공성을 모두 충족하는 경우로서 다음 각 호의 요건을 모두 갖추어야 하며 운용위원회의 심의를 거치고 국회에 보고하여야 한다.\n  1. 안정성 기준에 부합할 것\n  2. 수익성 기준에 부합할 것\n  3. 공공성 기준에 부합할 것\n\n제2장 감독",
+            "items": [
+              {
+                "item_id": "i1",
+                "number": "1.",
+                "text": "1. 안정성 기준에 부합할 것",
+                "sub_items": []
+              },
+              {
+                "item_id": "i2",
+                "number": "2.",
+                "text": "2. 수익성 기준에 부합할 것",
+                "sub_items": []
+              },
+              {
+                "item_id": "i3",
+                "number": "3.",
+                "text": "3. 공공성 기준에 부합할 것\n\n제2장 감독",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "chapter": "제1장 총칙"
+      },
+      {
+        "article_id": "art_12",
+        "number": "제12조",
+        "number_raw": "12",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "감독",
+        "full_text": "제12조(감독) 국토교통부장관은 기금의 운용을 감독한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_12_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제2장 감독"
+      },
+      {
+        "article_id": "art_13",
+        "number": "제13조",
+        "number_raw": "13",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "자료제출",
+        "full_text": "제13조(자료제출) 수탁기관은 국토교통부장관에게 자료를 제출하여야 한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_13_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제2장 감독"
+      },
+      {
+        "article_id": "art_14",
+        "number": "제14조",
+        "number_raw": "14",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "보고",
+        "full_text": "제14조(보고) 수탁기관은 기금 운용 결과를 국토교통부장관에게 보고하여야 한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_14_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제2장 감독"
+      },
+      {
+        "article_id": "art_15",
+        "number": "제15조",
+        "number_raw": "15",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "보고",
+        "full_text": "제15조(보고) ① 수탁기관은 기금 결산을 국토교통부장관에게 매년 보고하여야 한다.\n\n제3장 운용 위탁",
+        "paragraphs": [
+          {
+            "para_id": "art_15_p1",
+            "number": null,
+            "text": "제3장 운용 위탁",
+            "items": []
+          }
+        ],
+        "chapter": "제2장 감독"
+      },
+      {
+        "article_id": "art_22",
+        "number": "제22조",
+        "number_raw": "22",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "업무지침",
+        "full_text": "제22조(업무지침) 수탁기관은 기금 운용에 관한 업무지침을 정하여야 한다.",
+        "paragraphs": [
+          {
+            "para_id": "art_22_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제3장 운용 위탁"
+      },
+      {
+        "article_id": "art_25",
+        "number": "제25조",
+        "number_raw": "25",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "권리제한",
+        "full_text": "제25조(권리제한) 누구든지 부정한 방법으로 기금 대출을 받아서는 아니 된다.",
+        "paragraphs": [
+          {
+            "para_id": "art_25_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제3장 운용 위탁"
+      },
+      {
+        "article_id": "art_26",
+        "number": "제26조",
+        "number_raw": "26",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "보증",
+        "full_text": "제26조(보증) 그 밖에 보증에 관하여 필요한 사항은 대통령령으로 정한다.\n\n제4장 보칙",
+        "paragraphs": [
+          {
+            "para_id": "art_26_p1",
+            "number": null,
+            "text": "제4장 보칙",
+            "items": []
+          }
+        ],
+        "chapter": "제3장 운용 위탁"
+      },
+      {
+        "article_id": "art_32",
+        "number": "제32조",
+        "number_raw": "32",
+        "is_inserted": false,
+        "insert_depth": 0,
+        "title": "권한위임",
+        "full_text": "제32조(권한위임) 국토교통부장관은 필요하다고 인정하는 경우 그 밖에 필요한 사항을 대통령령으로 정하는 바에 따라 권한을 위임할 수 있다.",
+        "paragraphs": [
+          {
+            "para_id": "art_32_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제4장 보칙"
+      },
+      {
+        "article_id": "art_34_2",
+        "number": "제34조의2",
+        "number_raw": "34",
+        "is_inserted": true,
+        "insert_depth": 1,
+        "title": "추가규정",
+        "full_text": "제34조의2(추가규정) 국토교통부장관은 필요하다고 인정하면 그 밖의 조치를 할 수 있다.",
+        "paragraphs": [
+          {
+            "para_id": "art_34_2_p1",
+            "number": null,
+            "text": "",
+            "items": []
+          }
+        ],
+        "chapter": "제4장 보칙"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "S-02-001",
+      "pattern_id": "S-02",
+      "pattern_name": "위임 검증",
+      "category": "구조",
+      "article_id": "art_2",
+      "article_number": "제2조",
+      "matched_text": "그 밖에",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "포괄위임 1건: 위임 범위 불명확",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "위임 범위가 '필요한 사항' 등 포괄 표현으로 되어 있어 하위법령의 범위가 불명확. 위임 대상을 구체적 항목으로 한정.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-02-002",
+      "pattern_id": "S-02",
+      "pattern_name": "위임 검증",
+      "category": "구조",
+      "article_id": "art_5",
+      "article_number": "제5조",
+      "matched_text": "그 밖에",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "포괄위임 1건: 위임 범위 불명확",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "위임 범위가 '필요한 사항' 등 포괄 표현으로 되어 있어 하위법령의 범위가 불명확. 위임 대상을 구체적 항목으로 한정.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-02-003",
+      "pattern_id": "S-02",
+      "pattern_name": "위임 검증",
+      "category": "구조",
+      "article_id": "art_7",
+      "article_number": "제7조",
+      "matched_text": "필요한 사항, 그 밖에",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "포괄위임 3건: 위임 범위 불명확",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "위임 범위가 '필요한 사항' 등 포괄 표현으로 되어 있어 하위법령의 범위가 불명확. 위임 대상을 구체적 항목으로 한정.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-02-004",
+      "pattern_id": "S-02",
+      "pattern_name": "위임 검증",
+      "category": "구조",
+      "article_id": "art_26",
+      "article_number": "제26조",
+      "matched_text": "필요한 사항, 그 밖에",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "포괄위임 2건: 위임 범위 불명확",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "위임 범위가 '필요한 사항' 등 포괄 표현으로 되어 있어 하위법령의 범위가 불명확. 위임 대상을 구체적 항목으로 한정.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-02-005",
+      "pattern_id": "S-02",
+      "pattern_name": "위임 검증",
+      "category": "구조",
+      "article_id": "art_32",
+      "article_number": "제32조",
+      "matched_text": "필요한 사항, 그 밖에",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "포괄위임 2건: 위임 범위 불명확",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "위임 범위가 '필요한 사항' 등 포괄 표현으로 되어 있어 하위법령의 범위가 불명확. 위임 대상을 구체적 항목으로 한정.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-03-001",
+      "pattern_id": "S-03",
+      "pattern_name": "모호 표현",
+      "category": "구조",
+      "article_id": "art_6",
+      "article_number": "제6조",
+      "matched_text": "그 밖에",
+      "severity": "개선",
+      "severity_score": 2,
+      "summary": "모호 표현 1건: 그 밖에",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "'등' '기타' 등 잔여 표현의 범위 한정 검토.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-03-002",
+      "pattern_id": "S-03",
+      "pattern_name": "모호 표현",
+      "category": "구조",
+      "article_id": "art_10",
+      "article_number": "제10조",
+      "matched_text": "필요하다고 인정",
+      "severity": "개선",
+      "severity_score": 2,
+      "summary": "모호 표현 1건: 필요하다고 인정",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "'등' '기타' 등 잔여 표현의 범위 한정 검토.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-03-003",
+      "pattern_id": "S-03",
+      "pattern_name": "모호 표현",
+      "category": "구조",
+      "article_id": "art_32",
+      "article_number": "제32조",
+      "matched_text": "필요하다고 인정",
+      "severity": "개선",
+      "severity_score": 2,
+      "summary": "모호 표현 1건: 필요하다고 인정",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "'등' '기타' 등 잔여 표현의 범위 한정 검토.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "S-03-004",
+      "pattern_id": "S-03",
+      "pattern_name": "모호 표현",
+      "category": "구조",
+      "article_id": "art_34_2",
+      "article_number": "제34조의2",
+      "matched_text": "필요하다고 인정, 그 밖의",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "모호 표현 2건: 필요하다고 인정, 그 밖의",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "일부 모호 표현의 해석 지침(시행령 또는 고시) 마련 검토.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "F-01-001",
+      "pattern_id": "F-01",
+      "pattern_name": "권리 제한",
+      "category": "공정성",
+      "article_id": "art_25",
+      "article_number": "제25조",
+      "matched_text": "권리 제한(강)",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "강한 권리 제한, 구제수단 부재",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "권리 제한 사유가 불명확하거나 과도. 제한 사유 구체화 및 예외·구제절차 명시.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "F-05-001",
+      "pattern_id": "F-05",
+      "pattern_name": "자의적 재량",
+      "category": "공정성",
+      "article_id": "art_10",
+      "article_number": "제10조",
+      "matched_text": "필요하다고 인정",
+      "severity": "심각",
+      "severity_score": 10,
+      "summary": "자의적 재량: 행정청 + 포괄요건 (필요하다고 인정) + 기준 없음",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "행정청 재량이 기속 요건 없이 부여되어 자의적 행사 가능. 재량 행사 기준·고려 요소 법정화.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "F-05-002",
+      "pattern_id": "F-05",
+      "pattern_name": "자의적 재량",
+      "category": "공정성",
+      "article_id": "art_32",
+      "article_number": "제32조",
+      "matched_text": "필요하다고 인정",
+      "severity": "심각",
+      "severity_score": 10,
+      "summary": "자의적 재량: 행정청 + 포괄요건 (필요하다고 인정) + 기준 없음",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "행정청 재량이 기속 요건 없이 부여되어 자의적 행사 가능. 재량 행사 기준·고려 요소 법정화.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "F-05-003",
+      "pattern_id": "F-05",
+      "pattern_name": "자의적 재량",
+      "category": "공정성",
+      "article_id": "art_34_2",
+      "article_number": "제34조의2",
+      "matched_text": "필요하다고 인정",
+      "severity": "심각",
+      "severity_score": 10,
+      "summary": "자의적 재량: 행정청 + 포괄요건 (필요하다고 인정) + 기준 없음",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "행정청 재량이 기속 요건 없이 부여되어 자의적 행사 가능. 재량 행사 기준·고려 요소 법정화.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "L-01-001",
+      "pattern_id": "L-01",
+      "pattern_name": "인용 법령",
+      "category": "적법성",
+      "article_id": "art_5",
+      "article_number": "제5조",
+      "matched_text": "5개 법률",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "한 조문에 5개 법률 인용 — 독해 곤란",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "인용 법령의 약칭·제명 표기 통일 정비.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "L-01-002",
+      "pattern_id": "L-01",
+      "pattern_name": "인용 법령",
+      "category": "적법성",
+      "article_id": "art_9",
+      "article_number": "제9조",
+      "matched_text": "14개 법률",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "한 조문에 14개 법률 인용 — 독해 곤란",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "한 조문에 다수 법률을 인용하여 독해 곤란. 직접 규정 전환 또는 별표 분리 검토.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "G-02-001",
+      "pattern_id": "G-02",
+      "pattern_name": "승인·인허가",
+      "category": "거버넌스",
+      "article_id": "art_9",
+      "article_number": "제9조",
+      "matched_text": "신고",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "처리 기한 부재, 간주 규정 부재",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "인허가 처리 기한 미규정. 처리 기한 법정화 및 간주 규정 신설 검토.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "G-03-001",
+      "pattern_id": "G-03",
+      "pattern_name": "감독 권한",
+      "category": "거버넌스",
+      "article_id": "art_12",
+      "article_number": "제12조",
+      "matched_text": "감독한다",
+      "severity": "심각",
+      "severity_score": 10,
+      "summary": "감독 규정 0/5 충족. 미충족: 감독 범위, 감독 주기, 감독 방법, 결과 공개, 시정 명령권",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "감독 권한이 무제한적이거나 감독 기준 부재. 감독 범위·절차·기준 법정화 및 비례원칙 반영.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "G-04-001",
+      "pattern_id": "G-04",
+      "pattern_name": "내부통제",
+      "category": "거버넌스",
+      "article_id": "art_22",
+      "article_number": "제22조",
+      "matched_text": "5요소 중 0개 충족",
+      "severity": "심각",
+      "severity_score": 10,
+      "summary": "내부통제 0/5 충족. 미충족: 통제환경, 위험평가, 통제활동, 정보소통, 모니터링",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "내부통제 의무 자체가 부재. 감사원 내부통제 5대 요소(통제환경·위험평가·통제활동·정보소통·모니터링) 기준 체계 신설.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "G-05-001",
+      "pattern_id": "G-05",
+      "pattern_name": "보고 의무",
+      "category": "거버넌스",
+      "article_id": "art_10",
+      "article_number": "제10조",
+      "matched_text": "보고하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "보고 규정 0/4 충족. 미충족: 보고 주기, 보고 양식, 보고 방법, 지연 제재",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "보고 주기·양식·제출처가 불명확. 구체적 보고 체계(주기/양식/경로) 법정화.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "G-05-002",
+      "pattern_id": "G-05",
+      "pattern_name": "보고 의무",
+      "category": "거버넌스",
+      "article_id": "art_13",
+      "article_number": "제13조",
+      "matched_text": "보고하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "보고 규정 0/4 충족. 미충족: 보고 주기, 보고 양식, 보고 방법, 지연 제재",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "보고 주기·양식·제출처가 불명확. 구체적 보고 체계(주기/양식/경로) 법정화.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "G-05-003",
+      "pattern_id": "G-05",
+      "pattern_name": "보고 의무",
+      "category": "거버넌스",
+      "article_id": "art_14",
+      "article_number": "제14조",
+      "matched_text": "보고하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "보고 규정 0/4 충족. 미충족: 보고 주기, 보고 양식, 보고 방법, 지연 제재",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "보고 주기·양식·제출처가 불명확. 구체적 보고 체계(주기/양식/경로) 법정화.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "G-05-004",
+      "pattern_id": "G-05",
+      "pattern_name": "보고 의무",
+      "category": "거버넌스",
+      "article_id": "art_15",
+      "article_number": "제15조",
+      "matched_text": "보고하여야 한다",
+      "severity": "주의",
+      "severity_score": 4,
+      "summary": "보고 규정 1/4 충족. 미충족: 보고 양식, 보고 방법, 지연 제재",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "보고 내용과 감독 목적 간 불일치. 보고 항목 재설계.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "E-01-001",
+      "pattern_id": "E-01",
+      "pattern_name": "조건 중첩",
+      "category": "효율성",
+      "article_id": "art_10",
+      "article_number": "제10조",
+      "matched_text": "조건 4단계",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "조건 4단계 중첩",
+      "detection_method": "rule",
+      "fix_type": "replace",
+      "recommendation": {
+        "template": "복합 조건이 3~4단계 중첩. 핵심 요건과 부차적 요건 분리, 부차 요건은 시행령 위임.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "E-05-001",
+      "pattern_id": "E-05",
+      "pattern_name": "제재 공백",
+      "category": "효율성",
+      "article_id": "art_7",
+      "article_number": "제7조",
+      "matched_text": "하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제7조의 의무에 대응하는 벌칙 미확인",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "제재 수위가 의무의 중대성 대비 현저히 낮음. 제재 수위 상향 또는 가중 사유 추가.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "E-05-002",
+      "pattern_id": "E-05",
+      "pattern_name": "제재 공백",
+      "category": "효율성",
+      "article_id": "art_10",
+      "article_number": "제10조",
+      "matched_text": "하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제10조의 의무에 대응하는 벌칙 미확인",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "제재 수위가 의무의 중대성 대비 현저히 낮음. 제재 수위 상향 또는 가중 사유 추가.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "E-05-003",
+      "pattern_id": "E-05",
+      "pattern_name": "제재 공백",
+      "category": "효율성",
+      "article_id": "art_13",
+      "article_number": "제13조",
+      "matched_text": "하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제13조의 의무에 대응하는 벌칙 미확인",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "제재 수위가 의무의 중대성 대비 현저히 낮음. 제재 수위 상향 또는 가중 사유 추가.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "E-05-004",
+      "pattern_id": "E-05",
+      "pattern_name": "제재 공백",
+      "category": "효율성",
+      "article_id": "art_14",
+      "article_number": "제14조",
+      "matched_text": "하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제14조의 의무에 대응하는 벌칙 미확인",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "제재 수위가 의무의 중대성 대비 현저히 낮음. 제재 수위 상향 또는 가중 사유 추가.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "E-05-005",
+      "pattern_id": "E-05",
+      "pattern_name": "제재 공백",
+      "category": "효율성",
+      "article_id": "art_15",
+      "article_number": "제15조",
+      "matched_text": "하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제15조의 의무에 대응하는 벌칙 미확인",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "제재 수위가 의무의 중대성 대비 현저히 낮음. 제재 수위 상향 또는 가중 사유 추가.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "E-05-006",
+      "pattern_id": "E-05",
+      "pattern_name": "제재 공백",
+      "category": "효율성",
+      "article_id": "art_22",
+      "article_number": "제22조",
+      "matched_text": "하여야 한다",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제22조의 의무에 대응하는 벌칙 미확인",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "제재 수위가 의무의 중대성 대비 현저히 낮음. 제재 수위 상향 또는 가중 사유 추가.",
+        "layer": 1
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    }
+  ],
+  "article_scores": [
+    {
+      "article_id": "art_2",
+      "article_number": "제2조",
+      "score": 4.0,
+      "grade": "Caution",
+      "finding_count": 1
+    },
+    {
+      "article_id": "art_5",
+      "article_number": "제5조",
+      "score": 5.5,
+      "grade": "Caution",
+      "finding_count": 2
+    },
+    {
+      "article_id": "art_7",
+      "article_number": "제7조",
+      "score": 8.5,
+      "grade": "Warning",
+      "finding_count": 2
+    },
+    {
+      "article_id": "art_26",
+      "article_number": "제26조",
+      "score": 4.0,
+      "grade": "Caution",
+      "finding_count": 1
+    },
+    {
+      "article_id": "art_32",
+      "article_number": "제32조",
+      "score": 13.0,
+      "grade": "Critical",
+      "finding_count": 3
+    },
+    {
+      "article_id": "art_6",
+      "article_number": "제6조",
+      "score": 2.0,
+      "grade": "Minor",
+      "finding_count": 1
+    },
+    {
+      "article_id": "art_10",
+      "article_number": "제10조",
+      "score": 16.0,
+      "grade": "Critical",
+      "finding_count": 5
+    },
+    {
+      "article_id": "art_34_2",
+      "article_number": "제34조의2",
+      "score": 11.5,
+      "grade": "Critical",
+      "finding_count": 2
+    },
+    {
+      "article_id": "art_25",
+      "article_number": "제25조",
+      "score": 7.0,
+      "grade": "Warning",
+      "finding_count": 1
+    },
+    {
+      "article_id": "art_9",
+      "article_number": "제9조",
+      "score": 8.5,
+      "grade": "Warning",
+      "finding_count": 2
+    },
+    {
+      "article_id": "art_12",
+      "article_number": "제12조",
+      "score": 10.0,
+      "grade": "Critical",
+      "finding_count": 1
+    },
+    {
+      "article_id": "art_22",
+      "article_number": "제22조",
+      "score": 11.5,
+      "grade": "Critical",
+      "finding_count": 2
+    },
+    {
+      "article_id": "art_13",
+      "article_number": "제13조",
+      "score": 8.5,
+      "grade": "Warning",
+      "finding_count": 2
+    },
+    {
+      "article_id": "art_14",
+      "article_number": "제14조",
+      "score": 8.5,
+      "grade": "Warning",
+      "finding_count": 2
+    },
+    {
+      "article_id": "art_15",
+      "article_number": "제15조",
+      "score": 8.5,
+      "grade": "Warning",
+      "finding_count": 2
+    }
+  ],
+  "category_scores": {
+    "구조": {
+      "crd": 176.47,
+      "weight": 1.0,
+      "finding_count": 9
+    },
+    "공정성": {
+      "crd": 217.65,
+      "weight": 1.0,
+      "finding_count": 4
+    },
+    "적법성": {
+      "crd": 64.71,
+      "weight": 1.0,
+      "finding_count": 2
+    },
+    "거버넌스": {
+      "crd": 305.88,
+      "weight": 1.3,
+      "finding_count": 7
+    },
+    "효율성": {
+      "crd": 288.24,
+      "weight": 1.2,
+      "finding_count": 7
+    }
+  },
+  "law_score": 157.83,
+  "law_grade": "F",
+  "engine_version": "0.1.0"
+}
