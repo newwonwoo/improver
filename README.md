@@ -4,30 +4,48 @@
 
 ---
 
-## 엔진 강화 워크플로 (LLM 피드백 루프)
+## 엔진 강화 워크플로 (LLM 피드백 루프, 웹 UI 운영 가정)
 
 ```
-[1] 모든 법령 분석 → judgment MD (시행령 부록 포함)
+[1] 모든 법령 분석 → judgment MD (시행령·시행규칙 매핑·부록 포함)
     python scripts/analyze_batch_sets.py data/laws/raw --output-dir outputs/
 
-[2] 각 MD를 GPT/Gemini에 입력 → JSON 응답 받아 outputs/llm_responses/<법령명>.json 저장
-    (MD 안에 시스템 프롬프트 + JSON 스키마가 모두 박혀 있어 한 번 호출로 6가지 작업 완료:
-     TP/FP 판정 / 등급 재평가 / 권고안 개선 / 미탐 식별 / 체크리스트 / 종합평가)
+[2] 400개씩 묶음 번들 생성 (사용자가 LLM 웹 UI에 던질 작업 큐)
+    python scripts/bundle_judgments.py --batch-size 400 \
+        --output-dir outputs/bundles --max-mb 95
 
-[3] LLM 응답을 결과에 일괄 import
+    → outputs/bundles/bundle_NN_of_05.md (5개) — GitHub에 추적
+
+[3] 각 번들의 법령 섹션을 LLM 웹 UI에 입력 → JSON 응답을 outputs/llm_responses/<법령명>.json 저장
+    (시행령·시행규칙은 필요시 outputs/judgments/<법령명>.md 부록 A/B 추가 첨부)
+
+[3.5] 진척 추적 — 어디까지 응답 받았나
+    python scripts/track_responses.py
+    # → outputs/llm_responses/_index.json + 누락된 법령 목록 출력
+
+    [재시도] 응답 못 받은 법령만으로 번들 재생성
+    python scripts/bundle_judgments.py --skip-processed --output-dir outputs/bundles_retry
+
+[4] LLM 응답을 결과에 일괄 import (웹 UI 응답의 마크다운/설명문 자동 제거)
     python scripts/import_judgment_batch.py \
-        --results-dir outputs/results \
-        --llm-dir outputs/llm_responses \
+        --results-dir outputs/results --llm-dir outputs/llm_responses \
         --output-dir outputs/results_with_llm
 
-[4] LLM 응답을 집계해 엔진 튜닝 제안 생성
-    python scripts/tune_engine.py \
-        --llm-dir outputs/llm_responses \
-        --output outputs/tuning_proposals.json
-    # → FP 비율 ≥40% 패턴 / 등급 시프트 큰 패턴 / X-NEW 새 룰 후보 식별
+[5] 엔진 강화 자산 자동 추출
+    python scripts/tune_engine.py        # → FP 필터·임계치·X-NEW 새 룰 제안
+    python scripts/extract_feedback.py   # → 사례 DB 후보·권고 템플릿 후보
 
-[5] 사람이 검토해 config/patterns.json, recommendations.json 갱신 → 룰 정밀도↑
+[6] 사람이 검토 후 config/{patterns.json, recommendations.json, disciplinary_cases.json} 갱신
+    → 재분석 → 강화된 룰 정밀도 확인
 ```
+
+### 강건성 (웹 UI 운영 필수)
+
+- **JSON 추출**: 마크다운 코드블록(```json), 설명문 섞임, trailing comma 자동 처리
+- **스키마 검증**: 영문 severity → 한글 자동 매핑, dict↔list 정규화
+- **중복 응답**: 같은 법령 응답 여러 개일 때 최신 파일 mtime 기준 자동 선택
+- **누락 추적**: track_responses.py가 던진 법령 vs 받은 응답 자동 매칭, 진척률 표시
+- **자동 후보 추출**: LLM이 인용한 사례 → disciplinary_cases 후보, 일관되게 다시 쓴 권고 → 템플릿 후보
 
 데이터 위치:
 - 로데이터: `data/laws/raw/<법령명>/{법률,시행령,시행규칙}.md` — legalize-kr 1,720 세트

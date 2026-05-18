@@ -31,8 +31,17 @@ def _process_pair(result_path_str: str, llm_path_str: str, out_path_str: str) ->
     llm_path = Path(llm_path_str)
     out_path = Path(out_path_str)
 
+    from engine.llm_response_parser import parse_llm_response
     analysis = json.loads(result_path.read_text(encoding="utf-8"))
-    llm = json.loads(llm_path.read_text(encoding="utf-8"))
+    raw = llm_path.read_text(encoding="utf-8")
+    ex, val = parse_llm_response(raw)
+    if ex.parsed is None:
+        return {"name": result_path.stem, "status": "parse_error",
+                "reason": ex.error or "JSON 추출 실패"}
+    if val.errors:
+        return {"name": result_path.stem, "status": "schema_error",
+                "errors": val.errors, "warnings": val.warnings}
+    llm = ex.parsed
     result = _result_from_dict(analysis)
 
     stats = _apply_judgments(result, llm.get("judgments", []))
@@ -66,11 +75,22 @@ def main(argv: list[str] | None = None) -> int:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    pairs: list[tuple[Path, Path, Path]] = []
+    # P2-2: 같은 법령 응답이 여러 개(법령명__YYYY-MM-DD.json) 있을 때 최신만 사용
+    from engine.response_tracker import _parse_response_filename
+    latest_by_law: dict[str, Path] = {}
     for llm_file in llm_dir.glob("*.json"):
-        result_file = results_dir / llm_file.name
+        if llm_file.name.startswith("_"):
+            continue
+        law_name, _ = _parse_response_filename(llm_file.name)
+        existing = latest_by_law.get(law_name)
+        if existing is None or llm_file.stat().st_mtime > existing.stat().st_mtime:
+            latest_by_law[law_name] = llm_file
+
+    pairs: list[tuple[Path, Path, Path]] = []
+    for law_name, llm_file in latest_by_law.items():
+        result_file = results_dir / f"{law_name}.json"
         if result_file.exists():
-            pairs.append((result_file, llm_file, output_dir / llm_file.name))
+            pairs.append((result_file, llm_file, output_dir / f"{law_name}.json"))
 
     if not pairs:
         print("매칭되는 result/llm 쌍이 없습니다.", file=sys.stderr)

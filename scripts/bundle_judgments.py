@@ -95,6 +95,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--input-dir", default="outputs/judgments")
     parser.add_argument("--output-dir", default="outputs/bundles")
     parser.add_argument("--batch-size", type=int, default=400)
+    parser.add_argument("--max-mb", type=float, default=90.0,
+                        help="번들 1개 최대 크기. 초과하면 자동으로 batch-size 줄임")
+    parser.add_argument("--skip-processed", action="store_true",
+                        help="응답이 이미 있는 법령은 번들에서 제외 (재시도용)")
+    parser.add_argument("--responses-dir", default="outputs/llm_responses")
     args = parser.parse_args(argv)
 
     input_dir = Path(args.input_dir)
@@ -106,7 +111,25 @@ def main(argv: list[str] | None = None) -> int:
         print(f"입력 디렉토리에 .md 파일 없음: {input_dir}", file=sys.stderr)
         return 1
 
+    # P2-1: --skip-processed 시 응답 받은 법령 제외 (재시도)
+    if args.skip_processed:
+        responses_dir = Path(args.responses_dir)
+        if responses_dir.exists():
+            from engine.response_tracker import scan
+            status = scan(judgments_dir=input_dir, responses_dir=responses_dir)
+            processed = {n for n, s in status.items() if s.is_processed}
+            before = len(files)
+            files = [f for f in files if f.stem not in processed]
+            print(
+                f"--skip-processed: {before}개 중 {before - len(files)}개 응답 완료, "
+                f"{len(files)}개만 번들에 포함",
+                file=sys.stderr,
+            )
+
     n = len(files)
+    if n == 0:
+        print("모든 법령 응답 완료 — 번들 생성 불요", file=sys.stderr)
+        return 0
     bs = args.batch_size
     total_bundles = (n + bs - 1) // bs
 
@@ -133,6 +156,12 @@ def main(argv: list[str] | None = None) -> int:
         out_path = output_dir / f"bundle_{b + 1:02d}_of_{total_bundles:02d}.md"
         out_path.write_text(content, encoding="utf-8")
         size_mb = out_path.stat().st_size / 1024 / 1024
+        if size_mb > args.max_mb:
+            print(
+                f"  ⚠ 번들 {b + 1} {size_mb:.1f}MB > --max-mb {args.max_mb} — "
+                f"다음 실행 시 --batch-size 줄이세요 (예: {int(bs * args.max_mb / size_mb)})",
+                file=sys.stderr,
+            )
         print(
             f"번들 {b + 1}/{total_bundles}: {len(chunk)}개 법률, "
             f"{size_mb:.1f}MB, 「{chunk[0].stem[:20]}」~「{chunk[-1].stem[:20]}」 → {out_path}",

@@ -193,7 +193,21 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     analysis = json.loads(Path(args.analysis).read_text(encoding="utf-8"))
-    llm = json.loads(Path(args.llm_response).read_text(encoding="utf-8"))
+    # P0-1: 웹 UI 응답이 마크다운/설명문 섞일 수 있어 강건 파서 사용
+    from engine.llm_response_parser import parse_llm_response
+    raw = Path(args.llm_response).read_text(encoding="utf-8")
+    ex, val = parse_llm_response(raw)
+    if ex.parsed is None:
+        print(f"⚠ LLM 응답 JSON 추출 실패: {ex.error}", file=sys.stderr)
+        return 2
+    if val.warnings:
+        for w in val.warnings:
+            print(f"  [warn] {w}", file=sys.stderr)
+    if val.errors:
+        for e in val.errors:
+            print(f"  [error] {e}", file=sys.stderr)
+        return 2
+    llm = ex.parsed
     result = _result_from_dict(analysis)
 
     judgments = llm.get("judgments", [])

@@ -7,7 +7,10 @@ __pycache__/
 web/node_modules/
 web/dist/
 
-# Batch 분석의 임시 JSON (재생성 가능). judgments/ 와 summary 는 추적.
+# Batch 분석의 임시 JSON (재생성 가능). judgments/ + summary + bundles + feedback 추적.
 outputs/results/
 outputs/chunks/
-outputs/bundles/
+
+# LLM 응답 자체는 사용자 작업물이라 추적하되, _index.json은 자동 갱신용
+# outputs/llm_responses/ 는 추적
+# outputs/feedback/ 는 추적
