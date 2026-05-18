@@ -56,69 +56,108 @@
   matched_text + summary 만 주면 LLM도 결국 키워드 판정. 콘텐츠 검증의
   의미가 사라짐. **조문 본문 + 맥락** 이 LLM 입력의 최소 단위.
 
-## 4. 올바른 번들 형태 (룰 번들 v2)
+## 4. 4-Stage 청사진
 
-LLM이 콘텐츠 검증할 수 있도록 **조문 본문 + 맥락**을 포함해야 한다.
+엔진을 "키워드 매칭 → AI에 가까운 의미 feature 통합 판정"으로 진화시키는 전체 흐름.
 
-한 룰당 한 번들. 그러나 finding당:
-- 법령명 / 조문번호 / severity
-- **조문 본문 전체** (룰이 잡은 매칭 + 주변 ±1조문)
-- **시행령 매핑 후보 본문** (있으면)
-- 룰의 현재 매칭 텍스트 / 요약 / 표준 권고
+| Stage | 목적 | LLM | 산출물 |
+|-------|------|-----|--------|
+| **A. 검증 데이터 수집** | 룰 1차 진단 결과를 LLM이 콘텐츠 보고 라벨링 | ◯ 일회성 | `outputs/verification_dataset.jsonl` |
+| **B. 신호 추출** | 라벨 데이터에서 keyword 너머 feature 발굴 | ✗ | `docs/design/signal_catalog.md` |
+| **C. 엔진 이식** | 신호를 코드/분류기로 — 진짜 강화 | ✗ | `engine/signals/*.py` + 룰 통합 |
+| **D. 운영** | 새 법령 자동 분석은 LLM 없이 | ✗ (분기별 spot-check) | 영구 강화된 엔진 |
 
-샘플 크기는 finding 줄어들고 콘텐츠 늘어서:
-- 룰당 50~150건 (1,000 → 100 권장)
-- 한 번들 200~500KB
-- LLM 호출 = 한 룰당 1~2회 (Gemini Pro 2 권장)
+핵심: **C 단계에서 키워드 → 의미 feature 통합 판정으로 진화**. 예시 feature:
 
-LLM에게 묻는 것 (v1과 다름):
-1. 각 샘플 finding의 **TP/FP/BORDER + 콘텐츠 인용 근거** (왜 그런지 본문에서 짚기)
-2. **룰이 키워드로는 못 잡는 새 신호** — "이 케이스를 엔진이 자동 식별하려면 어떤 신호를 추가해야 하는가" (코드화 가능한 표현으로)
-3. **놓친 결함 유형** — 룰이 안 잡았는데 사람이 봤다면 잡았을 결함 (recall 신호)
-4. **룰 자체 보완 의견** — 현재 룰 자체의 한계와 보완 방향
+- `article_type_classifier` — 정의/벌칙/절차/일반 등 조문 유형 분류
+- `delegation_concreteness_score` — 위임의 구체성 0~1
+- `relief_vs_burden_classifier` — 수익적 vs 침익적 조문
+- `enforcement_decree_coverage` — 시행령 구체화 정도
 
-응답 JSON 스키마 (v1의 통계 패턴 → 신호·신규 룰로 재설계):
+LLM은 A에서만 등장, B 이후는 코드로만 동작.
+
+## 5. Stage A — 검증 데이터 수집
+
+### 5.1 sample 설계
+
+- 모집단: 150,294 finding (룰 1차 진단 결과, 1,704 법령 누적)
+- 학습 데이터로 충분한 양: 룰별 stratified **300~500건 = 총 ~7~10K**
+- ChatGPT Plus 가정 (128K 입력 / 16K 출력)
+- sub-bundle 한 번 = **50건** (입력 ~60KB / 출력 ~10KB) → 호출 약 ~150회
+
+### 5.2 sub-bundle 형태 (콘텐츠 포함)
+
+한 sub-bundle 안에:
+- 시스템 프롬프트 1회
+- 응답 스키마 1회
+- finding 50건, 각 finding은:
+  - 전역 식별자 `<finding_id>@<법령명>`
+  - 법령·조문·severity·매칭 텍스트
+  - **조문 본문 전체** (중복 조문은 본문 1번만, finding 여러 개는 참조)
+  - **시행령 매핑 본문** (있는 경우만)
+
+### 5.3 LLM에게 묻는 것
+
+1. 각 finding의 **TP/FP/BORDER + 콘텐츠 인용 근거** (짧게)
+2. **새 신호** — 키워드로 못 잡지만 콘텐츠에서 보이는 패턴 (코드화 가능한 표현)
+3. **놓친 패턴** — 룰이 잡지 못한 결함 유형 (recall 신호)
+
+### 5.4 응답 JSON 스키마 (효율 최적화)
+
 ```json
 {
+  "bundle_id": "S-02_part01",
   "rule_id": "S-02",
   "verdicts": [
-    {"finding_id": "...", "verdict": "TP|FP|BORDER",
-     "content_evidence": "조문 본문 인용 1~2문장",
-     "reasoning": "..."}
+    {"fid": "S-02-001@금융거래지표의관리에관한법률",
+     "v": "TP|FP|BORDER",
+     "ev": "조문 인용 ≤30자"}
   ],
   "new_signals": [
     {"name": "정의조문 인용형 위임",
-     "description": "...",
-     "detection_logic": "코드화 가능한 표현 — 정규식 / 구조 조건 / 교차 신호",
-     "applies_when": "이 신호가 활성화될 조건",
-     "expected_effect": "TP↑ / FP↓ / 새 패턴 발견",
-     "example_finding_ids": [...]}
+     "logic": "article.title contains '정의' AND prev_clause matches '~란.*말한다'",
+     "effect": "FP_FILTER",
+     "examples": ["S-02-001@금융거래지표의관리에관한법률"]}
   ],
   "missed_patterns": [
     {"name": "...",
-     "description": "...",
-     "detection_logic": "...",
-     "example_articles": ["「법령」 §X", ...]}
-  ],
-  "rule_assessment": {
-    "core_limitation": "키워드만 봐서 X 신호를 놓침",
-    "improvement_priority": "high|medium|low",
-    "comment": "..."
-  }
+     "logic": "...",
+     "examples": ["「법령」 §X"]}
+  ]
 }
 ```
 
-## 5. 이식 단계 (LLM 빠진 후)
+- 짧은 키 (`fid`, `v`, `ev`) → 출력 토큰 절약
+- `verdicts` 는 1줄 / `new_signals` 는 풍부
+- `rule_assessment` 등 메타는 Stage B에서 별도 분석 (응답 토큰 절약)
 
-1. 응답 통합 → `outputs/rule_signals_report.md` (사람이 읽는 보고서)
-2. 사람이 보고서 검토 → 어떤 신호를 채택할지 결정
-3. 채택된 신호를 `engine/rules/*.py` / `engine/fpc.py` / `config/patterns.json` 에 코드로 이식
-4. 재스캔 → precision/recall 변화 측정 (`scripts/evaluate.py`)
-5. 신호 효과 확인되면 commit. 효과 없으면 롤백.
+### 5.5 파이프라인
 
-## 6. 명시적으로 안 하는 것
+1. `scripts/bundle_rule_verification.py` — 룰별 stratified sample → sub-bundle MD
+2. 사용자가 sub-bundle 하나씩 ChatGPT Plus 에 복붙 → 응답 저장
+3. `scripts/import_rule_verification.py` — 응답 검증 + 통합 jsonl 생성
+4. 진척 추적용 `_index.json` (몇 개 처리됨, 어느 게 누락)
+
+## 6. Stage B — 신호 추출 (LLM 없음)
+
+A의 jsonl 을 사람이 / 분석 스크립트가 보고:
+- 동일 신호의 다른 표현을 통합 (중복 제거)
+- 적용 빈도 / 영향력 (TP↑ N건 / FP↓ N건) 정량화
+- 코드화 가능 여부 평가
+- 채택할 신호 목록 → `docs/design/signal_catalog.md`
+
+## 7. Stage C — 엔진 이식 (LLM 없음)
+
+각 채택된 신호별로:
+- `engine/signals/<name>.py` 작성 — pure function, finding 또는 조문 받아 score/bool 반환
+- 기존 룰 (`engine/rules/*.py`) 에 신호 통합 — keyword + signal score → 종합 판정
+- 또는 작은 분류기 (logistic regression / gradient boosting) 로 feature 벡터 → label
+- 재스캔 + `scripts/evaluate.py` 로 precision/recall 변화 측정
+- 개선 확인 → commit. 효과 없음 → 롤백.
+
+## 8. 명시적으로 안 하는 것
 
 - LLM 응답을 자동으로 룰 코드에 patch (편향 박힘)
 - 매 분석마다 LLM 호출 (의존 영구화)
-- 룰 번들에 콘텐츠 빼고 메타만 (의미 없음)
+- 룰 번들에 콘텐츠 빼고 메타만 (v1 실패 사유)
 - 통계 분석을 일차 강화 source 로 (보조 도구만)
