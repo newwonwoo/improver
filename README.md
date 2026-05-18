@@ -35,8 +35,22 @@
     python scripts/tune_engine.py        # → FP 필터·임계치·X-NEW 새 룰 제안
     python scripts/extract_feedback.py   # → 사례 DB 후보·권고 템플릿 후보
 
-[6] 사람이 검토 후 config/{patterns.json, recommendations.json, disciplinary_cases.json} 갱신
-    → 재분석 → 강화된 룰 정밀도 확인
+[5.5] 검토된 후보 → config 자동 병합 (사람이 후보 JSON에 "approved": true 마킹 후)
+    python scripts/apply_proposals.py --dry-run    # 미리보기
+    python scripts/apply_proposals.py              # 적용 (백업 자동 생성)
+
+    # 명확한 임계치 조정은 자동 (n≥30, |delta|≥1.0의 강한 신호만)
+    python scripts/auto_tune.py
+
+[5.7] config 무결성 검증 (수동 편집·자동 갱신 후)
+    python scripts/validate_config.py
+
+[6] 강화 효과 측정 — 강화 전/후 분석 결과 비교
+    python scripts/analyze_batch_sets.py data/laws/raw --output-dir outputs_v2/
+    python scripts/diff_report.py \
+        --before outputs/results --after outputs_v2/results \
+        --output outputs/before_after.json
+    # → 평균 점수 변화, 등급 전이(F→D 등), FP 변화, Layer 3 권고 증가
 ```
 
 ### 강건성 (웹 UI 운영 필수)
