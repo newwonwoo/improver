@@ -78,11 +78,29 @@ def _find_decree_matches(art: Article, decree: Law | None) -> list[Article]:
     return matches
 
 
+def _format_subordinate_block(label: str, articles: list[Article]) -> list[str]:
+    """위임 매핑 인라인 블록 (시행령/시행규칙 공통)."""
+    out: list[str] = []
+    out.append(f"**🔗 위임 → {label} 매핑 후보 ({len(articles)}건, ±3조 휴리스틱)**")
+    out.append("")
+    for a in articles[:3]:  # 최대 3개까지만 인라인
+        title = f" ({a.title})" if a.title else ""
+        out.append(f"<details><summary>{label} {a.number}{title}</summary>")
+        out.append("")
+        out.append("```")
+        out.append(a.full_text.strip())
+        out.append("```")
+        out.append("</details>")
+        out.append("")
+    return out
+
+
 def _format_article(
     art: Article,
     findings: list[Finding],
     *,
     decree: Law | None = None,
+    rule: Law | None = None,
 ) -> str:
     head = f"### {art.number}"
     if art.title:
@@ -99,20 +117,16 @@ def _format_article(
         out.append("_엔진 후보 없음._")
         out.append("")
 
-    # 위임 매핑: 이 법률 조문이 시행령에 위임한 경우, 후보 시행령 조문 본문 인라인
+    # 시행령 위임 매핑
     decree_matches = _find_decree_matches(art, decree)
     if decree_matches:
-        out.append(f"**🔗 위임 → 시행령 매핑 후보 ({len(decree_matches)}건, ±3조 휴리스틱)**")
-        out.append("")
-        for darticle in decree_matches[:3]:  # 최대 3개까지만 인라인
-            title = f" ({darticle.title})" if darticle.title else ""
-            out.append(f"<details><summary>시행령 {darticle.number}{title}</summary>")
-            out.append("")
-            out.append("```")
-            out.append(darticle.full_text.strip())
-            out.append("```")
-            out.append("</details>")
-            out.append("")
+        out.extend(_format_subordinate_block("시행령", decree_matches))
+
+    # 시행규칙 위임 매핑 — 별표·서식 등 LLM이 위임 정합성 판단할 때 핵심 단서
+    rule_matches = _find_decree_matches(art, rule)
+    if rule_matches:
+        out.extend(_format_subordinate_block("시행규칙", rule_matches))
+
     return "\n".join(out)
 
 
@@ -202,10 +216,10 @@ def render(
     out.append("> finding이 없는 조문은 _엔진 후보 없음_으로 표시되며, LLM이 직접 추가 결함을 식별할 수 있는 자료입니다.")
     out.append("")
 
-    # 조문 순서대로 (law.articles) — 시행령 매핑 인라인 포함
+    # 조문 순서대로 (law.articles) — 시행령·시행규칙 매핑 인라인 포함
     for art in law.articles:
         findings = by_article.get(art.article_id, [])
-        out.append(_format_article(art, findings, decree=decree))
+        out.append(_format_article(art, findings, decree=decree, rule=rule))
 
     # 법령 전체 단위 finding (article_id == "law_level")
     law_level_findings = [
