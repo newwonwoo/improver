@@ -1,0 +1,422 @@
+{
+  "generated_by": "scripts/bundle_by_rule.py",
+  "sample_size_limit": 1000,
+  "min_findings_filter": 10,
+  "seed": 42,
+  "bundles": [
+    {
+      "rule_id": "S-02",
+      "rule_name": "위임 검증",
+      "total_findings": 28371,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "주의": 20989,
+        "심각": 694,
+        "경고": 6688
+      },
+      "severity_dist_sample": {
+        "심각": 24,
+        "경고": 236,
+        "주의": 740
+      },
+      "top_law_categories": {
+        "(미분류)": 28371
+      },
+      "bundle_file": "S-02.md",
+      "bundle_size_kb": 154.6
+    },
+    {
+      "rule_id": "G-02",
+      "rule_name": "승인·인허가",
+      "total_findings": 23627,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "경고": 19983,
+        "심각": 2036,
+        "주의": 1608
+      },
+      "severity_dist_sample": {
+        "심각": 86,
+        "경고": 846,
+        "주의": 68
+      },
+      "top_law_categories": {
+        "(미분류)": 23627
+      },
+      "bundle_file": "G-02.md",
+      "bundle_size_kb": 142.3
+    },
+    {
+      "rule_id": "S-03",
+      "rule_name": "모호 표현",
+      "total_findings": 23324,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "개선": 16554,
+        "심각": 4171,
+        "주의": 2139,
+        "경고": 460
+      },
+      "severity_dist_sample": {
+        "심각": 179,
+        "경고": 20,
+        "주의": 92,
+        "개선": 709
+      },
+      "top_law_categories": {
+        "(미분류)": 23324
+      },
+      "bundle_file": "S-03.md",
+      "bundle_size_kb": 149.7
+    },
+    {
+      "rule_id": "E-01",
+      "rule_name": "조건 중첩",
+      "total_findings": 22839,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "주의": 6894,
+        "경고": 4510,
+        "심각": 11435
+      },
+      "severity_dist_sample": {
+        "심각": 501,
+        "경고": 197,
+        "주의": 302
+      },
+      "top_law_categories": {
+        "(미분류)": 22839
+      },
+      "bundle_file": "E-01.md",
+      "bundle_size_kb": 126.4
+    },
+    {
+      "rule_id": "E-05",
+      "rule_name": "제재 공백",
+      "total_findings": 15091,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "경고": 14138,
+        "개선": 953
+      },
+      "severity_dist_sample": {
+        "경고": 937,
+        "개선": 63
+      },
+      "top_law_categories": {
+        "(미분류)": 15091
+      },
+      "bundle_file": "E-05.md",
+      "bundle_size_kb": 157.0
+    },
+    {
+      "rule_id": "F-01",
+      "rule_name": "권리 제한",
+      "total_findings": 13796,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "경고": 8190,
+        "주의": 1681,
+        "개선": 2970,
+        "심각": 955
+      },
+      "severity_dist_sample": {
+        "심각": 69,
+        "경고": 594,
+        "주의": 122,
+        "개선": 215
+      },
+      "top_law_categories": {
+        "(미분류)": 13796
+      },
+      "bundle_file": "F-01.md",
+      "bundle_size_kb": 148.1
+    },
+    {
+      "rule_id": "G-05",
+      "rule_name": "보고 의무",
+      "total_findings": 6008,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "경고": 4519,
+        "주의": 1489
+      },
+      "severity_dist_sample": {
+        "경고": 752,
+        "주의": 248
+      },
+      "top_law_categories": {
+        "(미분류)": 6008
+      },
+      "bundle_file": "G-05.md",
+      "bundle_size_kb": 204.0
+    },
+    {
+      "rule_id": "G-01",
+      "rule_name": "예외·단서",
+      "total_findings": 2851,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "경고": 2171,
+        "심각": 679,
+        "주의": 1
+      },
+      "severity_dist_sample": {
+        "심각": 238,
+        "경고": 761,
+        "주의": 1
+      },
+      "top_law_categories": {
+        "(미분류)": 2851
+      },
+      "bundle_file": "G-01.md",
+      "bundle_size_kb": 117.4
+    },
+    {
+      "rule_id": "E-03",
+      "rule_name": "아날로그 잔재",
+      "total_findings": 2699,
+      "sample_size": 999,
+      "severity_dist_full": {
+        "개선": 1099,
+        "심각": 1453,
+        "주의": 62,
+        "경고": 85
+      },
+      "severity_dist_sample": {
+        "심각": 538,
+        "경고": 31,
+        "주의": 23,
+        "개선": 407
+      },
+      "top_law_categories": {
+        "(미분류)": 2699
+      },
+      "bundle_file": "E-03.md",
+      "bundle_size_kb": 153.7
+    },
+    {
+      "rule_id": "L-02",
+      "rule_name": "타법 조문 참조",
+      "total_findings": 2605,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "경고": 909,
+        "주의": 1696
+      },
+      "severity_dist_sample": {
+        "경고": 349,
+        "주의": 651
+      },
+      "top_law_categories": {
+        "(미분류)": 2605
+      },
+      "bundle_file": "L-02.md",
+      "bundle_size_kb": 149.1
+    },
+    {
+      "rule_id": "S-04",
+      "rule_name": "열거 과다",
+      "total_findings": 2183,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "개선": 1563,
+        "주의": 373,
+        "심각": 67,
+        "경고": 180
+      },
+      "severity_dist_sample": {
+        "심각": 31,
+        "경고": 82,
+        "주의": 171,
+        "개선": 716
+      },
+      "top_law_categories": {
+        "(미분류)": 2183
+      },
+      "bundle_file": "S-04.md",
+      "bundle_size_kb": 128.2
+    },
+    {
+      "rule_id": "F-03",
+      "rule_name": "처분·명령",
+      "total_findings": 1829,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "개선": 1132,
+        "경고": 351,
+        "주의": 315,
+        "심각": 31
+      },
+      "severity_dist_sample": {
+        "심각": 17,
+        "경고": 192,
+        "주의": 172,
+        "개선": 619
+      },
+      "top_law_categories": {
+        "(미분류)": 1829
+      },
+      "bundle_file": "F-03.md",
+      "bundle_size_kb": 140.8
+    },
+    {
+      "rule_id": "L-01",
+      "rule_name": "인용 법령",
+      "total_findings": 1707,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "주의": 1277,
+        "경고": 430
+      },
+      "severity_dist_sample": {
+        "경고": 252,
+        "주의": 748
+      },
+      "top_law_categories": {
+        "(미분류)": 1707
+      },
+      "bundle_file": "L-01.md",
+      "bundle_size_kb": 156.2
+    },
+    {
+      "rule_id": "F-05",
+      "rule_name": "자의적 재량",
+      "total_findings": 1523,
+      "sample_size": 1000,
+      "severity_dist_full": {
+        "심각": 1523
+      },
+      "severity_dist_sample": {
+        "심각": 1000
+      },
+      "top_law_categories": {
+        "(미분류)": 1523
+      },
+      "bundle_file": "F-05.md",
+      "bundle_size_kb": 188.9
+    },
+    {
+      "rule_id": "S-01",
+      "rule_name": "삽입조 과다",
+      "total_findings": 745,
+      "sample_size": 745,
+      "severity_dist_full": {
+        "개선": 302,
+        "경고": 123,
+        "주의": 219,
+        "심각": 101
+      },
+      "severity_dist_sample": {
+        "개선": 302,
+        "경고": 123,
+        "주의": 219,
+        "심각": 101
+      },
+      "top_law_categories": {
+        "(미분류)": 745
+      },
+      "bundle_file": "S-01.md",
+      "bundle_size_kb": 122.8
+    },
+    {
+      "rule_id": "G-03",
+      "rule_name": "감독 권한",
+      "total_findings": 350,
+      "sample_size": 350,
+      "severity_dist_full": {
+        "경고": 249,
+        "심각": 96,
+        "주의": 5
+      },
+      "severity_dist_sample": {
+        "경고": 249,
+        "심각": 96,
+        "주의": 5
+      },
+      "top_law_categories": {
+        "(미분류)": 350
+      },
+      "bundle_file": "G-03.md",
+      "bundle_size_kb": 71.5
+    },
+    {
+      "rule_id": "L-03",
+      "rule_name": "참조 끊김",
+      "total_findings": 327,
+      "sample_size": 327,
+      "severity_dist_full": {
+        "경고": 327
+      },
+      "severity_dist_sample": {
+        "경고": 327
+      },
+      "top_law_categories": {
+        "(미분류)": 327
+      },
+      "bundle_file": "L-03.md",
+      "bundle_size_kb": 65.2
+    },
+    {
+      "rule_id": "F-02",
+      "rule_name": "면책 조항",
+      "total_findings": 232,
+      "sample_size": 232,
+      "severity_dist_full": {
+        "주의": 56,
+        "경고": 159,
+        "심각": 17
+      },
+      "severity_dist_sample": {
+        "주의": 56,
+        "경고": 159,
+        "심각": 17
+      },
+      "top_law_categories": {
+        "(미분류)": 232
+      },
+      "bundle_file": "F-02.md",
+      "bundle_size_kb": 35.0
+    },
+    {
+      "rule_id": "G-04",
+      "rule_name": "내부통제",
+      "total_findings": 143,
+      "sample_size": 143,
+      "severity_dist_full": {
+        "심각": 115,
+        "경고": 25,
+        "주의": 3
+      },
+      "severity_dist_sample": {
+        "심각": 115,
+        "경고": 25,
+        "주의": 3
+      },
+      "top_law_categories": {
+        "(미분류)": 143
+      },
+      "bundle_file": "G-04.md",
+      "bundle_size_kb": 33.2
+    },
+    {
+      "rule_id": "F-04",
+      "rule_name": "의사표시 의제",
+      "total_findings": 43,
+      "sample_size": 43,
+      "severity_dist_full": {
+        "심각": 39,
+        "경고": 4
+      },
+      "severity_dist_sample": {
+        "심각": 39,
+        "경고": 4
+      },
+      "top_law_categories": {
+        "(미분류)": 43
+      },
+      "bundle_file": "F-04.md",
+      "bundle_size_kb": 10.3
+    }
+  ]
+}
