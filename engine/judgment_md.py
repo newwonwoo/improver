@@ -14,6 +14,7 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Iterable
 
+from .judgment_prompt import expected_schema_excerpt, header
 from .schema import AnalysisResult, Article, Finding
 
 
@@ -70,21 +71,6 @@ def _format_article(art: Article, findings: list[Finding]) -> str:
     return "\n".join(out)
 
 
-_PROMPT_HEADER = """\
-> **LLM 판단 요청** — 이 문서는 규정개선 분석 엔진이 자동 추출한 *후보* 결함 목록입니다.
-> 룰 기반 1차 스캔 결과이므로 오탐(false positive)이 포함되어 있습니다.
-> 다음을 검토해주세요:
->
-> 1. 각 후보가 **진짜 결함**인지(TP) **오탐**인지(FP) 판정
-> 2. 진짜 결함이면 **등급(심각/경고/주의/개선)** 재평가
-> 3. **권고안의 적절성**과 개선 제안
-> 4. 엔진이 **놓친 결함(미탐)**이 있는지 조문 전문을 직접 검토
->
-> 한 조문에 여러 후보가 걸린 경우 `🔗 교차 패턴` 메타 finding이 동반됩니다.
-> 등급 변경은 1단계 이내가 안전합니다(2단계↑는 사유 명시).
-"""
-
-
 def render(result: AnalysisResult) -> str:
     law = result.law
     by_article: dict[str, list[Finding]] = defaultdict(list)
@@ -105,7 +91,7 @@ def render(result: AnalysisResult) -> str:
     out: list[str] = []
     out.append(f"# 「{law.name}」 LLM 판단용 자료")
     out.append("")
-    out.append(_PROMPT_HEADER)
+    out.append(header(law.name, len(real), law.total_articles))
     out.append("")
     out.append("## 메타")
     out.append("")
@@ -172,6 +158,8 @@ def render(result: AnalysisResult) -> str:
             out.append("")
 
     out.append("---")
+    out.append("")
+    out.append(expected_schema_excerpt())
     out.append("")
     out.append(f"_엔진 v{result.engine_version} 자동 생성. 룰 20패턴 + Layer 1/2/3 권고 적용._")
     return "\n".join(out)

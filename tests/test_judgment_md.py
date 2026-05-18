@@ -34,9 +34,10 @@ def test_renders_title_and_meta():
 
 def test_renders_llm_prompt_block():
     md = judgment_md.render(_run())
-    assert "LLM 판단 요청" in md
-    assert "TP" in md  # FP/BORDER 등 라벨 안내
-    assert "오탐" in md
+    # 새 프롬프트 구조 — 시스템 프롬프트 블록 + 작업 안내
+    assert "🤖 LLM 시스템 프롬프트" in md
+    assert "TP/FP/BORDER" in md
+    assert "📋 이번 분석 작업" in md
 
 
 def test_renders_all_articles_with_full_text():
