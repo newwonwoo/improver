@@ -11,7 +11,7 @@ from engine.parser import parse_law
 from engine.rules import run_all
 
 REPO = Path(__file__).resolve().parent.parent
-REAL_LAW = REPO / "data" / "laws" / "주택도시기금법.md"
+REAL_LAW = REPO / "data" / "laws" / "raw" / "주택도시기금법" / "법률.md"
 
 
 def test_system_prompt_includes_six_tasks():

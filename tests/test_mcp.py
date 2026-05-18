@@ -31,8 +31,19 @@ def test_check_article_exists_repealed():
 
 
 def test_check_article_exists_renamed():
-    res = check_article_exists("정보통신망이용촉진및정보보호등에관한법률", "1")
+    # repealed_laws.json의 제명변경 항목 — 인덱스에 없는 옛 이름이라야 작동
+    from engine.mcp import LawIndex, check_article_exists as check_with_idx
+    idx = LawIndex(
+        laws=[],
+        repealed={
+            "제명변경": [
+                {"old_name": "옛이름법", "new_name": "새이름법", "date": "2020-01-01"}
+            ]
+        },
+    )
+    res = check_with_idx("옛이름법", "1", index=idx)
     assert res.status == "law_renamed"
+    assert res.current_law_name == "새이름법"
 
 
 def test_check_article_exists_unknown():

@@ -6,7 +6,7 @@ from engine.adapters import normalize_legalize_md
 from engine.parser import parse_law
 from engine.rules import run_all
 
-REAL_LAW = Path(__file__).resolve().parent.parent / "data" / "laws" / "주택도시기금법.md"
+REAL_LAW = Path(__file__).resolve().parent.parent / "data" / "laws" / "raw" / "주택도시기금법" / "법률.md"
 
 
 def _run():

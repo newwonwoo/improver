@@ -48,8 +48,18 @@ def _extract_articles(text: str, *, law_name: str = "x") -> list[str]:
     return out
 
 
+_DECREE_STEMS = {"법률": "", "시행령": " 시행령", "시행규칙": " 시행규칙"}
+
+
 def _law_files(root: Path) -> list[tuple[str, Path]]:
-    """디렉토리 트리에서 (법령명, 파일경로) 쌍을 수집."""
+    """디렉토리 트리에서 (법령명, 파일경로) 쌍을 수집.
+
+    두 가지 입력 구조 지원:
+    1. legalize-kr 풀 구조: <root>/<법령명>/{법률,시행령,시행규칙}.md
+       → 파일 stem이 "법률|시행령|시행규칙"이면 부모 디렉토리명이 법령명
+    2. 평면 구조: <root>/<법령명>.{md,txt}
+       → 파일 stem이 법령명
+    """
     out: list[tuple[str, Path]] = []
     seen: set[Path] = set()
     for pattern in _GLOBS:
@@ -57,12 +67,17 @@ def _law_files(root: Path) -> list[tuple[str, Path]]:
             if p in seen:
                 continue
             seen.add(p)
-            name = p.stem
-            if name.startswith("synthetic_"):
+            stem = p.stem
+            if stem.startswith("synthetic_"):
                 continue
-            # "주택도시기금법_시행령" → "주택도시기금법 시행령" (legalize 변환)
-            normalized_name = name.replace("_", " ")
-            out.append((normalized_name, p))
+            if stem in _DECREE_STEMS:
+                parent_name = p.parent.name
+                if parent_name == root.name:
+                    continue  # root 직속의 법률.md는 모호
+                name = parent_name + _DECREE_STEMS[stem]
+            else:
+                name = stem.replace("_", " ")
+            out.append((name, p))
     return out
 
 

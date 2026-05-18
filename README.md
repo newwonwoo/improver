@@ -4,6 +4,39 @@
 
 ---
 
+## 엔진 강화 워크플로 (LLM 피드백 루프)
+
+```
+[1] 모든 법령 분석 → judgment MD (시행령 부록 포함)
+    python scripts/analyze_batch_sets.py data/laws/raw --output-dir outputs/
+
+[2] 각 MD를 GPT/Gemini에 입력 → JSON 응답 받아 outputs/llm_responses/<법령명>.json 저장
+    (MD 안에 시스템 프롬프트 + JSON 스키마가 모두 박혀 있어 한 번 호출로 6가지 작업 완료:
+     TP/FP 판정 / 등급 재평가 / 권고안 개선 / 미탐 식별 / 체크리스트 / 종합평가)
+
+[3] LLM 응답을 결과에 일괄 import
+    python scripts/import_judgment_batch.py \
+        --results-dir outputs/results \
+        --llm-dir outputs/llm_responses \
+        --output-dir outputs/results_with_llm
+
+[4] LLM 응답을 집계해 엔진 튜닝 제안 생성
+    python scripts/tune_engine.py \
+        --llm-dir outputs/llm_responses \
+        --output outputs/tuning_proposals.json
+    # → FP 비율 ≥40% 패턴 / 등급 시프트 큰 패턴 / X-NEW 새 룰 후보 식별
+
+[5] 사람이 검토해 config/patterns.json, recommendations.json 갱신 → 룰 정밀도↑
+```
+
+데이터 위치:
+- 로데이터: `data/laws/raw/<법령명>/{법률,시행령,시행규칙}.md` — legalize-kr 1,720 세트
+- 판단용 MD: `outputs/judgments/<법령명>.md` — 시행령 부록 + 위임 매핑 인라인
+- 분석 JSON: `outputs/results/<법령명>.json` — `.gitignore` (재생성 가능)
+- 튜닝 제안: `outputs/tuning_proposals.json`
+
+---
+
 ## 빠른 시작
 
 ```bash
