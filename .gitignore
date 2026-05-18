@@ -9,3 +9,4 @@ web/dist/
 
 # Batch 분석의 임시 JSON (재생성 가능). judgments/ 와 summary 는 추적.
 outputs/results/
+outputs/chunks/
