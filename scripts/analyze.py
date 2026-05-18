@@ -14,7 +14,8 @@ from pathlib import Path
 # 패키지 import 위해 프로젝트 루트를 path에 추가
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from engine import cases, cross_pattern, fpc, html_report, recommender, scorer  # noqa: E402
+from engine import cases, cross_pattern, fpc, html_report, judgment_md, recommender, scorer  # noqa: E402
+from engine.adapters import normalize_legalize_md  # noqa: E402
 from engine.parser import parse_law  # noqa: E402
 from engine.rules import run_all  # noqa: E402
 
@@ -51,6 +52,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="LLM 정밀 판단 + Layer 3 권고안 (ANTHROPIC_API_KEY 필요)")
     parser.add_argument("--html", default=None,
                         help="정적 HTML 리포트 출력 경로 (선택)")
+    parser.add_argument("--judgment-md", default=None,
+                        help="LLM(GPT/Gemini) 판단용 Markdown 출력 경로")
+    parser.add_argument("--format", choices=["auto", "plain", "legalize"], default="auto",
+                        help="입력 파일 형식. auto는 YAML frontmatter 감지 시 legalize")
     parser.add_argument("--llm-log", default=None,
                         help="LLM 호출 로그 JSONL 출력 경로 (--use-llm 필요)")
     parser.add_argument("--no-cross-pattern", action="store_true",
@@ -58,8 +63,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     text = Path(args.input).read_text(encoding="utf-8")
+    meta: dict = {}
+    if args.format == "legalize" or (args.format == "auto" and text.lstrip().startswith("---")):
+        text, meta = normalize_legalize_md(text)
     category = args.category or _detect_law_category(args.name)
-    law = parse_law(text, name=args.name, law_type=args.law_type, law_category=category)
+    law = parse_law(
+        text, name=args.name, law_type=meta.get("법령구분") or args.law_type,
+        law_category=category,
+        effective_date=meta.get("시행일자"),
+        last_amended_date=meta.get("공포일자"),
+    )
 
     findings = run_all(law)
     findings = fpc.correct(law, findings)
@@ -91,6 +104,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.html:
         Path(args.html).write_text(html_report.render(result), encoding="utf-8")
         print(f"Wrote {args.html}", file=sys.stderr)
+
+    if args.judgment_md:
+        Path(args.judgment_md).write_text(judgment_md.render(result), encoding="utf-8")
+        print(f"Wrote {args.judgment_md}", file=sys.stderr)
 
     if args.llm_log and llm_client and dump_log:
         n = dump_log(llm_client, Path(args.llm_log))

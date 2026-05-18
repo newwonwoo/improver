@@ -23,29 +23,46 @@ import re
 import sys
 from pathlib import Path
 
-_ART_RE = re.compile(r"제(\d+)조(의\d+)?")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from engine.adapters import normalize_legalize_md  # noqa: E402
+from engine.parser import parse_law  # noqa: E402
+
+_GLOBS = ("*.txt", "*.md")
 
 
-def _extract_articles(text: str) -> list[str]:
-    seen: list[str] = []
-    visited: set[str] = set()
-    for m in _ART_RE.finditer(text):
-        num = m.group(1) + (m.group(2) or "").replace("의", "의")
-        if num in visited:
+def _extract_articles(text: str, *, law_name: str = "x") -> list[str]:
+    """파서로 조문 분리 후 부칙 제외한 조문 번호 목록 반환."""
+    law = parse_law(text, name=law_name)
+    out: list[str] = []
+    seen: set[str] = set()
+    for a in law.articles:
+        num = a.number_raw + (
+            "" if a.insert_depth == 0
+            else "의" + a.number.split("의", 1)[1] if "의" in a.number else ""
+        )
+        if num in seen:
             continue
-        visited.add(num)
-        seen.append(num)
-    return seen
+        seen.add(num)
+        out.append(num)
+    return out
 
 
 def _law_files(root: Path) -> list[tuple[str, Path]]:
     """디렉토리 트리에서 (법령명, 파일경로) 쌍을 수집."""
     out: list[tuple[str, Path]] = []
-    for p in sorted(root.rglob("*.txt")):
-        name = p.stem
-        if name.startswith("synthetic_"):
-            continue
-        out.append((name, p))
+    seen: set[Path] = set()
+    for pattern in _GLOBS:
+        for p in sorted(root.rglob(pattern)):
+            if p in seen:
+                continue
+            seen.add(p)
+            name = p.stem
+            if name.startswith("synthetic_"):
+                continue
+            # "주택도시기금법_시행령" → "주택도시기금법 시행령" (legalize 변환)
+            normalized_name = name.replace("_", " ")
+            out.append((normalized_name, p))
     return out
 
 
@@ -67,7 +84,9 @@ def build_index(root: Path, *, short_names_path: Path | None = None) -> dict:
     name_to_entry: dict[str, dict] = {}
     for name, path in _law_files(root):
         text = path.read_text(encoding="utf-8", errors="replace")
-        articles = _extract_articles(text)
+        if path.suffix == ".md" and text.lstrip().startswith("---"):
+            text, _ = normalize_legalize_md(text)
+        articles = _extract_articles(text, law_name=name)
         entry = {
             "name": name,
             "short_names": _short_names(short_names_path, name),

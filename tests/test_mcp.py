@@ -52,10 +52,12 @@ def test_check_enforcement_decree_no_decree():
     assert res.coverage == "none"
 
 
-def test_check_enforcement_decree_partial():
-    # 주택법 시행령은 인덱스에 없음 (수록 안 함) → 인덱스 미수록 케이스
+def test_check_enforcement_decree_now_resolves_via_real_index():
+    """legalize-kr 통합 후 주택법 시행령이 인덱스에 등록되어 매칭됨."""
     res = check_enforcement_decree("주택법", "10")
-    assert res.note and "미수록" in res.note
+    assert res.decree_exists is True
+    assert res.decree_name == "주택법 시행령"
+    assert res.coverage in {"full", "partial"}
 
 
 def test_law_index_custom_construction():
