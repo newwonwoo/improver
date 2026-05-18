@@ -18,13 +18,17 @@ def _load_templates() -> dict[str, dict[str, str]]:
 
 
 def apply(result: AnalysisResult) -> AnalysisResult:
+    """Layer 1 표준 권고안을 부착. 이미 Layer 3가 적용된 finding은 보존."""
     templates = _load_templates()
     for f in result.findings:
         per_pattern = templates.get(f.pattern_id, {})
         text = per_pattern.get(f.severity)
+        if not text:
+            continue
         existing = f.recommendation or {}
-        if text:
-            existing["template"] = text
+        existing["template"] = text
+        # Layer 3 (LLM 맞춤)가 이미 부착되었으면 격상 유지
+        if existing.get("layer") != 3:
             existing["layer"] = 1
-            f.recommendation = existing
+        f.recommendation = existing
     return result

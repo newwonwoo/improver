@@ -43,6 +43,7 @@ class F02Immunity:
             if severity == "양호":
                 continue
 
+            sub = "F-02-a" if is_full else ("F-02-c" if has_exception else "F-02-b")
             idx += 1
             findings.append(
                 make_finding(
@@ -57,6 +58,7 @@ class F02Immunity:
                             + (" (고의·중과실 예외 없음)" if not has_exception else " (범위 불명확)")
                         ),
                         fix_type="proviso" if is_full else "replace",
+                        sub_check_id=sub,
                     ),
                 )
             )

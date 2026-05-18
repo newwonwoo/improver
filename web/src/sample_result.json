@@ -438,7 +438,8 @@
         "related_agencies": [
           "법제처",
           "감사원"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -450,7 +451,7 @@
       "category": "구조",
       "article_id": "art_7",
       "article_number": "제7조",
-      "matched_text": "그 밖에, 필요한 사항",
+      "matched_text": "필요한 사항, 그 밖에",
       "severity": "주의",
       "severity_score": 4,
       "summary": "포괄위임 3건: 위임 범위 불명확",
@@ -475,7 +476,8 @@
         "related_agencies": [
           "법제처",
           "감사원"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -549,7 +551,8 @@
         "related_agencies": [
           "법제처",
           "감사원"
-        ]
+        ],
+        "cross_pattern_count": 3
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -597,7 +600,8 @@
         "layer": 1,
         "related_agencies": [
           "법제처"
-        ]
+        ],
+        "cross_pattern_count": 5
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -621,7 +625,8 @@
         "layer": 1,
         "related_agencies": [
           "법제처"
-        ]
+        ],
+        "cross_pattern_count": 3
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -645,7 +650,8 @@
         "layer": 1,
         "related_agencies": [
           "법제처"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -664,11 +670,13 @@
       "detection_method": "rule",
       "fix_type": "add_paragraph",
       "recommendation": {
+        "sub_check_id": "F-01-e",
         "template": "권리 제한 사유가 불명확하거나 과도. 제한 사유 구체화 및 예외·구제절차 명시.",
         "layer": 1,
         "related_agencies": [
           "공정위",
-          "권익위"
+          "권익위",
+          "인권위"
         ]
       },
       "is_false_positive": false,
@@ -707,7 +715,8 @@
         "related_agencies": [
           "금감원",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 5
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -745,7 +754,8 @@
         "related_agencies": [
           "금감원",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 3
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -783,7 +793,8 @@
         "related_agencies": [
           "금감원",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -806,7 +817,8 @@
         "layer": 1,
         "related_agencies": [
           "법제처"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -829,7 +841,8 @@
         "layer": 1,
         "related_agencies": [
           "법제처"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -848,6 +861,7 @@
       "detection_method": "rule",
       "fix_type": "add_paragraph",
       "recommendation": {
+        "sub_check_id": "G-02-c",
         "template": "인허가 처리 기한 미규정. 처리 기한 법정화 및 간주 규정 신설 검토.",
         "layer": 1,
         "matched_cases": [
@@ -862,7 +876,8 @@
             "url": "https://www.acrc.go.kr/"
           }
         ],
-        "reference_note": "권익위: 민원처리법 §43"
+        "reference_note": "권익위: 민원처리법 §43",
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -968,7 +983,8 @@
         "related_agencies": [
           "감사원",
           "금감원"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -987,6 +1003,7 @@
       "detection_method": "rule",
       "fix_type": "add_paragraph",
       "recommendation": {
+        "sub_check_id": "G-05-a",
         "template": "보고 주기·양식·제출처가 불명확. 구체적 보고 체계(주기/양식/경로) 법정화.",
         "layer": 1,
         "matched_cases": [
@@ -1024,7 +1041,8 @@
         "reference_note": "감사원: 감사원법 §33, 공공기관운영법 §48",
         "related_agencies": [
           "감사원"
-        ]
+        ],
+        "cross_pattern_count": 5
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1043,6 +1061,7 @@
       "detection_method": "rule",
       "fix_type": "add_paragraph",
       "recommendation": {
+        "sub_check_id": "G-05-a",
         "template": "보고 주기·양식·제출처가 불명확. 구체적 보고 체계(주기/양식/경로) 법정화.",
         "layer": 1,
         "matched_cases": [
@@ -1080,7 +1099,8 @@
         "reference_note": "감사원: 감사원법 §33, 공공기관운영법 §48",
         "related_agencies": [
           "감사원"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1099,6 +1119,7 @@
       "detection_method": "rule",
       "fix_type": "add_paragraph",
       "recommendation": {
+        "sub_check_id": "G-05-a",
         "template": "보고 주기·양식·제출처가 불명확. 구체적 보고 체계(주기/양식/경로) 법정화.",
         "layer": 1,
         "matched_cases": [
@@ -1136,7 +1157,8 @@
         "reference_note": "감사원: 감사원법 §33, 공공기관운영법 §48",
         "related_agencies": [
           "감사원"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1155,6 +1177,7 @@
       "detection_method": "rule",
       "fix_type": "add_paragraph",
       "recommendation": {
+        "sub_check_id": "G-05-b",
         "template": "보고 내용과 감독 목적 간 불일치. 보고 항목 재설계.",
         "layer": 1,
         "matched_cases": [
@@ -1192,7 +1215,8 @@
         "reference_note": "감사원: 감사원법 §33, 공공기관운영법 §48",
         "related_agencies": [
           "감사원"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1211,6 +1235,7 @@
       "detection_method": "rule",
       "fix_type": "replace",
       "recommendation": {
+        "sub_check_id": "E-01-a",
         "template": "복합 조건이 3~4단계 중첩. 핵심 요건과 부차적 요건 분리, 부차 요건은 시행령 위임.",
         "layer": 1,
         "matched_cases": [
@@ -1228,7 +1253,8 @@
         "reference_note": "국토교통부: 공공감사에 관한 법률 §23",
         "related_agencies": [
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 5
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1252,7 +1278,8 @@
         "related_agencies": [
           "법제처",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1276,7 +1303,8 @@
         "related_agencies": [
           "법제처",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 5
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1300,7 +1328,8 @@
         "related_agencies": [
           "법제처",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1324,7 +1353,8 @@
         "related_agencies": [
           "법제처",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1348,7 +1378,8 @@
         "related_agencies": [
           "법제처",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 2
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1372,7 +1403,92 @@
         "related_agencies": [
           "법제처",
           "권익위"
-        ]
+        ],
+        "cross_pattern_count": 2
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "X-CROSS-art_32",
+      "pattern_id": "X-CROSS",
+      "pattern_name": "교차 패턴",
+      "category": "구조",
+      "article_id": "art_32",
+      "article_number": "제32조",
+      "matched_text": "3개 패턴 동시",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제32조에 3개 패턴 동시 적발 — F-05, S-02, S-03",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "해당 조문은 복합적 이슈를 가지고 있어 개별 수정보다 조문 재설계를 권고합니다.",
+        "layer": 1,
+        "cross_pattern": true
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "X-CROSS-art_10",
+      "pattern_id": "X-CROSS",
+      "pattern_name": "교차 패턴",
+      "category": "구조",
+      "article_id": "art_10",
+      "article_number": "제10조",
+      "matched_text": "5개 패턴 동시",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "제10조에 5개 패턴 동시 적발 — E-01, E-05, F-05, G-05, S-03",
+      "detection_method": "rule",
+      "fix_type": "add_paragraph",
+      "recommendation": {
+        "template": "해당 조문은 구조적 결함 상태입니다. 폐지 후 목적별 분리 입법을 검토하시기 바랍니다.",
+        "layer": 1,
+        "cross_pattern": true
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "X-PATTERN-S-02",
+      "pattern_id": "X-PATTERN",
+      "pattern_name": "S-02 반복",
+      "category": "구조",
+      "article_id": "law_level",
+      "article_number": "법령 전체",
+      "matched_text": "S-02 5건",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "패턴 S-02이 법령 전반에 5건 반복됩니다. 개별 조문 수정이 아닌 법령 차원의 체계정비를 권고합니다.",
+      "detection_method": "rule",
+      "fix_type": "sub_legislation",
+      "recommendation": {
+        "template": "패턴 S-02이 법령 전반에 5건 반복됩니다. 개별 조문 수정이 아닌 법령 차원의 체계정비를 권고합니다.",
+        "layer": 1,
+        "cross_pattern": true
+      },
+      "is_false_positive": false,
+      "false_positive_reason": null
+    },
+    {
+      "finding_id": "X-PATTERN-E-05",
+      "pattern_id": "X-PATTERN",
+      "pattern_name": "E-05 반복",
+      "category": "효율성",
+      "article_id": "law_level",
+      "article_number": "법령 전체",
+      "matched_text": "E-05 6건",
+      "severity": "경고",
+      "severity_score": 7,
+      "summary": "패턴 E-05이 법령 전반에 6건 반복됩니다. 개별 조문 수정이 아닌 법령 차원의 체계정비를 권고합니다.",
+      "detection_method": "rule",
+      "fix_type": "sub_legislation",
+      "recommendation": {
+        "template": "패턴 E-05이 법령 전반에 6건 반복됩니다. 개별 조문 수정이 아닌 법령 차원의 체계정비를 권고합니다.",
+        "layer": 1,
+        "cross_pattern": true
       },
       "is_false_positive": false,
       "false_positive_reason": null
@@ -1410,9 +1526,9 @@
     {
       "article_id": "art_32",
       "article_number": "제32조",
-      "score": 13.0,
+      "score": 14.5,
       "grade": "Critical",
-      "finding_count": 3
+      "finding_count": 4
     },
     {
       "article_id": "art_6",
@@ -1426,7 +1542,7 @@
       "article_number": "제10조",
       "score": 16.0,
       "grade": "Critical",
-      "finding_count": 5
+      "finding_count": 6
     },
     {
       "article_id": "art_34_2",
@@ -1483,13 +1599,20 @@
       "score": 8.5,
       "grade": "Warning",
       "finding_count": 2
+    },
+    {
+      "article_id": "law_level",
+      "article_number": "법령 전체",
+      "score": 7.0,
+      "grade": "Warning",
+      "finding_count": 2
     }
   ],
   "category_scores": {
     "구조": {
-      "crd": 176.47,
+      "crd": 300.0,
       "weight": 1.0,
-      "finding_count": 9
+      "finding_count": 12
     },
     "공정성": {
       "crd": 217.65,
@@ -1507,12 +1630,12 @@
       "finding_count": 7
     },
     "효율성": {
-      "crd": 288.24,
+      "crd": 329.41,
       "weight": 1.2,
-      "finding_count": 7
+      "finding_count": 8
     }
   },
-  "law_score": 157.83,
+  "law_score": 179.84,
   "law_grade": "F",
   "engine_version": "0.1.0"
 }

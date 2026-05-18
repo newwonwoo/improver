@@ -48,6 +48,13 @@ class G02Permit:
                 details.append("처리 기한 부재")
             if not has_deemed:
                 details.append("간주 규정 부재")
+            # G-02-b 중복, G-02-c 처리기한, G-02-d 간주
+            if len(present) >= 3:
+                sub = "G-02-b"
+            elif not has_deadline:
+                sub = "G-02-c"
+            else:
+                sub = "G-02-d"
             findings.append(
                 make_finding(
                     self,
@@ -58,6 +65,7 @@ class G02Permit:
                         matched_text=", ".join(present),
                         summary=", ".join(details),
                         fix_type="add_paragraph",
+                        sub_check_id=sub,
                     ),
                 )
             )

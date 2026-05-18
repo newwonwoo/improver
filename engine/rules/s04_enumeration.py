@@ -37,6 +37,7 @@ class S04Enumeration:
                             matched_text=f"호 {n}개",
                             summary=f"{art.number} {para.number or ''}: 호 {n}개 나열",
                             fix_type="add_paragraph",
+                            sub_check_id="S-04-a",
                         ),
                     )
                 )

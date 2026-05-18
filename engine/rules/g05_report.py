@@ -15,6 +15,13 @@ _ELEMENTS = {
     "지연 제재": re.compile(r"(과태료|벌금|징역|제재|영업정지)"),
 }
 
+_SUBCHECK_MAP = {
+    "보고 주기": "G-05-a",
+    "보고 양식": "G-05-b",
+    "보고 방법": "G-05-c",
+    "지연 제재": "G-05-d",
+}
+
 
 class G05Report:
     pattern_id = "G-05"
@@ -44,6 +51,7 @@ class G05Report:
                         matched_text="보고하여야 한다",
                         summary=f"보고 규정 {met}/4 충족. 미충족: {', '.join(missing)}",
                         fix_type="add_paragraph",
+                        sub_check_id=_SUBCHECK_MAP[missing[0]] if missing else None,
                     ),
                 )
             )

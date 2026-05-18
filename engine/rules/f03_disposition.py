@@ -61,6 +61,13 @@ class F03Disposition:
                 details.append("청문 부재")
             if not has_standard:
                 details.append("기준 미규정")
+            # F-03-a 처분유형, F-03-b 사전절차, F-03-c 기준표, F-03-d 비례원칙
+            if not has_hearing_in_law:
+                sub = "F-03-b"
+            elif not has_standard:
+                sub = "F-03-c"
+            else:
+                sub = "F-03-d"
             findings.append(
                 make_finding(
                     self,
@@ -71,6 +78,7 @@ class F03Disposition:
                         matched_text=f"{strength}한 처분",
                         summary=f"{strength}한 처분 + {', '.join(details) or '비례원칙 검토'}",
                         fix_type="add_paragraph",
+                        sub_check_id=sub,
                     ),
                 )
             )

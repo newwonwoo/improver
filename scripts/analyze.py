@@ -14,15 +14,18 @@ from pathlib import Path
 # 패키지 import 위해 프로젝트 루트를 path에 추가
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from engine import cases, fpc, html_report, recommender, scorer  # noqa: E402
+from engine import cases, cross_pattern, fpc, html_report, recommender, scorer  # noqa: E402
 from engine.parser import parse_law  # noqa: E402
 from engine.rules import run_all  # noqa: E402
 
 try:
-    from engine.llm import generate_recommendations, judge_findings  # noqa: E402
+    from engine.llm import dump_log, generate_recommendations, judge_findings  # noqa: E402
+    from engine.llm.client import make_default_client  # noqa: E402
 except ImportError:  # 의존성 없을 때 비활성화
+    dump_log = None  # type: ignore[assignment]
     generate_recommendations = None  # type: ignore[assignment]
     judge_findings = None  # type: ignore[assignment]
+    make_default_client = None  # type: ignore[assignment]
 
 
 def _detect_law_category(name: str) -> str:
@@ -48,6 +51,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="LLM 정밀 판단 + Layer 3 권고안 (ANTHROPIC_API_KEY 필요)")
     parser.add_argument("--html", default=None,
                         help="정적 HTML 리포트 출력 경로 (선택)")
+    parser.add_argument("--llm-log", default=None,
+                        help="LLM 호출 로그 JSONL 출력 경로 (--use-llm 필요)")
+    parser.add_argument("--no-cross-pattern", action="store_true",
+                        help="교차 패턴 권고안 부착 비활성화")
     args = parser.parse_args(argv)
 
     text = Path(args.input).read_text(encoding="utf-8")
@@ -60,13 +67,19 @@ def main(argv: list[str] | None = None) -> int:
     result = recommender.apply(result)
     result = cases.attach(result)
 
+    llm_client = None
     if args.use_llm and judge_findings and generate_recommendations:
-        result = judge_findings(result)
-        # 등급 변화 반영 후 점수 재계산
+        llm_client = make_default_client() if make_default_client else None
+        result = judge_findings(result, client=llm_client)
         result = scorer.compute(law, result.findings)
         result = recommender.apply(result)
         result = cases.attach(result)
-        result = generate_recommendations(result)
+        result = generate_recommendations(result, client=llm_client)
+
+    if not args.no_cross_pattern:
+        result = cross_pattern.annotate(result)
+        result = scorer.compute(law, result.findings)
+        result = recommender.apply(result)
 
     out_json = json.dumps(result.to_dict(), ensure_ascii=False, indent=2)
     if args.output == "-":
@@ -78,6 +91,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.html:
         Path(args.html).write_text(html_report.render(result), encoding="utf-8")
         print(f"Wrote {args.html}", file=sys.stderr)
+
+    if args.llm_log and llm_client and dump_log:
+        n = dump_log(llm_client, Path(args.llm_log))
+        print(f"Wrote {args.llm_log} — {n} LLM calls", file=sys.stderr)
     return 0
 
 

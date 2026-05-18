@@ -51,6 +51,13 @@ class F04Deemed:
                 details.append(f"의제 기간 {period}일 (단기)")
             if not can_revoke:
                 details.append("철회 불가")
+            # F-04-b 통지, F-04-c 기간, F-04-d 철회
+            if not has_notice:
+                sub = "F-04-b"
+            elif 0 < period < 14:
+                sub = "F-04-c"
+            else:
+                sub = "F-04-d"
             findings.append(
                 make_finding(
                     self,
@@ -61,6 +68,7 @@ class F04Deemed:
                         matched_text=_DEEMED.search(text).group(0),
                         summary=f"의사표시 의제: {', '.join(details) or '기간/철회 점검 필요'}",
                         fix_type="add_paragraph",
+                        sub_check_id=sub,
                     ),
                 )
             )

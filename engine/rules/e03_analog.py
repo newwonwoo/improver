@@ -29,12 +29,21 @@ class E03Analog:
             if _STRONG.search(text):
                 severity = "심각" if not has_digital else "경고"
                 level = "강"
+                # 키워드 종류에 따라 서브체크 분기
+                if re.search(r"(서면으로|문서)", text):
+                    sub = "E-03-a"
+                elif re.search(r"(날인|인감)", text):
+                    sub = "E-03-b"
+                else:
+                    sub = "E-03-c"
             elif _MID.search(text):
                 severity = "주의" if not has_digital else "개선"
                 level = "중"
+                sub = "E-03-d"
             elif _WEAK.search(text) and not has_digital:
                 severity = "개선"
                 level = "약"
+                sub = "E-03-a"
             else:
                 continue
 
@@ -52,6 +61,7 @@ class E03Analog:
                             + (" + 전자 대안 부재" if not has_digital else "")
                         ),
                         fix_type="add_paragraph",
+                        sub_check_id=sub,
                     ),
                 )
             )

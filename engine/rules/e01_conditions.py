@@ -48,6 +48,7 @@ class E01Conditions:
                         matched_text=f"조건 {stages}단계",
                         summary=f"조건 {stages}단계 중첩",
                         fix_type="replace",
+                        sub_check_id="E-01-a",
                     ),
                 )
             )

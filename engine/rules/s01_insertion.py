@@ -37,8 +37,8 @@ class S01Insertion:
 
         if severity:
             idx += 1
-            # 첫 삽입조를 대표로 사용 (없으면 첫 조문)
             target = inserted[0] if inserted else law.articles[0]
+            # S-01-b 삽입 밀도 (법령 단위)
             findings.append(
                 make_finding(
                     self,
@@ -49,11 +49,12 @@ class S01Insertion:
                         matched_text=f"비율 {ratio:.1f}%, 최대깊이 {max_depth}",
                         summary=f"삽입조 {len(inserted)}/{total}건 ({ratio:.1f}%), 최대 깊이 {max_depth}",
                         fix_type="add_paragraph",
+                        sub_check_id="S-01-b",
                     ),
                 )
             )
 
-        # depth ≥ 3 개별 조문 별도 Finding
+        # S-01-a 삽입 깊이 — 개별 조문
         for art in inserted:
             if art.insert_depth >= 3:
                 idx += 1
@@ -67,6 +68,7 @@ class S01Insertion:
                             matched_text=art.number,
                             summary=f"{art.number}: 삽입 깊이 {art.insert_depth}단계",
                             fix_type="add_paragraph",
+                            sub_check_id="S-01-a",
                         ),
                     )
                 )

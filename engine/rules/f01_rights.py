@@ -52,6 +52,8 @@ class F01Rights:
             else:
                 severity = "개선"
 
+            # 서브체크: 구제수단 부재 → F-01-e, 그 외 강한 제한 → F-01-a
+            sub_check = "F-01-e" if not has_remedy else "F-01-a"
             idx += 1
             findings.append(
                 make_finding(
@@ -67,6 +69,7 @@ class F01Rights:
                             + (", 구제수단 부재" if not has_remedy else "")
                         ),
                         fix_type="add_paragraph" if not has_remedy else "replace",
+                        sub_check_id=sub_check,
                     ),
                 )
             )
