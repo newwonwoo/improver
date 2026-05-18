@@ -11,6 +11,10 @@ web/dist/
 outputs/results/
 outputs/chunks/
 
+# 룰 강화 보고서 — rule_responses/ 에서 재생성됨
+outputs/rule_enhancement_report.md
+outputs/rule_enhancement_report.json
+
 # LLM 응답 자체는 사용자 작업물이라 추적하되, _index.json은 자동 갱신용
 # outputs/llm_responses/ 는 추적
 # outputs/feedback/ 는 추적
