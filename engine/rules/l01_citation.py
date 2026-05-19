@@ -34,7 +34,22 @@ _FP_TITLE = re.compile(
     r"(승계|회원의?\s*자격|비과세|면제|적용\s*제외|준용|회원\s*가입"
     r"|결격\s*사유|감면|특별\s*공제|공제\s*대상|징계\s*부가금"
     r"|취업\s*제한|비위\s*면직|정보체계|시스템|자료\s*제공|정보\s*제공"
-    r"|적용\s*특례|지원\s*대상|지급\s*대상)"
+    r"|적용\s*특례|지원\s*대상|지급\s*대상"
+    r"|세입|세출|정관|회계|예산|결산|수수료|회비"
+    r"|기초연구|연구사업|입주기관\s*지원|위탁|위임"
+    r"|겸임|겸직|특례)"
+)
+# 본문 신호: "다음 각 호의 [기관/사람/자/대학/대상자]" — 정의용 인용 패턴
+_DEFINITIONAL_LIST = re.compile(
+    r"다음\s*각\s*호의?\s*(기관|사람|자|대학|단체|기업|법인|시설|매체물|대상자|업체)"
+)
+# 본문 신호: 적용 범위 정의 (이 법 ... 다음 각 호의 법률에 따르지)
+_SCOPE_DEFINITION = re.compile(
+    r"(이\s*법|이\s*규정|이\s*기준).{0,50}다음\s*각\s*호의?\s*법률에\s*따르"
+)
+# 본문 신호: 행위제한·금지 단서 (생태·경관보전지역에서의 행위제한 류)
+_PROHIBITED_AREA = re.compile(
+    r"누구든지\s*.{0,30}안에서는?\s*다음\s*각\s*호의?\s*어느\s*하나"
 )
 # FP: 벌칙 본문 신호 (제목이 안 잡혀도 본문으로 판별)
 # Source: signal_candidates.json :: L-01 :: "벌칙·제재조문_FP_필터"
@@ -79,6 +94,15 @@ def _is_fp_article(art: Article) -> bool:
     # 정보체계 자료원천 인용
     if _INFO_SYSTEM.search(text):
         return True
+    # 정의용 인용 패턴 (다음 각 호의 기관/사람/자/대학…)
+    if _DEFINITIONAL_LIST.search(text):
+        return True
+    # 적용 범위 정의 (이 법 ... 다음 각 호의 법률에 따르)
+    if _SCOPE_DEFINITION.search(text):
+        return True
+    # 행위제한 영역에서 다른 법령 인용
+    if _PROHIBITED_AREA.search(text):
+        return True
     return False
 
 
@@ -96,10 +120,13 @@ class L01Citation:
             cites = _CITE_PAT.findall(art.full_text)
             # 법령명만 카운트 — 동일 법령명은 1회로
             laws = {c for c in cites if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
-            if len(laws) < 6:
-                continue
             # TP 부스트: 의제·특례 조문의 과다 인용은 한 단계 상향
             has_tp_context = bool(_TP_CONTEXT.search(art.full_text))
+            # TP 컨텍스트 있으면 임계값 낮춤 (인허가의제는 6개부터)
+            # TP 컨텍스트 없으면 7개 이상이어야 발화 (정밀도 우선)
+            min_threshold = 6 if has_tp_context else 7
+            if len(laws) < min_threshold:
+                continue
             if len(laws) >= 10:
                 severity = "심각" if has_tp_context else "경고"
             elif len(laws) >= 8:

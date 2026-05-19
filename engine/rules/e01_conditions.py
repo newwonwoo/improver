@@ -35,12 +35,20 @@ _MANDATORY = re.compile(r"취소하여야 한다")
 
 
 def _is_fp_article(art: Article) -> bool:
-    """E-01 FP 필터."""
+    """E-01 FP 필터.
+
+    Source: signal_candidates.json :: E-01 (LLM verified)
+    R5 examples (FPs):
+      E-01-001@게임산업진흥에관한법률 (FP — 정의조문)
+      E-01-038@건설기술진흥법 (FP — 벌칙조 각호 열거)
+      E-01-006@국가과학기술경쟁력강화를위한이공계지원특별법 (FP — 정책의무)
+    """
     if art.is_definition() or art.is_penalty() or art.is_purpose():
         return True
     if art.is_policy_obligation():
         return True
     text = art.full_text
+    title = art.title or ""
     # 위원회 심의사항 열거
     if _COMMITTEE_ENUM.search(text) and _PURE_ENUM.search(text):
         return True
@@ -49,6 +57,23 @@ def _is_fp_article(art: Article) -> bool:
         return True
     # 수익적 지원 조문 — 침익적 제재 키워드 없으면 FP
     if _BENEFIT_ONLY.search(text) and not _ADVERSARIAL.search(text):
+        return True
+    # 정의 조문 강화 — 본문 신호 (제목 매칭 못 잡은 경우)
+    if re.search(r'이\s*법에서\s*.*용어.*(정의|뜻은|뜻).*다음과\s*같다', text[:200]):
+        return True
+    if re.search(r'"[^"]+"\s*(이|라)?\s*(함은|란).{0,80}말한다', text[:300]):
+        return True
+    # 벌칙 본문 신호 — 첫 문장이 형벌 조문
+    if re.search(r'(\d+년\s*이하의?\s*징역|\d+(천|만|억)?\s*원\s*이하의?\s*벌금|사형|무기)', text[:200]):
+        return True
+    # 인용호 단독 조문 — 실질규정 없는 인용만 (signal: "인용호 단독조문 FP")
+    if (len(text) < 200
+            and re.search(r'^제\d+조(의\d+)?(부터\s*제\d+조까지)?', text.strip())
+            and not re.search(r"(하여야\s*한다|아니\s*된다|할\s*수\s*있다|적용한다|준용한다)", text)):
+        return True
+    # 계획 수립·기재사항 — 항목 나열일 뿐 조건 중첩 아님 (제재 없는 경우)
+    if (re.search(r'(개발계획|종합계획|기본계획|관리계획|시행계획).{0,30}(포함되어야|기재되어야|고려하여)', text)
+            and not _ADVERSARIAL.search(text)):
         return True
     return False
 

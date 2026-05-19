@@ -21,6 +21,27 @@ _STANDARD = re.compile(
 _CIVIL_TERMINATION = re.compile(r"(계약의? 해지|계약의? 해제|합의|당사자\s*간|당사자\s*사이)")
 _BENEFICIAL_ACT = re.compile(r"(납부\s*연장|분할\s*납부|감면|지원금|보조금|허가|인가|등록|지정)\s*.{0,20}(할\s*수\s*있다|하여야\s*한다)")
 _SANCTION_ONLY = re.compile(r"^(과태료|벌칙|양벌규정|형벌|처벌)")  # 조문제목
+# SLM signals (signal_candidates :: F-03)
+# 처분 후속·인용 조문 (처분권 부여어 없이 처분 받은 자를 가리키는 인용만)
+_DISPOSITION_REFERENCE = re.compile(
+    r"제\s*\d+\s*조에?\s*따라\s*.{0,30}(영업정지|등록취소|폐쇄명령|허가취소|면허취소|업무정지)를?\s*받은"
+)
+# 결격사유·등록제한·양도제한 류 (처분 자체 X)
+_DISQUALIFICATION_TITLE = re.compile(
+    r"(결격\s*사유|면허\s*금지|등록\s*제한|양도\s*제한|취업\s*제한)"
+)
+# 보고·자료제출·권한위임 조문
+_REPORTING_TITLE = re.compile(
+    r"(보고|자료\s*제출|권한의?\s*위임|실적관리)"
+)
+# 사인간 도급해지
+_PRIVATE_TERMINATION = re.compile(
+    r"(관계인|발주자|수급인).{0,40}도급계약을?\s*해지할\s*수\s*있다"
+)
+# 법원·타기관 신청·요청
+_THIRD_PARTY_REQUEST = re.compile(
+    r"(법원|법원소년부|허가관청|시\s*[ㆍ·]\s*도지사)에게\s*.{0,30}(신청|요구|요청)할\s*수\s*있다"
+)
 
 
 class F03Disposition:
@@ -54,6 +75,24 @@ class F03Disposition:
             # FP 필터 6: 사인간 민사 해지·해제 조문
             text = art.full_text
             if _CIVIL_TERMINATION.search(text) and not _STRONG.search(text):
+                continue
+            # SLM filters (signal_candidates :: F-03)
+            title = art.title or ""
+            # 결격사유·등록제한 (처분 X)
+            if _DISQUALIFICATION_TITLE.search(title):
+                continue
+            # 보고·자료제출·위임 (처분 X)
+            if _REPORTING_TITLE.search(title):
+                continue
+            # 처분 후속 인용만 (처분권 부여 X)
+            if _DISPOSITION_REFERENCE.search(text) and not re.search(
+                    r"(취소한다|취소하여야|정지한다|정지하여야|명할\s*수\s*있다|취소할\s*수\s*있다)", text):
+                continue
+            # 사인간 도급해지
+            if _PRIVATE_TERMINATION.search(text):
+                continue
+            # 타기관 신청·요청 (처분권자가 본 조문 주체 아님)
+            if _THIRD_PARTY_REQUEST.search(text) and not _STRONG.search(text):
                 continue
             if _STRONG.search(text):
                 strength = "강"

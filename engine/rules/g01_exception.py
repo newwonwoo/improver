@@ -13,9 +13,29 @@ from .base import PatternResult, make_finding
 _DANSEO = re.compile(r"다만[,\s]")
 _VAGUE_EXC = re.compile(r"대통령령으로 정하는 (경우|사항)을? 제외")
 # FP 필터: 면책·양벌 단서 (고의·중과실 면책은 적법 패턴)
-_EXEMPT_DANSEO = re.compile(r"(상당한\s*주의와\s*감독|고의가\s*아닌|정상적인\s*인식능력|고의\s*또는\s*과실이\s*없)")
+_EXEMPT_DANSEO = re.compile(
+    r"(상당한\s*주의와\s*감독|고의가\s*아닌|정상적인\s*인식능력"
+    r"|고의\s*또는\s*과실이\s*없|진실한\s*사실)"
+)
 # TP 부스트: 처분조 단서 중첩
 _DISPOSITION_KEY = re.compile(r"(취소|정지|명령|과징금|해임|폐쇄)")
+
+# SLM-level FP filters (signal_candidates :: G-01)
+# 정의·용어 조문 (제외/한정 단서는 정의 범위 명확화일 뿐)
+_DEFINITION_TITLE = re.compile(r"(정의|용어|이\s*법에서.*뜻은|이라\s*함은|이란.{0,40}말한다)")
+# 양벌·벌칙·과태료 조문
+_PENALTY_TITLE = re.compile(r"(양벌규정|벌칙|과태료|몰수|추징)")
+# 세제·재정 절차 조문 (추계조사·기준소득·비치·기록 등 세무 절차 변형)
+_TAX_PROCEDURE = re.compile(
+    r"(추계\s*조사|기준\s*소득|기준\s*경비|비치(ㆍ|·)?\s*기록"
+    r"|장부(ㆍ|·)?\s*증명서|세액\s*공제|기장의무|세무\s*조사)"
+)
+# 행정심판·소송 준용 단서
+_ADMIN_PROC_REF = re.compile(r"(행정심판법|행정소송법).{0,30}준용")
+# 효력범위·면제 한정 단서 (재량·처분 부재시 FP)
+_SCOPE_LIMIT_DANSEO = re.compile(
+    r"(대상\s*물건|용도|효력\s*범위|면제\s*대상|적용\s*범위)"
+)
 
 
 def _max_danseo_per_para(art: Article) -> int:
@@ -33,6 +53,14 @@ class G01Exception:
     category = "거버넌스"
 
     def scan(self, law: Law) -> list[Finding]:
+        # SLM signal composition (docs/ENGINE_PRINCIPLES.md R1, R4)
+        # Source: signal_candidates.json :: G-01
+        # Rationale: "다만" 횟수만으로 발화하면 FP 폭증. 단서가 정의·세제절차·
+        #   양벌·효력범위 같은 표준 입법 영역에 있으면 결함 아님.
+        # R5 examples:
+        #   G-01-001@금융소비자보호에관한법률 (FP — 정의조문 단서)
+        #   G-01-011@건축법 (FP — 양벌규정 면책단서)
+        #   G-01-021@법인세법 (FP — 세제 절차 단서)
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:
@@ -40,13 +68,29 @@ class G01Exception:
             if art.is_definition() or art.is_penalty() or art.is_purpose():
                 continue
             text = art.full_text
+            title = art.title or ""
+            # FP 필터: 정의·용어 조문 (제목 또는 본문 신호)
+            if _DEFINITION_TITLE.search(title) or _DEFINITION_TITLE.search(text[:200]):
+                continue
+            # FP 필터: 양벌·벌칙·과태료 조문 (제목 또는 본문)
+            if _PENALTY_TITLE.search(title):
+                continue
             # FP 필터: 면책·양벌 단서 (고의·중과실 예외 명시 = 적법 패턴)
             if _EXEMPT_DANSEO.search(text):
+                continue
+            # FP 필터: 세제 절차 단서 (추계조사·기준소득 등)
+            if _TAX_PROCEDURE.search(text):
+                continue
+            # FP 필터: 행정심판·소송 준용 단서
+            if _ADMIN_PROC_REF.search(text):
                 continue
             # 항별 최대 단서 수로 평가 (다항 조문의 항당 1개 단서는 정상)
             danseo_count = _max_danseo_per_para(art)
             has_vague_exc = bool(_VAGUE_EXC.search(text))
             has_disposition = bool(_DISPOSITION_KEY.search(text))
+            # FP 필터: 효력범위·면제 한정 단서 (처분 부재시)
+            if not has_disposition and _SCOPE_LIMIT_DANSEO.search(text) and danseo_count <= 2:
+                continue
 
             if danseo_count >= 4:
                 severity = "심각"
