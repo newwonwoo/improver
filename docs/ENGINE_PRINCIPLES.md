@@ -84,6 +84,18 @@ Article(
 - CI 에서 `scripts/engine_harness.py` 가 자동 실행.
 - F1 가 마지막 main 대비 -0.5% 이상 떨어지면 PR block.
 
+#### BORDER verdict 처리 정책 (2개 메트릭 병행)
+
+LLM 검증 데이터셋에는 TP/FP 외에 **BORDER** 라벨이 있다 (LLM이 결정 불가).
+엔진 평가는 두 가지 정책을 병행 계산한다:
+
+- **Strict F1**: BORDER 무시 (TP/FP만 카운트). 보수적·하한선 지표.
+- **Lenient F1**: BORDER fired → TP, BORDER skipped → 무시.
+  LLM이 결정 못한 케이스에 엔진의 합리적 발화는 보너스로 인정.
+
+상업 활용 가능 목표는 **Lenient F1 ≥ 0.50** (실사용에서 모호한 케이스에
+대한 합리적 추정도 가치).  Strict F1 ≥ 0.50 은 더 엄격한 학술 지표.
+
 ### R4. 신호 후보(322개)가 손-짠 regex 보다 우선
 
 `outputs/signal_candidates.json` 에 등록된 LLM 추출 신호는

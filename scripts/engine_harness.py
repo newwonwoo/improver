@@ -74,12 +74,38 @@ class Metrics:
             return None
         return 2 * p * r / (p + r)
 
+    # Lenient metrics: BORDER fired → TP (LLM 결정 불가 케이스에 엔진의 합리적 발화는
+    # 보너스로 인정). 정책: docs/ENGINE_PRINCIPLES.md R3 보강.
+    @property
+    def lenient_tp(self) -> int:
+        return self.tp + self.border_fired
+
+    @property
+    def lenient_precision(self) -> float | None:
+        denom = self.lenient_tp + self.fp
+        return self.lenient_tp / denom if denom else None
+
+    @property
+    def lenient_recall(self) -> float | None:
+        denom = self.lenient_tp + self.fn
+        return self.lenient_tp / denom if denom else None
+
+    @property
+    def lenient_f1(self) -> float | None:
+        p, r = self.lenient_precision, self.lenient_recall
+        if p is None or r is None or (p + r) == 0:
+            return None
+        return 2 * p * r / (p + r)
+
     def to_dict(self) -> dict:
         return {
             **asdict(self),
             "precision": self.precision,
             "recall": self.recall,
             "f1": self.f1,
+            "lenient_precision": self.lenient_precision,
+            "lenient_recall": self.lenient_recall,
+            "lenient_f1": self.lenient_f1,
         }
 
 
@@ -263,6 +289,10 @@ def _print_table(report: dict) -> None:
     print()
     print(f"BORDER fired/skipped: {o['border_fired']}/{o['border_skipped']}")
     print(f"missing (법령 파일 누락): {o['missing']}")
+    # Lenient metrics
+    print()
+    print(f"Lenient (BORDER fired→TP): P={o['lenient_precision']:.3f} "
+          f"R={o['lenient_recall']:.3f} F1={o['lenient_f1']:.3f}")
 
     # 카테고리별 진단
     print()
