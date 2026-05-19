@@ -33,6 +33,17 @@ _APPLICABLE_HINTS = (
     "공사", "공단", "재단", "공공기관", "기금", "조합",
 )
 
+# TP 부스트: 내부통제기준 명시 → 진성 신호
+_INTERNAL_CONTROL_EXPLICIT = re.compile(
+    r"(내부통제기준|내부통제장치|내부통제시스템|준법감시인|이해상충관리|위험관리체계)"
+)
+# FP 필터: 폐지·설립 단문 조문
+_REPEAL_ONLY = re.compile(r"이를\s*폐지한다|폐지된다")
+_ESTABLISHMENT = re.compile(r"(~를|을|이)\s*설립한다|설립하여")
+# FP 필터: 회계·세입 절차 조문
+_ACCOUNTING_ONLY = re.compile(r"(세입|세출|회계연도|특별회계\s*설치|예산)")
+_INTERNAL_ORG = re.compile(r"(임원|이사|이사회|감사|대표|직원)")
+
 
 def _is_applicable(law_name: str) -> bool:
     return any(h in law_name for h in _APPLICABLE_HINTS)
@@ -46,8 +57,24 @@ class G04InternalControl:
     def scan(self, law: Law) -> list[Finding]:
         if not _is_applicable(law.name):
             return []
+        if len(law.articles) < 5:
+            return []
+        # 목적·정의조문은 FP 제외
+        articles = [
+            a for a in law.articles
+            if not a.is_purpose() and not a.is_definition()
+            # 폐지 단문 제외
+            and not _REPEAL_ONLY.search(a.full_text)
+        ]
+        # 회계·세입만 있는 조문도 제외
+        articles = [
+            a for a in articles
+            if not (_ACCOUNTING_ONLY.search(a.full_text) and not _INTERNAL_ORG.search(a.full_text))
+        ]
+        if not articles:
+            return []
         # 법령 전체 텍스트 기준 5요소 매칭
-        full = "\n".join(art.full_text for art in law.articles)
+        full = "\n".join(art.full_text for art in articles)
         missing = [name for name, pat in _FIVE_ELEMENTS.items() if not pat.search(full)]
         met = len(_FIVE_ELEMENTS) - len(missing)
         if met >= 4:
@@ -63,6 +90,10 @@ class G04InternalControl:
         target = law.articles[0]
         for art in law.articles:
             if re.search(r"(업무지침|내부통제|관리규정|운영규정)", art.full_text):
+                target = art
+                break
+            # TP 부스트: 명시적 내부통제 키워드 조문
+            if _INTERNAL_CONTROL_EXPLICIT.search(art.full_text):
                 target = art
                 break
 

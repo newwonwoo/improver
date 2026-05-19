@@ -1,6 +1,7 @@
 """G-03 감독 권한 (엔진 설계서 §3.2 + 서브체크 5요소).
 
 감독 조항 식별 후 범위/주기/방법/공개/시정권 5요소 충족 여부 점수화.
+외부 감독(기관·단체 대상)만 적용; 내부 지휘감독은 제외.
 """
 from __future__ import annotations
 
@@ -27,6 +28,34 @@ _SUBCHECK_MAP = {
     "시정 명령권": "G-03-e",
 }
 
+# FP 필터: 내부 지휘감독 — 소속 직원·공무원 대상
+_INTERNAL_COMMAND = re.compile(
+    r"(소속\s*(공무원|직원|군인|경찰관|대원|판사|검사)"
+    r"|명을\s*받아.{0,20}감독"
+    r"|지휘[ㆍ·]?감독.{0,20}(소속|하급))"
+)
+# FP 필터: 위임·위탁받은 자 감독 (수직적 위임사무)
+_DELEGATED_SUPERVISE = re.compile(
+    r"(위임|위탁).{0,30}(받은\s*자를?|기관을?).{0,20}(지휘|감독)"
+)
+# TP: 외부 법인·단체에 대한 감독 (주무관청, 장관 → 법인·협회·조합 대상)
+_EXTERNAL_TARGET = re.compile(
+    r"(법인|협회|조합|공단|재단|기금|학교|의료기관|사업자|업자|자격자)"
+)
+
+
+def _is_fp_article(art: Article) -> bool:
+    if art.is_definition() or art.is_purpose() or art.is_penalty():
+        return True
+    text = art.full_text
+    # 내부 지휘감독 (소속 직원·공무원 대상) — FP
+    if _INTERNAL_COMMAND.search(text):
+        return True
+    # 위임·위탁받은 자 지휘감독 — FP
+    if _DELEGATED_SUPERVISE.search(text):
+        return True
+    return False
+
 
 def _subcheck_for_missing(missing: list[str]) -> str | None:
     return _SUBCHECK_MAP[missing[0]] if missing else None
@@ -43,7 +72,12 @@ class G03Supervision:
         for art in law.articles:
             if not _SUPERVISE.search(art.full_text):
                 continue
+            if _is_fp_article(art):
+                continue
             text = art.full_text
+            # 외부 감독 대상이 없으면 skip (내부 지휘만 남은 경우)
+            if not _EXTERNAL_TARGET.search(text):
+                continue
             missing = [name for name, pat in _ELEMENTS.items() if not pat.search(text)]
             met = len(_ELEMENTS) - len(missing)
             if met >= 4:
@@ -59,7 +93,6 @@ class G03Supervision:
                 make_finding(
                     self,
                     idx,
-                    # 첫 미충족 항목을 sub_check_id로 매핑
                     PatternResult(
                         article=art,
                         severity=severity,

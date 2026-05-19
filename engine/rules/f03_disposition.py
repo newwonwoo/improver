@@ -7,11 +7,15 @@ from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
 
-_STRONG = re.compile(r"(영업정지|인허가 취소|등록 취소|폐쇄명령|해임요구|인가 취소|허가 취소)")
-_MID = re.compile(r"(시정명령|과징금|과태료|업무정지)")
+_STRONG = re.compile(r"(영업정지|인허가 취소|등록 취소|폐쇄명령|해임요구|인가 취소|허가 취소|면허 취소|지정 취소|자격 취소)")
+_MID = re.compile(r"(시정명령|과징금|업무정지)")
 _WEAK = re.compile(r"(시정권고|개선명령|주의|경고)")
 _HEARING = re.compile(r"(청문|의견제출|의견 제출|이의신청|이의 신청)")
 _STANDARD = re.compile(r"(별표|기준|등급)")
+# FP 필터 패턴
+_CIVIL_TERMINATION = re.compile(r"(계약의? 해지|계약의? 해제|합의|당사자\s*간|당사자\s*사이)")
+_BENEFICIAL_ACT = re.compile(r"(납부\s*연장|분할\s*납부|감면|지원금|보조금|허가|인가|등록|지정)\s*.{0,20}(할\s*수\s*있다|하여야\s*한다)")
+_SANCTION_ONLY = re.compile(r"^(과태료|벌칙|양벌규정|형벌|처벌)")  # 조문제목
 
 
 class F03Disposition:
@@ -27,9 +31,25 @@ class F03Disposition:
         has_hearing_in_law = any(_HEARING.search(a.full_text) for a in law.articles)
 
         for art in law.articles:
+            # FP 필터 1: 벌칙·과태료 단독 조문
             if art.is_penalty():
                 continue
+            # FP 필터 2: 청문 절차를 자체 규정하는 조문 (자기참조 오탐)
+            if art.is_hearing_article():
+                continue
+            # FP 필터 3: 결격사유·취업제한 조문
+            if art.is_disqualification():
+                continue
+            # FP 필터 4: 목적·정의 조문
+            if art.is_purpose() or art.is_definition():
+                continue
+            # FP 필터 5: 조문제목이 벌칙/과태료/양벌규정
+            if art.title and _SANCTION_ONLY.match(art.title.strip()):
+                continue
+            # FP 필터 6: 사인간 민사 해지·해제 조문
             text = art.full_text
+            if _CIVIL_TERMINATION.search(text) and not _STRONG.search(text):
+                continue
             if _STRONG.search(text):
                 strength = "강"
             elif _MID.search(text):

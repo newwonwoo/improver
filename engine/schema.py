@@ -53,6 +53,39 @@ class Article:
         """의무 조항(권리·의무 핵심 요건) 여부."""
         return any(kw in self.full_text for kw in ("하여야 한다", "하지 못한다", "금지한다"))
 
+    def is_purpose(self) -> bool:
+        """목적 조문 — 제1조 '~함을 목적으로 한다'."""
+        return ("함을 목적으로 한다" in self.full_text or
+                (self.number_raw in ("1", "2") and bool(self.title and "목적" in self.title)))
+
+    def is_hearing_article(self) -> bool:
+        """청문 절차를 자체 규정하는 조문 (F-03 자기참조 FP)."""
+        if self.title and "청문" in self.title:
+            return True
+        return "청문을 하여야 한다" in self.full_text or "청문을 실시하여야 한다" in self.full_text
+
+    def is_disqualification(self) -> bool:
+        """결격사유·취업제한·등록제한 조문."""
+        _KEYS = ("결격사유", "취업제한", "등록제한", "자격제한", "피성년후견인")
+        if self.title and any(k in self.title for k in _KEYS):
+            return True
+        return False
+
+    def is_civil_or_penal_procedure(self) -> bool:
+        """민사·행정심판·형사 절차 전용 조문 (도메인 FP 필터)."""
+        _KEYS = ("민사집행", "행정심판", "행정소송", "가처분", "회생절차", "파산선고",
+                 "소멸시효", "당사자 사이의", "계약의 해지", "계약의 해제")
+        return any(k in self.full_text for k in _KEYS)
+
+    def is_policy_obligation(self) -> bool:
+        """선언적 정책의무 조문 ('노력하여야 한다' 비율 높음)."""
+        text = self.full_text
+        obligation_count = text.count("하여야 한다") + text.count("하지 아니하면 안 된다")
+        policy_count = text.count("노력하여야 한다") + text.count("시책을 마련") + text.count("지원하여야 한다")
+        if obligation_count == 0:
+            return False
+        return policy_count / obligation_count >= 0.5
+
 
 @dataclass
 class Law:

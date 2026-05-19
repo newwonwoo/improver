@@ -15,8 +15,8 @@ _ARTICLE_HEAD_PAT = re.compile(
     re.MULTILINE,
 )
 _PARA_HEAD_PAT = re.compile(r"^(?P<num>[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])", re.MULTILINE)
-_ITEM_HEAD_PAT = re.compile(r"^\s+(?P<num>\d+)\.\s+", re.MULTILINE)
-_SUBITEM_HEAD_PAT = re.compile(r"^\s+(?P<num>[가-힣])\.\s+", re.MULTILINE)
+_ITEM_HEAD_PAT = re.compile(r"^\s+(?P<num>\d+)\\?\.\s+", re.MULTILINE)
+_SUBITEM_HEAD_PAT = re.compile(r"^\s+(?P<num>[가-힣])\\?\.\s+", re.MULTILINE)
 _DATE_PAT = re.compile(r"\d{4}\.\s*\d{1,2}\.\s*\d{1,2}\.")
 _ADDENDUM_PAT = re.compile(r"^부\s*칙", re.MULTILINE)
 
@@ -99,10 +99,21 @@ def _attach_chapter(text: str, article_pos: int) -> str | None:
     return chapter
 
 
+def _strip_markdown_headers(text: str) -> str:
+    """마크다운 헤더(#+ )에서 # 기호 제거 — 법령.md 형식 지원.
+
+    '##### 제1조 (목적)' → '제1조 (목적)'
+    '## 제2장 총칙' → 그대로 (장/편 헤더는 _CHAPTER_PAT이 처리)
+    """
+    return re.sub(r"^#{1,6}\s+(제\d)", r"\1", text, flags=re.MULTILINE)
+
+
 def parse_law(raw_text: str, *, name: str, law_id: str | None = None,
               law_type: str = "법률", **meta: str) -> Law:
     """텍스트 → Law 객체."""
     body = _strip_addendum(raw_text)
+    # 마크다운 형식(법령.md) 지원 — '##### 제N조' 헤더 정규화
+    body = _strip_markdown_headers(body)
     masked, saved = _mask_law_citations(body)
 
     article_matches = list(_ARTICLE_HEAD_PAT.finditer(masked))

@@ -11,6 +11,22 @@ from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
 _CITE_PAT = re.compile(r"「([^」]+)」")
+# TP 컨텍스트: 인허가의제·특례·금지 조문 — 과도한 인용이 실질 결함
+_TP_CONTEXT = re.compile(r"(인[\s·ㆍ]?허가.{0,10}의제|특례\s*규정|금지\s*행위|이\s*법에\s*따른\s*의무)")
+# FP 컨텍스트: 법제상 불가피한 타법 인용 조문 유형
+_FP_CONTEXT = re.compile(r"(결격\s*사유|취업\s*제한|징계\s*부가금|감면\s*대상|지급\s*대상|중복\s*수급)")
+
+
+def _is_fp_article(art: Article) -> bool:
+    """L-01 FP 필터 — 불가피한 타법 인용 조문."""
+    if art.is_definition() or art.is_penalty() or art.is_purpose():
+        return True
+    if art.is_disqualification():
+        return True
+    text = art.full_text
+    if _FP_CONTEXT.search(text):
+        return True
+    return False
 
 
 class L01Citation:
@@ -22,12 +38,19 @@ class L01Citation:
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:
+            if _is_fp_article(art):
+                continue
             cites = _CITE_PAT.findall(art.full_text)
             # 법령명만 카운트 — 동일 법령명은 1회로
             laws = {c for c in cites if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
             if len(laws) < 5:
                 continue
-            severity = "경고" if len(laws) >= 10 else "주의"
+            # TP 부스트: 의제·특례 조문의 과다 인용은 한 단계 상향
+            has_tp_context = bool(_TP_CONTEXT.search(art.full_text))
+            if len(laws) >= 10:
+                severity = "심각" if has_tp_context else "경고"
+            else:
+                severity = "경고" if has_tp_context else "주의"
             idx += 1
             findings.append(
                 make_finding(
@@ -37,7 +60,8 @@ class L01Citation:
                         article=art,
                         severity=severity,
                         matched_text=f"{len(laws)}개 법률",
-                        summary=f"한 조문에 {len(laws)}개 법률 인용 — 독해 곤란",
+                        summary=f"한 조문에 {len(laws)}개 법률 인용 — 독해 곤란"
+                        + (" (의제·특례 조문)" if has_tp_context else ""),
                         fix_type="replace",
                     ),
                 )
