@@ -133,1006 +133,1268 @@
       "f1": 0.25766871165644173
     }
   },
+  "per_category": {
+    "거버넌스": {
+      "tp": 66,
+      "fp": 128,
+      "fn": 26,
+      "tn": 261,
+      "border_fired": 19,
+      "border_skipped": 43,
+      "missing": 0,
+      "precision": 0.3402061855670103,
+      "recall": 0.717391304347826,
+      "f1": 0.46153846153846156
+    },
+    "공정성": {
+      "tp": 69,
+      "fp": 166,
+      "fn": 22,
+      "tn": 278,
+      "border_fired": 26,
+      "border_skipped": 14,
+      "missing": 0,
+      "precision": 0.2936170212765957,
+      "recall": 0.7582417582417582,
+      "f1": 0.42331288343558277
+    },
+    "구조": {
+      "tp": 21,
+      "fp": 113,
+      "fn": 8,
+      "tn": 86,
+      "border_fired": 30,
+      "border_skipped": 41,
+      "missing": 0,
+      "precision": 0.15671641791044777,
+      "recall": 0.7241379310344828,
+      "f1": 0.25766871165644173
+    },
+    "적법성": {
+      "tp": 29,
+      "fp": 120,
+      "fn": 8,
+      "tn": 402,
+      "border_fired": 23,
+      "border_skipped": 18,
+      "missing": 0,
+      "precision": 0.19463087248322147,
+      "recall": 0.7837837837837838,
+      "f1": 0.31182795698924726
+    },
+    "효율성": {
+      "tp": 50,
+      "fp": 107,
+      "fn": 18,
+      "tn": 72,
+      "border_fired": 38,
+      "border_skipped": 15,
+      "missing": 0,
+      "precision": 0.3184713375796178,
+      "recall": 0.7352941176470589,
+      "f1": 0.4444444444444445
+    }
+  },
   "n_verdicts": 2050,
   "fp_fn_cases": [
     {
       "fid": "E-01-003@간선급행버스체계의건설및운영에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "개발계획 수립 항목 열거"
     },
     {
       "fid": "G-01-004@간선급행버스체계의건설및운영에관한특별법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "과태료 단서 관행"
     },
     {
       "fid": "E-01-038@건설기술진흥법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "벌칙조 각호 열거"
     },
     {
       "fid": "E-01-016@건설기술진흥법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "계획수립 절차 열거"
     },
     {
       "fid": "F-03-004@건설기술진흥법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "영업정지 요청(인용·재량)"
     },
     {
       "fid": "F-02-001@건설기술진흥법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "고의·중과실 예외 명시"
     },
     {
       "fid": "F-02-003@건설기술진흥법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "고의·중과실 예외 명시"
     },
     {
       "fid": "G-01-004@건설산업기본법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "직접시공 면제 단서 위임"
     },
     {
       "fid": "F-03-006@건설산업기본법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "시정명령 요구·보고 조문"
     },
     {
       "fid": "G-01-011@건축법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "양벌규정 면책 단서"
     },
     {
       "fid": "G-01-003@건축법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "절차기한 연장 단서"
     },
     {
       "fid": "S-04-001@건축법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "정의조문 ~말한다"
     },
     {
       "fid": "F-03-002@건축법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "안전영향평가 의뢰 절차"
     },
     {
       "fid": "E-01-001@게임산업진흥에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "정의조문 각목 다단"
     },
     {
       "fid": "F-03-006@고용보험및산업재해보상보험의보험료징수등에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "제2차 납부의무 실체규정"
     },
     {
       "fid": "E-01-042@공동주택관리법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "공제사업 승인 정형"
     },
     {
       "fid": "E-01-044@공동주택관리법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "위임위탁 열거 통상"
     },
     {
       "fid": "E-01-003@공익신고자보호법",
       "kind": "FN",
+      "category": "효율성",
       "evidence": "이첩·재조사 다단절차"
     },
     {
       "fid": "E-01-093@공직선거법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "투표용지 절차 열거"
     },
     {
       "fid": "E-01-073@공직선거법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "선거비용 예외 단문"
     },
     {
       "fid": "G-01-017@공직선거법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "기부행위 정의 단서"
     },
     {
       "fid": "S-04-006@공직선거법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "벌칙 위반유형 20개"
     },
     {
       "fid": "S-04-004@공직선거법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "불보전비용 한정열거"
     },
     {
       "fid": "S-04-001@공직선거법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "등록무효 한정열거 명확"
     },
     {
       "fid": "E-01-035@관광진흥법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "수용대상 4호 열거"
     },
     {
       "fid": "E-01-001@관광진흥법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "정의조문 용어정의 열거"
     },
     {
       "fid": "F-03-001@관광진흥법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "지위승계 신고 절차"
     },
     {
       "fid": "E-01-007@광업법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "광구분할 3호 열거"
     },
     {
       "fid": "E-01-012@국가공무원법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "채용후보자 자격상실 열거"
     },
     {
       "fid": "E-01-001@국가공무원법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "고위공무원단 정의조문"
     },
     {
       "fid": "G-01-001@국가공무원법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "시험위임 단서"
     },
     {
       "fid": "G-01-007@국가유공자등예우및지원에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "②③항 단서—수익적 예외"
     },
     {
       "fid": "L-01-003@국가유공자등예우및지원에관한법률",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "중복가점 방지 — 타법 인용 필수"
     },
     {
       "fid": "E-01-001@국가정보원법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "직무범위 각목 열거"
     },
     {
       "fid": "E-01-006@국가첨단전략산업경쟁력강화및보호에관한특별조치법",
       "kind": "FN",
+      "category": "효율성",
       "evidence": "해외M&A 승인 다단재량"
     },
     {
       "fid": "L-01-002@국가첨단전략산업경쟁력강화및보호에관한특별조치법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "부담금 감면 — 근거법 열거"
     },
     {
       "fid": "L-01-004@국가첨단전략산업경쟁력강화및보호에관한특별조치법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "특성화대학 범위 열거"
     },
     {
       "fid": "G-01-005@국민연금법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①호·③항 단서—제외사유 명시"
     },
     {
       "fid": "E-01-007@국민체육진흥법",
       "kind": "FN",
+      "category": "효율성",
       "evidence": "자격취소 8호+필수단서"
     },
     {
       "fid": "F-02-001@국민체육진흥법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "겸직금지 — 면책無"
     },
     {
       "fid": "F-02-002@국민체육진흥법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "치료목적사용면책(WADA용어)"
     },
     {
       "fid": "E-01-006@국세기본법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "공시송달 사유·방법 열거"
     },
     {
       "fid": "G-01-011@국세기본법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "행정심판 준용 단서"
     },
     {
       "fid": "G-01-002@국세기본법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "정의·자격 단서—기술조항"
     },
     {
       "fid": "L-01-001@국세기본법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "정의조항 — 세법 열거"
     },
     {
       "fid": "L-01-007@국세기본법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "가산세 한도 적용대상 열거"
     },
     {
       "fid": "E-01-001@궤도운송법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "정의조문 용어 14개"
     },
     {
       "fid": "E-01-024@근로자퇴직급여보장법",
       "kind": "FN",
+      "category": "효율성",
       "evidence": "금융정보 요청 다단요건"
     },
     {
       "fid": "E-01-016@기업활동규제완화에관한특별조치법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "공동선임 대상지역 열거"
     },
     {
       "fid": "L-01-008@기업활동규제완화에관한특별조치법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "검사면제 근거법 열거"
     },
     {
       "fid": "E-01-011@낙동강수계물관리및주민지원등에관한법률",
       "kind": "FN",
+      "category": "효율성",
       "evidence": "과징금 부과 다단재량"
     },
     {
       "fid": "L-01-001@낙동강수계물관리및주민지원등에관한법률",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "정의조항"
     },
     {
       "fid": "E-01-001@낚시관리및육성법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "낚시통제구역 절차"
     },
     {
       "fid": "E-01-028@농수산물품질관리법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "취소심판 사유 열거"
     },
     {
       "fid": "E-01-048@농수산물품질관리법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "재검사 절차 정형"
     },
     {
       "fid": "F-03-001@농수산물품질관리법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "심판위원회 구성조문"
     },
     {
       "fid": "E-01-021@대도시권광역교통관리에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "부담금 사용용도 열거"
     },
     {
       "fid": "E-01-012@도로교통법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "노면전차 협의사항 열거"
     },
     {
       "fid": "E-01-028@도로교통법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "운행안전 일반의무"
     },
     {
       "fid": "S-04-002@도로교통법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "긴급차 특례 한정열거"
     },
     {
       "fid": "F-03-002@도로교통법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "운전자 주의의무"
     },
     {
       "fid": "F-03-007@도로교통법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "고용주 주의의무"
     },
     {
       "fid": "L-01-001@도로교통법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "제2조 정의 24개 인용"
     },
     {
       "fid": "E-01-087@도시및주거환경정비법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "예정구역 지정절차"
     },
     {
       "fid": "E-01-012@도시및주거환경정비법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "입안제안 사유 7호 열거"
     },
     {
       "fid": "G-01-010@도시및주거환경정비법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "각호 단서 1개+산림 단서"
     },
     {
       "fid": "S-04-013@도시및주거환경정비법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "벌칙 구성요건 13호"
     },
     {
       "fid": "S-04-009@도시및주거환경정비법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "시행규정 기재사항 12호"
     },
     {
       "fid": "F-04-002@도시및주거환경정비법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "지방의회 60일 의제(기관간)"
     },
     {
       "fid": "F-04-003@도시및주거환경정비법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "조문본문 부족·조문번호 오인"
     },
     {
       "fid": "F-04-001@도시및주거환경정비법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "지방의회 60일 의제(기관간)"
     },
     {
       "fid": "E-01-020@도시재생활성화및지원에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "건축규제 완화 항목"
     },
     {
       "fid": "E-01-004@도심융합특구조성및육성에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "지정 고려사항 열거"
     },
     {
       "fid": "S-04-005@도심융합특구조성및육성에관한특별법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "부담금 감면 12개 법률 열거"
     },
     {
       "fid": "L-01-001@도심융합특구조성및육성에관한특별법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "정의조 — 연계사업 각목 분리"
     },
     {
       "fid": "E-01-012@도청이전을위한도시건설및지원에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "종전부동산 처리절차"
     },
     {
       "fid": "E-01-046@독점규제및공정거래에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "분할·합병 연대납부 열거"
     },
     {
       "fid": "G-01-012@독점규제및공정거래에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "③⑤항 송달동의 단서"
     },
     {
       "fid": "S-04-001@독점규제및공정거래에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "정의조문 ~말한다"
     },
     {
       "fid": "S-04-003@독점규제및공정거래에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "불공정거래 유형 10호"
     },
     {
       "fid": "F-03-006@독점규제및공정거래에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "협조요청(자료확인)"
     },
     {
       "fid": "F-03-007@독점규제및공정거래에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "분쟁조정 절차"
     },
     {
       "fid": "E-01-016@디자인보호법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "출원서 기재사항 9호 열거"
     },
     {
       "fid": "E-01-018@마약류관리에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "사고사유 3호 폐기 3호"
     },
     {
       "fid": "S-04-001@마약류관리에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "행위금지 구성요건 13호"
     },
     {
       "fid": "S-04-003@마약류관리에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "벌칙 12호"
     },
     {
       "fid": "L-01-001@마약류관리에관한법률",
       "kind": "FN",
+      "category": "적법성",
       "evidence": "제3항제3호 한 호에 5개법 평문"
     },
     {
       "fid": "L-01-001@물순환촉진및지원에관한법률",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "정의조 시설 각목 분리"
     },
     {
       "fid": "E-01-034@물환경보전법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "토지수용법 준용 3항"
     },
     {
       "fid": "L-01-001@물환경보전법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "정의조 — 분산 인용"
     },
     {
       "fid": "F-02-012@민법",
       "kind": "FN",
+      "category": "공정성",
       "evidence": "수급인이…고지하지 아니한 때"
     },
     {
       "fid": "F-02-016@민법",
       "kind": "FN",
+      "category": "공정성",
       "evidence": "심신상실시 단서 고의·과실"
     },
     {
       "fid": "F-04-001@민법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "최고·확답기간 부여 절차"
     },
     {
       "fid": "E-01-084@법인세법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "신고기한 호별 분기"
     },
     {
       "fid": "G-01-026@법인세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "구분경리 면제 단서"
     },
     {
       "fid": "G-01-021@법인세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "국내원천소득 정의 단서"
     },
     {
       "fid": "G-01-014@법인세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "세법 산정·준용 단서"
     },
     {
       "fid": "L-01-006@법인세법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "중간예납 예외 각목"
     },
     {
       "fid": "E-01-030@벤처기업육성에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "촉진지구 해제 5호"
     },
     {
       "fid": "E-01-021@별정우체국법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "재직기간 휴직 5호"
     },
     {
       "fid": "E-01-007@보험업법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "허가취소 사유 3·4호"
     },
     {
       "fid": "S-04-007@보험업법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "제209조 과태료(벌칙)"
     },
     {
       "fid": "S-04-003@보험업법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "모집행위 금지 10호"
     },
     {
       "fid": "G-01-002@보훈보상대상자지원에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "④⑤항 통지면제(수익적)"
     },
     {
       "fid": "G-01-005@보훈보상대상자지원에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "②③항 가점 제외단서"
     },
     {
       "fid": "L-01-001@보훈보상대상자지원에관한법률",
       "kind": "FN",
+      "category": "적법성",
       "evidence": "제2항 본문에 5개법 평문"
     },
     {
       "fid": "L-01-002@보훈보상대상자지원에관한법률",
       "kind": "FN",
+      "category": "적법성",
       "evidence": "제3항 괄호 내 5개법 평문"
     },
     {
       "fid": "E-01-003@복권및복권기금법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "개인정보 예외 4호 열거"
     },
     {
       "fid": "F-04-002@빈집및소규모주택정비에관한특례법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "관리청 매각확인서 제출시"
     },
     {
       "fid": "E-01-013@산업재해보상보험법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "유족 순위 3호 열거"
     },
     {
       "fid": "E-01-011@산업집적활성화및공장설립에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "사용승인 의제 11호"
     },
     {
       "fid": "L-01-007@산업집적활성화및공장설립에관한법률",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "산학융합 — 분산 인용"
     },
     {
       "fid": "G-01-006@상속세및증여세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "세법 한도 단서"
     },
     {
       "fid": "G-01-008@상속세및증여세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "세법 환급 단서"
     },
     {
       "fid": "F-03-006@상속세및증여세법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "증여세 부과 조세조문"
     },
     {
       "fid": "F-03-002@상속세및증여세법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "증여의제 과세규정"
     },
     {
       "fid": "E-01-016@생활화학제품및살생물제의안전관리에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "물질승인취소 5호"
     },
     {
       "fid": "L-01-003@석유및석유대체연료사업법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "세무 — 항·호 분리"
     },
     {
       "fid": "G-01-036@소득세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "전자기부금영수증 단서"
     },
     {
       "fid": "G-01-008@소득세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "결손금공제 단서"
     },
     {
       "fid": "G-01-016@소득세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "주택임대 감면 단서"
     },
     {
       "fid": "G-01-002@소득세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "원천징수 납세지 단서"
     },
     {
       "fid": "G-01-037@소득세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①제2호·③ 각기 별 단서"
     },
     {
       "fid": "G-01-010@소득세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①·④ 각 항 독립 단서"
     },
     {
       "fid": "G-01-017@소득세법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "②·③ 각 항 별개 단서"
     },
     {
       "fid": "L-01-005@소득세법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "특별세액공제—수익적"
     },
     {
       "fid": "L-01-008@소득세법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "자료 각호 분리"
     },
     {
       "fid": "E-01-011@소상공인보호및지원에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "기금사용 25호 열거"
     },
     {
       "fid": "E-01-014@소하천정비법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "점용료 감면 3호"
     },
     {
       "fid": "S-04-001@소하천정비법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "인ㆍ허가 의제"
     },
     {
       "fid": "E-01-010@수산업법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "면허취소 6호 열거"
     },
     {
       "fid": "E-01-037@수산업법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "벌칙조문 위반행위 열거"
     },
     {
       "fid": "F-03-001@수산업법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "면허금지(취소 인용)"
     },
     {
       "fid": "E-01-003@순환경제사회전환촉진법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "기본계획 6호 열거"
     },
     {
       "fid": "E-01-007@스마트농업육성및지원에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "육성지구 조성계획 6호"
     },
     {
       "fid": "E-01-011@스마트농업육성및지원에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "자료제출 협조요청"
     },
     {
       "fid": "E-01-009@스마트도시조성및산업진흥등에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "지원기관 업무 9호"
     },
     {
       "fid": "E-01-011@승강기안전관리법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "안전인증 면제 7호"
     },
     {
       "fid": "S-04-003@승강기안전관리법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "등록취소 사유 열거"
     },
     {
       "fid": "E-01-007@신행정수도후속대책을위한연기ㆍ공주지역행정중심복합도시건설을위한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "이전계획 부 6호"
     },
     {
       "fid": "F-03-003@아동ㆍ청소년의성보호에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "수사기관 응급조치"
     },
     {
       "fid": "E-01-022@여객자동차운수사업법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "다른법률 의제 8호"
     },
     {
       "fid": "G-01-001@여객자동차운수사업법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①·② 항별 신고단서"
     },
     {
       "fid": "S-04-002@여객자동차운수사업법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "면허취소 사유 13개"
     },
     {
       "fid": "G-01-002@여신전문금융업법",
       "kind": "FN",
+      "category": "거버넌스",
       "evidence": "유지의무 단서로 광범위 면제"
     },
     {
       "fid": "E-01-002@역세권의개발및이용에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "사업계획 16호 열거"
     },
     {
       "fid": "F-04-001@역세권의개발및이용에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "지방의회 60일 의제(기관간)"
     },
     {
       "fid": "E-01-001@영화및비디오물의진흥에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "정의조문 용어정의"
     },
     {
       "fid": "E-01-003@영화및비디오물의진흥에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "진흥위 기능 17개 열거"
     },
     {
       "fid": "E-01-006@의료법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "면허 자격 3호 열거"
     },
     {
       "fid": "F-02-001@의료법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "조 제목만 존재"
     },
     {
       "fid": "E-01-012@인삼산업법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "벌칙조문 형량별 열거"
     },
     {
       "fid": "E-01-002@인적자원개발기본법",
       "kind": "FN",
+      "category": "효율성",
       "evidence": "심의사항 9호+다단 목"
     },
     {
       "fid": "E-01-017@임업및산촌진흥촉진에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "기본계획 포함사항 8호 열거"
     },
     {
       "fid": "E-01-098@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "의결권권유 정의·예외"
     },
     {
       "fid": "G-01-035@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "특례조문·준용단서"
     },
     {
       "fid": "G-01-004@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "상호규제 단서는 예외허용"
     },
     {
       "fid": "G-01-032@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①·② 항별 단서"
     },
     {
       "fid": "G-01-038@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①·② 항별 단서"
     },
     {
       "fid": "S-04-005@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "조사·조치 사유"
     },
     {
       "fid": "S-04-002@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "불건전영업 금지행위"
     },
     {
       "fid": "F-03-001@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "인가요건 의제규정"
     },
     {
       "fid": "F-03-012@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "거짓기재 배상책임·민사"
     },
     {
       "fid": "F-03-025@자본시장과금융투자업에관한법률",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "실질주주 권리행사·민사"
     },
     {
       "fid": "E-01-036@저작권법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "징계요구 사유 열거"
     },
     {
       "fid": "S-04-002@전세사기피해자지원및주거안정에관한특별법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "자료요청 기관별 13개"
     },
     {
       "fid": "E-01-049@제주특별자치도설치및국제자유도시조성을위한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "세계평화의섬 단순지정"
     },
     {
       "fid": "G-01-010@제주특별자치도설치및국제자유도시조성을위한특별법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①·⑤ 위임권한 단서"
     },
     {
       "fid": "G-01-015@제주특별자치도설치및국제자유도시조성을위한특별법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①·③ 항별 단서"
     },
     {
       "fid": "G-01-002@제주특별자치도설치및국제자유도시조성을위한특별법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①제1호·③ 항별 단서"
     },
     {
       "fid": "G-01-003@제주특별자치도설치및국제자유도시조성을위한특별법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "①·④ 항별 단서"
     },
     {
       "fid": "L-01-005@제주특별자치도설치및국제자유도시조성을위한특별법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "제362조 매수청구 절차법 인용"
     },
     {
       "fid": "L-01-006@제주특별자치도설치및국제자유도시조성을위한특별법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "제364조 환경영향평가법 반복인용"
     },
     {
       "fid": "E-01-097@조세특례제한법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "감면 단일조항 다항"
     },
     {
       "fid": "G-01-027@조세특례제한법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "준용·인용 단서 다수"
     },
     {
       "fid": "G-01-051@조세특례제한법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "음수→0 한도조항"
     },
     {
       "fid": "S-04-002@조세특례제한법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "타법명만 열거"
     },
     {
       "fid": "L-01-026@조세특례제한법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "증권거래세 면제 열거"
     },
     {
       "fid": "L-01-004@조세특례제한법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "창업감면 적용법 열거"
     },
     {
       "fid": "L-01-011@조세특례제한법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "감면 대상 농지 등 열거"
     },
     {
       "fid": "L-01-013@조세특례제한법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "고유목적사업법인 열거"
     },
     {
       "fid": "L-01-015@조세특례제한법",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "제88조의4 우리사주 — 근로복지법 반복"
     },
     {
       "fid": "E-01-004@종자산업법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "진흥센터 사업 열거"
     },
     {
       "fid": "E-01-025@주차장법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "특별회계 재원 열거"
     },
     {
       "fid": "E-01-012@주택법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "결격사유 7호 단순열거"
     },
     {
       "fid": "S-04-001@주택법",
       "kind": "FP",
+      "category": "구조",
       "evidence": "정의조문 ~말한다"
     },
     {
       "fid": "F-04-001@주택법",
       "kind": "FP",
+      "category": "공정성",
       "evidence": "지방의회 30일 의제(기관간)"
     },
     {
       "fid": "E-01-003@중부내륙연계발전지역지원에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "보전계획 포함사항 열거"
     },
     {
       "fid": "E-01-003@중재법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "중재합의 서면 3호 열거"
     },
     {
       "fid": "G-01-002@중재법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "거부사유 분리가능 단서"
     },
     {
       "fid": "G-01-001@중재법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "서면방식 정의 단서"
     },
     {
       "fid": "E-01-069@지방세특례제한법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "감면구분 시한 열거"
     },
     {
       "fid": "G-01-010@지방세특례제한법",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "감면대상 정의 단서"
     },
     {
       "fid": "E-01-019@지방자치분권및지역균형발전에관한특별법",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "위원회 구성 열거"
     },
     {
       "fid": "L-01-002@참전유공자예우및단체설립에관한법률",
       "kind": "FP",
+      "category": "적법성",
       "evidence": "준용·중복지급 조정 6개법"
     },
     {
       "fid": "E-01-010@채무자회생및파산에관한법률",
       "kind": "FP",
+      "category": "효율성",
       "evidence": "단일조 단순규정"
     },
     {
       "fid": "G-01-016@채무자회생및파산에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "변제계획인가후 절차단서"
     },
     {
       "fid": "G-01-003@채무자회생및파산에관한법률",
       "kind": "FP",
+      "category": "거버넌스",
       "evidence": "조사보고 절차단서"
     },
     {
       "fid": "S-04-004@채무자회생및파산에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "합병 회생계획 기재"
     },
     {
       "fid": "S-04-011@채무자회생및파산에관한법률",
       "kind": "FP",
+      "category": "구조",
       "evidence": "재단채권 범위 한정"
     }
   ]

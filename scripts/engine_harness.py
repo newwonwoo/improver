@@ -135,6 +135,19 @@ def _engine_findings_for(law_name: str) -> list:
     return run_all(law)
 
 
+# 룰 → 카테고리 매핑 (engine/rules/*.py 의 category 속성)
+RULE_CATEGORY = {
+    "S-01": "구조", "S-02": "구조", "S-03": "구조", "S-04": "구조",
+    "F-01": "공정성", "F-02": "공정성", "F-03": "공정성",
+    "F-04": "공정성", "F-05": "공정성",
+    "L-01": "적법성", "L-02": "적법성", "L-03": "적법성",
+    "G-01": "거버넌스", "G-02": "거버넌스", "G-03": "거버넌스",
+    "G-04": "거버넌스", "G-05": "거버넌스",
+    "E-01": "효율성", "E-02": "효율성", "E-03": "효율성",
+    "E-04": "효율성", "E-05": "효율성",
+}
+
+
 def evaluate() -> dict:
     """정답지 vs 엔진 비교."""
     verdicts = _load_verdicts()
@@ -145,6 +158,7 @@ def evaluate() -> dict:
         by_law[info["law_name"]].append(fid)
 
     per_rule: dict[str, Metrics] = defaultdict(Metrics)
+    per_category: dict[str, Metrics] = defaultdict(Metrics)
     overall = Metrics()
     cases: list[dict] = []  # 디버깅용 — fp/fn 만 기록
 
@@ -166,39 +180,44 @@ def evaluate() -> dict:
             fired = rule_id in fired_rules
 
             m = per_rule[rule_id]
+            cat = RULE_CATEGORY.get(rule_id, "기타")
+            cm = per_category[cat]
 
             if verdict == "BORDER":
                 if fired:
-                    m.border_fired += 1
+                    m.border_fired += 1; cm.border_fired += 1
                     overall.border_fired += 1
                 else:
-                    m.border_skipped += 1
+                    m.border_skipped += 1; cm.border_skipped += 1
                     overall.border_skipped += 1
                 continue
 
             if verdict == "TP":
                 if fired:
-                    m.tp += 1; overall.tp += 1
+                    m.tp += 1; cm.tp += 1; overall.tp += 1
                 else:
-                    m.fn += 1; overall.fn += 1
+                    m.fn += 1; cm.fn += 1; overall.fn += 1
                     cases.append({
-                        "fid": fid, "kind": "FN",
+                        "fid": fid, "kind": "FN", "category": cat,
                         "evidence": info["evidence"],
                     })
             elif verdict == "FP":
                 if fired:
-                    m.fp += 1; overall.fp += 1
+                    m.fp += 1; cm.fp += 1; overall.fp += 1
                     cases.append({
-                        "fid": fid, "kind": "FP",
+                        "fid": fid, "kind": "FP", "category": cat,
                         "evidence": info["evidence"],
                     })
                 else:
-                    m.tn += 1; overall.tn += 1
+                    m.tn += 1; cm.tn += 1; overall.tn += 1
 
     report = {
         "overall": overall.to_dict(),
         "per_rule": {
             r: m.to_dict() for r, m in sorted(per_rule.items())
+        },
+        "per_category": {
+            c: m.to_dict() for c, m in sorted(per_category.items())
         },
         "n_verdicts": sum(
             m.tp + m.fp + m.fn + m.tn
@@ -244,6 +263,22 @@ def _print_table(report: dict) -> None:
     print()
     print(f"BORDER fired/skipped: {o['border_fired']}/{o['border_skipped']}")
     print(f"missing (법령 파일 누락): {o['missing']}")
+
+    # 카테고리별 진단
+    print()
+    print(f"{'Category':<10} {'TP':>5} {'FP':>5} {'FN':>5} {'TN':>5} {'P':>7} {'R':>7} {'F1':>7}")
+    print("-" * 60)
+    base_per_cat = baseline.get("per_category", {}) if baseline else {}
+    for cat, m in report.get("per_category", {}).items():
+        p = m["precision"] or 0
+        r = m["recall"] or 0
+        f1 = m["f1"] or 0
+        delta = f1 - (base_per_cat.get(cat, {}).get("f1") or 0)
+        delta_str = f" Δ{delta:+.3f}" if baseline else ""
+        print(
+            f"{cat:<10} {m['tp']:>5} {m['fp']:>5} {m['fn']:>5} {m['tn']:>5} "
+            f"{p:>7.3f} {r:>7.3f} {f1:>7.3f}{delta_str}"
+        )
     print()
 
 
