@@ -75,7 +75,9 @@ class E01Conditions:
                 cond = len(_CONDITION_LEAD.findall(pt))
                 link = len(_AND_OR.findall(pt))
                 nested = len(_NESTED_HINT.findall(pt))
-                s = nested + (cond // 2) + (link // 4)
+                # 다중 nested hint(2개 이상)는 강한 nesting 신호 → 가중
+                nested_weight = nested + max(0, nested - 1)  # 1→1, 2→3, 3→5
+                s = nested_weight + (cond // 2) + (link // 4)
                 if s > max_stages:
                     max_stages = s
             stages = max_stages
