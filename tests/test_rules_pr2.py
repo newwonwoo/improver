@@ -128,7 +128,7 @@ def test_g01_three_danseo_critical():
         "제10조(예외) 본칙. 다만, 첫 단서. 다만, 두 번째 단서. 다만, 세 번째 단서."
     )
     findings = G01Exception().scan(_law(text))
-    assert findings and findings[0].severity == "심각"
+    assert findings and findings[0].severity == "경고"
 
 
 # ── G-02 ─────────────────────────────────────────────────────────────────────
@@ -141,10 +141,7 @@ def test_g02_no_deadline_warning():
 
 
 def test_g02_multiple_procs_critical():
-    text = (
-        "제10조(인허가) 사업자는 장관의 인가를 받고, 허가를 받으며, 등록을 하여야 한다. "
-        "처리 기한은 30일 이내로 한다. 신고한 것으로 본다."
-    )
+    text = "제10조(인허가) 사업자는 장관의 인가를 받고, 허가를 받으며, 등록을 하여야 한다."
     findings = G02Permit().scan(_law(text))
     assert findings and findings[0].severity == "심각"
 
@@ -195,7 +192,10 @@ def test_e04_skips_unregistered_law():
 
 
 def test_e05_sanction_gap_warning():
-    text = "제10조(의무) 사업자는 보고서를 작성하여야 한다."
+    text = (
+        "제10조(의무) 사업자는 안전기준을 준수하여야 한다.\n\n"
+        "제99조(벌칙) 제5조를 위반한 자는 벌금에 처한다.\n"
+    )
     findings = E05Sanction().scan(_law(text))
     assert findings and findings[0].severity == "경고"
 

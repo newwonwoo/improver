@@ -41,18 +41,20 @@ class S02Delegation:
         self._check_decree = check_decree
 
     def _idx(self) -> LawIndex | None:
-        if self._index is None and self._check_decree:
+        if self._index is not None:
+            return self._index
+        if self._check_decree:
             try:
                 self._index = load_default_index()
+                return self._index
             except Exception:
                 self._check_decree = False
-                return None
-        return self._index
+        return None
 
     def scan(self, law: Law) -> list[Finding]:
         findings: list[Finding] = []
         idx = 0
-        index = self._idx() if self._check_decree else None
+        index = self._idx()
 
         delegating: list[Article] = []
         catchall_arts: list[Article] = []

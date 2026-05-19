@@ -63,10 +63,20 @@ class E01Conditions:
             if _is_fp_article(art):
                 continue
             text = art.full_text
-            cond = len(_CONDITION_LEAD.findall(text))
-            link = len(_AND_OR.findall(text))
-            nested = len(_NESTED_HINT.findall(text))
-            stages = nested + (cond // 2) + (link // 4)   # link weight 감소: //3→//4
+            # 항별 최고 복잡도 사용 — 열거 호/목이 전체 카운트를 부풀리는 오탐 방지
+            para_texts = [p.text for p in art.paragraphs if p.text.strip()] if art.paragraphs else []
+            if not para_texts:
+                # 헤더만 있고 본문이 없는 단문 조문은 full_text 전체로 계산
+                para_texts = [text]
+            max_stages = 0
+            for pt in para_texts:
+                cond = len(_CONDITION_LEAD.findall(pt))
+                link = len(_AND_OR.findall(pt))
+                nested = len(_NESTED_HINT.findall(pt))
+                s = nested + (cond // 2) + (link // 4)
+                if s > max_stages:
+                    max_stages = s
+            stages = max_stages
             # TP 부스트: 재량/기속 혼재 (취소할 수 있다 + 취소하여야 한다)
             if _DISCRETION_MIXED.search(text) and _MANDATORY.search(text):
                 stages += 2

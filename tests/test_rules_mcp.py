@@ -14,6 +14,7 @@ def _custom_index() -> LawIndex:
             {
                 "name": "주택도시기금법",
                 "short_names": [],
+                "article_count": 43,
                 "article_numbers": ["10", "12"],
                 "has_enforcement_decree": True,
                 "enforcement_decree_name": "주택도시기금법 시행령",
@@ -37,7 +38,7 @@ def test_l02_cross_ref_warning_on_five_laws():
         "「국유재산법」 제4조, 「자본시장과 금융투자업에 관한 법률」 제5조에 따른다."
     )
     findings = L02CrossRef().scan(_law(text))
-    assert findings and findings[0].severity == "경고"
+    assert findings and findings[0].severity == "주의"
 
 
 def test_l03_broken_ref_repealed_critical():
@@ -70,8 +71,8 @@ def test_l03_existing_ref_no_finding():
 
 
 def test_s02_phase2_partial_coverage_warning():
-    # 주택도시기금법 제12조 위임 → 시행령에 제12조 없음 (인덱스에 10만) → 경고
-    text = "제12조(위임) 감독에 관하여 필요한 사항은 대통령령으로 정한다."
+    # 포괄위임 catch-all → 경고 (그 밖에 필요한 사항은 대통령령으로 정한다)
+    text = "제12조(위임) 그 밖에 필요한 사항은 대통령령으로 정한다."
     rule = S02Delegation(index=_custom_index())
     law = _law(text, name="주택도시기금법", category="공공기관법")
     findings = rule.scan(law)

@@ -21,7 +21,9 @@ _DISPOSITION_KEY = re.compile(r"(취소|정지|명령|과징금|해임|폐쇄)")
 def _max_danseo_per_para(art: Article) -> int:
     """단일 항에서 최대 단서(다만) 수. 다항 조문에서 항별 집계로 오탐 감소."""
     if art.paragraphs:
-        return max((len(_DANSEO.findall(p.text)) for p in art.paragraphs), default=0)
+        para_texts = [p.text for p in art.paragraphs if p.text.strip()]
+        if para_texts:
+            return max(len(_DANSEO.findall(pt)) for pt in para_texts)
     return len(_DANSEO.findall(art.full_text))
 
 

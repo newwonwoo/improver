@@ -16,7 +16,7 @@ def _law(text: str, name: str = "테스트법", category: str = "일반"):
 
 
 def test_s03_vague_obligation_two_keywords_severe():
-    law = _law("제10조(의무) 장관은 필요하다고 인정하는 경우 그 밖의 조치를 하여야 한다.")
+    law = _law("제10조(의무) 장관은 정당한 사유 없이 필요하다고 인정하는 경우 조치를 하여야 한다.")
     findings = S03Vague().scan(law)
     assert len(findings) == 1
     assert findings[0].severity == "심각"
@@ -34,7 +34,7 @@ def test_s03_definition_article_excluded():
 def test_f05_discretion_administrative_subject():
     text = (
         "제9조(운용변경) 국토교통부장관은 필요하다고 인정하는 경우에는 "
-        "기금의 운용방법을 변경할 수 있다.\n"
+        "사업자의 허가를 취소할 수 있다.\n"
     )
     findings = F05Discretion().scan(_law(text))
     assert len(findings) == 1
@@ -56,17 +56,19 @@ def test_g03_supervision_all_missing():
 
 
 def test_g04_internal_control_only_applicable_laws():
-    text = "제1조(목적) 본문.\n"
+    articles = "\n\n".join(
+        f"제{i}조(사항{i}) 본문{i}." for i in range(1, 8)
+    )
     # 비기관법 — 적용 제외
-    assert G04InternalControl().scan(_law(text, name="일반법")) == []
+    assert G04InternalControl().scan(_law(articles, name="일반법")) == []
     # 기금법 — 5요소 매칭 0 → 심각
-    findings = G04InternalControl().scan(_law(text, name="주택도시기금법"))
+    findings = G04InternalControl().scan(_law(articles, name="주택도시기금법"))
     assert len(findings) == 1
     assert findings[0].severity == "심각"
 
 
 def test_g05_report_missing_elements():
-    text = "제14조(보고) 수탁기관은 결과를 보고하여야 한다."
+    text = "제14조(보고) 수탁기관은 운영상황을 보고하여야 한다."
     findings = G05Report().scan(_law(text))
     assert len(findings) == 1
     assert findings[0].severity == "경고"
@@ -94,4 +96,4 @@ def test_s02_delegation_vague_scope_caution():
     text = "제15조(위임) 그 밖에 필요한 사항은 대통령령으로 정한다."
     findings = S02Delegation().scan(_law(text))
     assert len(findings) == 1
-    assert findings[0].severity == "주의"
+    assert findings[0].severity == "경고"

@@ -7,9 +7,10 @@ from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
 
-_STRONG = re.compile(r"(영업정지|인허가 취소|등록 취소|폐쇄명령|해임요구|인가 취소|허가 취소|면허 취소|지정 취소|자격 취소)")
-_MID = re.compile(r"(시정명령|과징금|업무정지)")
-_WEAK = re.compile(r"(시정권고|개선명령|주의|경고)")
+_STRONG = re.compile(r"(영업정지|인허가\s*취소|등록\s*취소|폐쇄\s*명령|해임\s*요구|인가\s*취소|허가\s*취소|면허\s*취소|지정\s*취소|자격\s*취소)")
+_MID = re.compile(r"(시정\s*명령|과징금|업무\s*정지)")
+# 주의: "주의" 단독 매칭은 FP. 행정처분으로서의 경고/주의만 해당
+_WEAK = re.compile(r"(시정\s*권고|개선\s*명령|경고\s*처분|구두\s*경고|서면\s*경고|공식\s*경고|경고를\s*할\s*수\s*있다|경고를\s*하여야)")
 _HEARING = re.compile(r"(청문|의견제출|의견 제출|이의신청|이의 신청)")
 _STANDARD = re.compile(r"(별표|기준|등급)")
 # FP 필터 패턴

@@ -64,7 +64,10 @@ class L03BrokenRef:
                 elif result.status == "not_found":
                     # 인덱스가 완전한 법령만 not_found 보고 (불완전 인덱스 오탐 방지)
                     entry = index.find(ref_law)
-                    if entry is None or entry.get("article_count", 0) < _MIN_ART_COUNT_FOR_NOT_FOUND:
+                    if entry is None:
+                        continue
+                    art_count = entry.get("article_count") or len(entry.get("article_numbers", []))
+                    if art_count < _MIN_ART_COUNT_FOR_NOT_FOUND:
                         continue
                     severity = "경고"
                     summary = f"조문 부재: 「{ref_law}」 제{ref_art}조 — 현행법에서 삭제됨"

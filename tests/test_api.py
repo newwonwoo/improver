@@ -36,9 +36,19 @@ def test_agencies_endpoint_returns_mapping(client):
 
 
 def test_analyze_endpoint(client):
+    # G-04 requires 5+ articles and applicable law name (기금 matches)
+    text = "\n".join([
+        "제1조(목적) 이 법은 주택도시기금의 설치 및 운영에 관하여 필요한 사항을 규정함을 목적으로 한다.",
+        "제2조(정의) 이 법에서 \"기금\"이란 주택도시기금을 말한다.",
+        "제10조(기금의 조성) 기금은 다음 각 호의 재원으로 조성한다.",
+        "제15조(기금의 운용) 기금관리주체는 기금을 운용한다.",
+        "제20조(수탁기관의 지정) 국토교통부장관은 수탁기관을 지정할 수 있다.",
+        "제22조(업무지침) 수탁기관은 업무지침을 정하여야 한다.",
+        "제30조(감독) 국토교통부장관은 기금관리주체를 감독한다.",
+    ])
     payload = {
         "name": "주택도시기금법",
-        "text": "제22조(업무지침) 수탁기관은 업무지침을 정하여야 한다.",
+        "text": text,
         "category": "공공기관법",
     }
     res = client.post("/analyze", json=payload)

@@ -43,14 +43,16 @@ class L01Citation:
             cites = _CITE_PAT.findall(art.full_text)
             # 법령명만 카운트 — 동일 법령명은 1회로
             laws = {c for c in cites if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
-            if len(laws) < 5:
+            if len(laws) < 6:
                 continue
             # TP 부스트: 의제·특례 조문의 과다 인용은 한 단계 상향
             has_tp_context = bool(_TP_CONTEXT.search(art.full_text))
             if len(laws) >= 10:
                 severity = "심각" if has_tp_context else "경고"
-            else:
+            elif len(laws) >= 8:
                 severity = "경고" if has_tp_context else "주의"
+            else:
+                severity = "주의" if has_tp_context else "개선"
             idx += 1
             findings.append(
                 make_finding(

@@ -30,7 +30,7 @@ class S01Insertion:
             severity = "경고"
         elif ratio >= 20:
             severity = "주의"
-        elif ratio >= 10:
+        elif ratio >= 15:
             severity = "개선"
         else:
             severity = None

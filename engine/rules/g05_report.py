@@ -27,6 +27,14 @@ _SUBCHECK_MAP = {
 _INTERNAL_REPORT = re.compile(
     r"(국회에?\s*보고|감사원에?\s*보고|대통령에게?\s*보고|소관\s*위원회|국무회의)"
 )
+# FP 필터: 행정 내부 보고 — 주체가 공무원/소속직원인 경우만
+# 주의: '장관에게 보고하여야' 자체는 외부 수탁기관도 하므로 주체 확인 필요
+_INTERNAL_ADMIN_REPORT = re.compile(
+    r"(소속\s*공무원|소속\s*직원"
+    r"|공무원은.{0,30}보고하여야|직원은.{0,30}보고하여야"
+    r"|물품.{0,5}공무원|물품관리관에게.{0,10}보고"
+    r"|직무위반.{0,10}보고|이탈.{0,10}보고|징계.{0,10}보고)"
+)
 # FP 필터: 결과 보고 → 심의/의결 후 단순 통지
 _RESULT_REPORT = re.compile(r"(결과를?\s*보고|결과를?\s*알려|현황을?\s*보고)")
 
@@ -47,6 +55,9 @@ class G05Report:
                 continue
             # 내부/상위기관 보고는 절차 요건 적용 불필요
             if _INTERNAL_REPORT.search(text):
+                continue
+            # 행정 내부 보고 (공무원→장관, 기관장→부처) — 외부 의무 아님
+            if _INTERNAL_ADMIN_REPORT.search(text):
                 continue
             # 단순 결과 통보
             if _RESULT_REPORT.search(text) and not _REPORT_OBLIG.search(text.replace("결과를 보고", "")):

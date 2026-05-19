@@ -57,7 +57,7 @@ def test_llm_judge_adjusts_severity_within_one_step():
 
 
 def test_llm_judge_two_step_change_flags_review_only():
-    text = "제10조(재량) 국토교통부장관은 필요하다고 인정하는 경우에는 조치를 할 수 있다."
+    text = "제10조(재량) 국토교통부장관은 필요하다고 인정하는 경우에는 사업자의 허가를 취소할 수 있다."
     result = _build_result(text)
 
     mock = MockClient(
