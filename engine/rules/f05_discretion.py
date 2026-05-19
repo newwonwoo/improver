@@ -14,7 +14,13 @@ _AGENCY_SUBJECT = re.compile(
     r"(장관|위원회|청장|시ㆍ도지사|시·도지사|시장|군수|구청장|공사|공단|위원장|원장)[^.]{0,60}(할 수 있다|할 수 있고)"
 )
 # 고위험 포괄기준: 직접 재량 판단기준이 되는 표현
-_HIGH_VAGUE = re.compile(r"(필요하다고 인정|필요하다고 인정되는|정당한 사유 없이|상당한 이유 없이)")
+# 주의: "정당한 사유 없이"·"상당한 이유 없이" 는 표준 입법 표현 → 제외
+_HIGH_VAGUE = re.compile(r"(필요하다고 인정|필요하다고 인정되는)")
+# 형사·민사·행정심판 절차 도메인 — "필요하다고 인정"이 표준 사법 재량
+_LEGAL_PROCEDURE_DOMAIN = re.compile(
+    r"(보호관찰|수사|체포|구속|압수|수색|감정|증거|기소|공소|항소|상고|재심"
+    r"|행정심판|행정소송|민사소송|형사소송|재판|소송|심판|공판|심리)"
+)
 # 중위험: 처분 맥락에서만 문제
 _MID_VAGUE = re.compile(r"(필요한 경우|적절한|상당한)")
 # 침익적 처분 맥락: 행정청이 이를 근거로 불이익 처분 가능
@@ -48,6 +54,9 @@ class F05Discretion:
                 continue
             text = art.full_text
             if not _AGENCY_SUBJECT.search(text):
+                continue
+            # 형사·민사 절차 도메인 — "필요하다고 인정" 은 표준 사법 재량
+            if _LEGAL_PROCEDURE_DOMAIN.search(text):
                 continue
             # 내부 행정 규정 (감사계획, 업무지침) — 시민 영향 없음
             if _INTERNAL_ADMIN.search(text):

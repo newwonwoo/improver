@@ -91,13 +91,10 @@ class E01Conditions:
             # FP 감쇄: 순수 열거(단서 없음, 가목 없음)
             if _PURE_ENUM.search(text) and "다만" not in text and "가." not in text and "가\\." not in text:
                 stages = max(0, stages - 2)
-            # FP 감쇄: 다음 각 호의 어느 하나(OR alternatives) — 알파벳 ORs는 중첩이 아님
-            # 단, 처분 조문에서는 alternatives가 많을수록 위험이 커지므로 감쇄 폭 절반
+            # FP 감쇄: 다음 각 호의 어느 하나(OR alternatives) — 호는 alternatives이지 nesting 아님
+            # 호의 개수가 cond 카운트 대부분을 차지하므로 감쇄 폭 크게 적용
             if _OR_ALTERNATIVES.search(text):
-                if _DISPOSITION_HINT.search(text):
-                    stages = max(0, stages - 1)
-                else:
-                    stages = max(0, stages - 3)
+                stages = max(0, stages - 3)
             if stages < 5:
                 continue
             if stages >= 9:

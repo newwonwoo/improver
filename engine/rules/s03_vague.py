@@ -8,10 +8,10 @@ from .base import PatternResult, make_finding
 
 
 # 고위험 모호 표현: 의무/권리를 좌우하는 재량적 판단기준
+# 주의: "정당한 사유" 단독은 표준 입법 표현 → 제외
 HIGH_RISK_VAGUE: list[str] = [
     "필요하다고 인정",
     "필요하다고 인정하는 때",
-    "정당한 사유",
     "합리적인 이유",
     "합리적인 사유",
     "상당한 이유",

@@ -34,6 +34,13 @@ _ENUMERATED_BEFORE_CATCHALL = re.compile(
     r"(명칭|관할|구역|조직|정원|구성|위원|임명|위촉|운영|소재지|영수증|기부금)"
     r"[^.]{0,80}(그\s*밖에|기타)"
 )
+# FP 필터: 위원회/협의회/평의원회 등 자문기구의 운영 위임은 통상 적정
+_COMMITTEE_TITLE = re.compile(r"(위원회|심의회|평의원회|이사회|협의회|운영위원회|자문위원회|소위원회)")
+# FP 필터: catch-all 뒤에 "구성·운영" 등이 오는 경우 위원회 운영 위임
+_CATCHALL_OPERATION = re.compile(
+    r"(그\s*밖에|기타)\s*[^.]{0,60}(구성|운영|회의|의사|회칙|운영규정)"
+    r"[^.]{0,40}(대통령령|시행령|총리령|부령)"
+)
 
 
 class S02Delegation:
@@ -81,6 +88,13 @@ class S02Delegation:
                 continue
             # FP: 조직·운영 구체 항목들이 그 밖에 앞에 나열된 경우
             if _ENUMERATED_BEFORE_CATCHALL.search(text):
+                continue
+            # FP: 위원회·협의회 등 자문기구 조문 — catch-all delegation은 통상 운영 위임
+            title = art.title or ""
+            if _COMMITTEE_TITLE.search(title):
+                continue
+            # FP: 그 밖에 + 구성·운영 + 대통령령 — 위원회 운영 위임
+            if _CATCHALL_OPERATION.search(text):
                 continue
             # 구체적 기준/절차도 함께 위임되면 경감
             has_specific = bool(_SPECIFIC_SUBJECT.search(text))

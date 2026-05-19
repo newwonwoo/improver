@@ -48,6 +48,21 @@ _DISQUALIFICATION_LIST = re.compile(
     r"(허가의?\s*기준|허가를?\s*하여서는\s*아니\s*된다"
     r"|허가를?\s*하지?\s*아니|결격\s*사유|취소\s*사유)"
 )
+# FP 필터: 데이터·정보 시스템 등록 (규제적 등록 아님)
+_DATA_REGISTRATION = re.compile(
+    r"(시스템에?\s*등록|정보를?\s*등록|자료를?\s*등록|결과를?\s*등록"
+    r"|등록ㆍ관리|등록하여\s*관리|등록ㆍ공시|등록ㆍ공개)"
+)
+# FP 필터: 신청자/지원자 측의 신청 권리(허가 대상자가 아닌 수혜자)
+_BENEFICIARY_APPLICATION = re.compile(
+    r"(갱생보호\s*신청|급여를?\s*신청|혜택을?\s*신청|장학금을?\s*신청"
+    r"|지원을?\s*신청|보조금을?\s*신청|기금을?\s*신청)"
+)
+# FP 필터: 자격요건 정의 조문 (인허가 처리 X)
+_QUALIFICATION_DEFINITION = re.compile(
+    r"(다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는\s*자만이?"
+    r"|다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는\s*사람만이?)"
+)
 
 
 class G02Permit:
@@ -80,6 +95,15 @@ class G02Permit:
                 continue
             # 결격·취소 사유 열거 조문 (실제 인허가 처리 X)
             if _DISQUALIFICATION_LIST.search(text):
+                continue
+            # 시스템·자료 등록 (규제적 등록 아님)
+            if _DATA_REGISTRATION.search(text):
+                continue
+            # 수혜자 신청 (갱생보호·지원·보조금 신청 등)
+            if _BENEFICIARY_APPLICATION.search(text):
+                continue
+            # 자격요건 정의 조문 ("…에 해당하는 자만이…")
+            if _QUALIFICATION_DEFINITION.search(text):
                 continue
             # 직접 처리 동사가 없으면 skip
             if not _PROCESSING_VERB.search(text):

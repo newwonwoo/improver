@@ -14,7 +14,14 @@ _CITE_PAT = re.compile(r"「([^」]+)」")
 # TP 컨텍스트: 인허가의제·특례·금지 조문 — 과도한 인용이 실질 결함
 _TP_CONTEXT = re.compile(r"(인[\s·ㆍ]?허가.{0,10}의제|특례\s*규정|금지\s*행위|이\s*법에\s*따른\s*의무)")
 # FP 컨텍스트: 법제상 불가피한 타법 인용 조문 유형
-_FP_CONTEXT = re.compile(r"(결격\s*사유|취업\s*제한|징계\s*부가금|감면\s*대상|지급\s*대상|중복\s*수급)")
+_FP_CONTEXT = re.compile(
+    r"(결격\s*사유|취업\s*제한|징계\s*부가금|감면\s*대상|지급\s*대상|중복\s*수급"
+    r"|회원의?\s*자격|비과세|적용\s*제외|준용한다|준용하는|회원\s*가입)"
+)
+_FP_TITLE = re.compile(
+    r"(승계|회원의?\s*자격|비과세|면제|적용\s*제외|준용|회원\s*가입"
+    r"|결격\s*사유|감면|특별\s*공제|공제\s*대상)"
+)
 
 
 def _is_fp_article(art: Article) -> bool:
@@ -22,6 +29,9 @@ def _is_fp_article(art: Article) -> bool:
     if art.is_definition() or art.is_penalty() or art.is_purpose():
         return True
     if art.is_disqualification():
+        return True
+    title = art.title or ""
+    if _FP_TITLE.search(title):
         return True
     text = art.full_text
     if _FP_CONTEXT.search(text):
