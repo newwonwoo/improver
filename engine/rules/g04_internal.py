@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import re
 
-from ..structure import is_judicial_law, is_labor_welfare_law
+from ..structure import is_judicial_law, is_labor_welfare_law, decompose, ArticleType
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
@@ -118,7 +118,7 @@ class G04InternalControl:
             severity = "주의"
 
         # 가장 가까운 "업무지침|내부통제|관리규정" 조항을 대표 조문으로
-        target = law.articles[0]
+        target = None
         for art in law.articles:
             if re.search(r"(업무지침|내부통제|관리규정|운영규정)", art.full_text):
                 target = art
@@ -127,6 +127,12 @@ class G04InternalControl:
             if _INTERNAL_CONTROL_EXPLICIT.search(art.full_text):
                 target = art
                 break
+        # SLM verdict: PURPOSE 조문을 target으로 잡으면 15건 모두 FP
+        # → 진성 내부통제 조문이 없으면 발화 자체를 안 함
+        if target is None:
+            return []
+        if decompose(target).type == ArticleType.PURPOSE:
+            return []
 
         return [
             make_finding(

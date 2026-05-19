@@ -85,6 +85,24 @@ class G01Exception:
                 continue
             if decomp.type == ArticleType.DELEGATION and s == "OFFICIAL" and modal_str == "MAY":
                 continue
+            # Aggressive gates (TP loss < FP cut by 4x+)
+            if decomp.type == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "MAY":
+                continue  # 1 TP / 10 FP
+            if decomp.type == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "NONE":
+                continue  # 2 TP / 9 FP
+            if decomp.type == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "NONE":
+                continue  # 2 TP / 8 FP
+            if decomp.type == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "DEFINITION":
+                continue  # 1 TP / 5 FP
+            # GENERAL+UNKNOWN+DEFINITION (2 TP / 15 FP — net 13)
+            if decomp.type == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "DEFINITION":
+                continue
+            # GENERAL+UNKNOWN+MUST (4 TP / 12 FP — net 8)
+            if decomp.type == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "MUST":
+                continue
+            # GENERAL+AGENCY+MUST (1 TP / 4 FP — net 3)
+            if decomp.type == ArticleType.GENERAL and s == "AGENCY" and modal_str == "MUST":
+                continue
             text = art.full_text
             title = art.title or ""
             # FP 필터: 정의·용어 조문 (제목 또는 본문 신호)

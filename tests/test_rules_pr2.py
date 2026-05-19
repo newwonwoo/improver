@@ -139,8 +139,11 @@ def test_f04_deemed_short_period_critical():
 
 
 def test_g01_three_danseo_critical():
+    # SLM gate filters DELEGATION+UNKNOWN+NONE — add agency subject & disposition
+    # so the decomposition gives DISPOSITION+AGENCY+MAY (TP cell, not gated).
     text = (
-        "제10조(예외) 본칙. 다만, 첫 단서. 다만, 두 번째 단서. 다만, 세 번째 단서."
+        "제10조(예외) 장관은 본칙에 따라 영업을 취소할 수 있다. "
+        "다만, 첫 단서. 다만, 두 번째 단서. 다만, 세 번째 단서."
     )
     findings = G01Exception().scan(_law(text))
     assert findings and findings[0].severity == "경고"

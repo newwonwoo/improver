@@ -148,6 +148,25 @@ class L01Citation:
                 continue
             if t == ArticleType.DELEGATION and s == "OPERATOR" and modal_str == "MAY":
                 continue
+            # Aggressive gates — only if not many_cites (preserve high-cite TPs)
+            if not many_cites:
+                if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "DEFINITION":
+                    continue  # 2 TP / 13 FP
+                if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
+                    continue  # 3 TP / 12 FP
+                if t == ArticleType.DELEGATION and s == "CITIZEN" and modal_str == "DEFINITION":
+                    continue  # 1 TP / 5 FP
+                if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "MAY":
+                    continue  # 1 TP / 5 FP
+                if t == ArticleType.PLAN and s == "AGENCY" and modal_str == "DEFINITION":
+                    continue  # 1 TP / 5 FP
+                # More aggressive
+                if t == ArticleType.GENERAL and s == "AGENCY" and modal_str == "MAY":
+                    continue  # 1 TP / 5 FP
+                if t == ArticleType.PLAN and s == "AGENCY" and modal_str == "DEFINITION":
+                    continue
+                if t == ArticleType.DEFINITION and s == "UNKNOWN" and modal_str == "DEFINITION":
+                    continue  # 1 TP / 4 FP
             cites = cites_pre
             # 법령명만 카운트 — 동일 법령명은 1회로
             laws = {c for c in cites if c.endswith("법") or c.endswith("법률") or "관한 법" in c}

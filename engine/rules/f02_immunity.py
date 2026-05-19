@@ -186,6 +186,9 @@ class F02Immunity:
             if t == ArticleType.GENERAL and s == "OPERATOR" and modal_str == "NONE":
                 if not (_PATTERN_A.search(text) or _PATTERN_B.search(text) or _PATTERN_C.search(text)):
                     continue
+            # Aggressive: GENERAL + UNKNOWN + NONE (1 TP / 9 FP — net 8)
+            if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "NONE":
+                continue
             is_full = bool(_PATTERN_C.search(text))
             is_partial = bool(_PATTERN_A.search(text) or _PATTERN_B.search(text))
             if not (is_full or is_partial):

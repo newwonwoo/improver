@@ -102,6 +102,13 @@ class F03Disposition:
                 continue
             if decomp.type == ArticleType.GENERAL and s == "AGENCY" and modal_str == "MUST":
                 continue
+            # Aggressive gates (TP loss < FP cut by 4x+)
+            # DISPOSITION + UNKNOWN + MAY (6 TP / 25 FP — net 19) — 주체 식별 안 된 처분
+            if decomp.type == ArticleType.DISPOSITION and s == "UNKNOWN" and modal_str == "MAY":
+                continue
+            # DELEGATION + AGENCY + MAY (2 TP / 8 FP — net 6)
+            if decomp.type == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
+                continue
             # FP 필터 6: 사인간 민사 해지·해제 조문
             text = art.full_text
             if _CIVIL_TERMINATION.search(text) and not _STRONG.search(text):

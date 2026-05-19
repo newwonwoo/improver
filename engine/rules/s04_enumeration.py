@@ -153,6 +153,22 @@ class S04Enumeration:
                 continue
             if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str in ("NONE", "MAY"):
                 continue
+            # Aggressive (TP loss < FP cut by 4x)
+            # DISPOSITION + AGENCY + MAY (4 TP / 32 FP — net 28)
+            if t == ArticleType.DISPOSITION and s == "AGENCY" and modal_str == "MAY":
+                continue
+            # DELEGATION + AGENCY + MAY (3 TP / 9 FP — net 6)
+            if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
+                continue
+            # GENERAL + UNKNOWN + MUST (1 TP / 6 FP)
+            if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "MUST":
+                continue
+            # DELEGATION + EVERYONE + PROHIBITED (1 TP / 6 FP)
+            if t == ArticleType.DELEGATION and s == "EVERYONE" and modal_str == "PROHIBITED":
+                continue
+            # GENERAL + UNKNOWN + DEFINITION (1 TP / 4 FP)
+            if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "DEFINITION":
+                continue
             # SLM signal: 호 수만으론 TP/FP 분간 불가 (TP 평균 13.4 ≈ FP 평균 13.7).
             # 컨텍스트(처분·위반·포괄위임) 신호와 결합해야 의미 있는 발화.
             art_text = art.full_text

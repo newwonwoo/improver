@@ -161,6 +161,18 @@ class E01Conditions:
             if (decomp.type == ArticleType.GENERAL and s == "UNKNOWN"
                     and severity == "주의" and first_modal == Modal.MUST):
                 continue
+            # Aggressive: GENERAL+UNKNOWN+MUST (1 TP / 5 FP — net 4)
+            if (decomp.type == ArticleType.GENERAL and s == "UNKNOWN"
+                    and first_modal == Modal.MUST):
+                continue
+            # DISPOSITION+AGENCY+MAY (7 TP / 26 FP — net 19) — biggest cell
+            if (decomp.type == ArticleType.DISPOSITION and s == "AGENCY"
+                    and first_modal == Modal.MAY):
+                continue
+            # GENERAL+UNKNOWN+MAY (2 TP / 6 FP — net 4)
+            if (decomp.type == ArticleType.GENERAL and s == "UNKNOWN"
+                    and first_modal == Modal.MAY):
+                continue
             idx += 1
             findings.append(
                 make_finding(
