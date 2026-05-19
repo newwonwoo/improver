@@ -115,9 +115,17 @@ class S04Enumeration:
         for art in law.articles:
             if _is_fp_article(art):
                 continue
+            # SLM signal: 호 수만으론 TP/FP 분간 불가 (TP 평균 13.4 ≈ FP 평균 13.7).
+            # 컨텍스트(처분·위반·포괄위임) 신호와 결합해야 의미 있는 발화.
+            art_text = art.full_text
+            has_adversarial_context = bool(re.search(
+                r"(취소|정지|명령|과징금|과태료|처분|위반|금지|시정명령)", art_text
+            ))
             for para in art.paragraphs:
                 n = len(para.items)
-                if n < 10:
+                # 적대적 컨텍스트 없으면 임계값 상향 (15호 이상만 발화)
+                min_n = 10 if has_adversarial_context else 15
+                if n < min_n:
                     continue
                 if n >= 30:
                     severity = "심각"

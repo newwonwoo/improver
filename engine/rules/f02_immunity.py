@@ -37,6 +37,24 @@ _INSOLVENCY = re.compile(
 )
 # FP: 법령명이 회생·파산·면책 관련 (전체 법률이 도산법 영역)
 _INSOLVENCY_LAW = re.compile(r"(회생|파산|채무자\s*회생|면책)")
+# FP: 민·상사 법령 전체 (책임 분담은 민사법의 본질, 행정 면책과 별개)
+# Source: signal_candidates :: F-02 :: "민·상사 책임 배분"
+# Trade-off: TP 5건 (상법 3, 민법 2) 손실 vs FP 55건 정리 (net +50)
+_CIVIL_LAW_NAME = re.compile(
+    r"^(상법|민법|어음법|수표법|제조물책임법|소비자기본법|신탁법"
+    r"|자본시장과금융투자업에관한법률|증권관련집단소송법"
+    r"|유류오염손해배상보장법|자동차손해배상보장법)$"
+)
+# FP: 중복 보상 조정 — 다른 법령으로 보상 받으면 그 범위 책임 면제 (사회보장 통합)
+_BENEFIT_OFFSET = re.compile(
+    r"(다른\s*법령에?\s*따라|「[^」]+」에?\s*따라).{0,80}"
+    r"(보상을?\s*받으면|배상을?\s*받으면|급여(가|를)?\s*지급).{0,40}"
+    r"(범위에서|한도에서).{0,40}(책임을?\s*지지\s*아니|책임을?\s*면|면제한다)"
+)
+# FP: 다른 법률에 따른 배상 등과의 조정 (제목)
+_OFFSET_TITLE = re.compile(r"(다른\s*법(률|령)에?\s*따른\s*(배상|보상)|급여(와|의)\s*관계|관계\s*조정)")
+# FP: 삭제·미시행 빈 조문 (본문이 거의 비어있음)
+_EMPTY_ARTICLE = re.compile(r"^[\s]*제\d+조(의\d+)?[\s\(]")  # 본문 길이로 판단
 # FP: 불가항력·천재지변 한정 면책
 _FORCE_MAJEURE = re.compile(r"(천재지변|불가항력|자연재해|전시|사변)")
 # FP: 국가배상법 단서 존재 → 면책이 제한됨
@@ -93,6 +111,14 @@ def _is_fp_article(art: Article, text: str) -> bool:
     # 불가항력만 열거된 경우
     if _FORCE_MAJEURE.search(text) and not _PATTERN_C.search(text):
         return True
+    # 중복 배상 조정 (제목 또는 본문 신호)
+    if _OFFSET_TITLE.search(art.title or ""):
+        return True
+    if _BENEFIT_OFFSET.search(text):
+        return True
+    # 삭제된 빈 조문 (본문 거의 비어있고 "삭제" 키워드)
+    if len(text.strip()) < 150 and "삭제" in text:
+        return True
     return False
 
 
@@ -120,6 +146,10 @@ class F02Immunity:
 
         # 법령명 게이트: 도산법 영역은 전체 미적용
         if _INSOLVENCY_LAW.search(law.name):
+            return []
+        # 민·상사 법령 전체 미적용 (책임 분담은 민사법의 본질)
+        # R5: F-02 verdict 분석 — 상법(TP3/FP26)·민법(TP2/FP16) net +37 noise reduction
+        if _CIVIL_LAW_NAME.search(law.name):
             return []
 
         findings: list[Finding] = []
