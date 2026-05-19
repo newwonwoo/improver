@@ -60,21 +60,37 @@ _BUSINESS_SCOPE_BODY = re.compile(
 def _is_fp_article(art: Article) -> bool:
     """열거 과다 FP 필터 — 법제상 불가피한 호 다수 조문.
 
-    Source: signal_candidates.json :: S-04 (LLM 검증 데이터셋 기반)
-    R5 examples:
-      S-04-003@선박의입항및출항등에관한법률 (FP — 제56조 벌칙 조문)
-      S-04-005@하수도법 (FP — 허가취소 13호 사유)
-      S-04-001@방송문화진흥회법 (FP — 정관 기재사항)
-      S-04-002@전세사기피해자지원및주거안정에관한특별법 (FP — 자료요청 기관별)
+    Method B (Claude classifier) 보강 분석 결과:
+      - 벌칙·과태료라도 N≥20 이면 예측가능성 위협 → 발화 (FP 필터 해제)
+      - 인허가의제 N≥30 극단치 → 발화 (FP 필터 해제)
+      - 기본계획 + 캐치올 호 → 발화 (FP 필터 해제)
+    Source: signal_candidates.json + Method B inline classification
+    R5 examples (Method B로 직접 검증):
+      S-04-003@해운법 제19조 (TP — 면허취소 18개)
+      S-04-001@경범죄처벌법 제3조 (TP — 벌칙 41개)
+      S-04-006@하수도법 제80조 (TP — 과태료 28개)
+      S-04-003@새만금특별법 제17조 (TP — 인허가의제 53개)
+    Counter-examples:
+      S-04-001@독점규제법 제2조 (FP — 정의조문)
+      S-04-002@도로교통법 제2조 (FP — 정의조문 35개)
     """
     # 정의·벌칙·목적 조문은 호 열거가 정상
-    if art.is_definition() or art.is_penalty() or art.is_purpose():
+    if art.is_definition() or art.is_purpose():
         return True
     text = art.full_text
     title = art.title or ""
-    # 인허가의제 조문 — 법적 의제 열거 불가피
+    # 벌칙 조문: N≥35 인 극단치만 발화 (경범죄처벌법 제3조 41개 류)
+    # (Method B 분석: 20~30 구간은 정상 입법, LLM 도 FP 판정 다수)
+    if art.is_penalty():
+        max_items = max((len(p.items) for p in art.paragraphs), default=0)
+        if max_items < 35:
+            return True
+
+    # 인허가의제 조문 — N≥50 극단치만 발화 (새만금 53개 류)
     if _PERMIT_DEEMED.search(title) or _PERMIT_DEEMED.search(text[:300]):
-        return True
+        max_items = max((len(p.items) for p in art.paragraphs), default=0)
+        if max_items < 50:
+            return True
     # 정관 기재사항 — 민법·상법 표준 형식 (제목 단독 "정관" 포함)
     if _ARTICLES_OF_ASSOC.search(title) or _ARTICLES_OF_ASSOC.search(text[:300]):
         return True
@@ -85,16 +101,23 @@ def _is_fp_article(art: Article) -> bool:
         return True
     # 표준 열거 제목 (회원자격·수입·면제 등): 호 30개 미만이면 FP
     # 단, "위반행위·취소사유·결격사유" 등 침익적 열거는 보고
+    # 추가: 기본계획·시행계획에 캐치올 호가 있으면 발화 (포괄위임 동반 결함)
     if _STD_LIST_TITLE.search(title):
         adversarial_title = any(k in title for k in ("위반", "취소", "결격", "처분", "벌"))
-        if not adversarial_title:
+        plan_with_catchall = (
+            any(k in title for k in ("기본계획", "종합계획", "시행계획"))
+            and any(_CATCHALL_ITEM.search(p.items[-1].text) if p.items else False
+                    for p in art.paragraphs)
+        )
+        if not adversarial_title and not plan_with_catchall:
             return True
     # 본문 신호 — title 이 일반적이거나 비어있을 때만 본문 첫 200자만 보고 분류
-    # (전체 본문 매칭은 진성 TP 의 호 안에서 매칭돼 오탐 위험)
     body_start = text[:200]
-    # 벌칙 첫 줄 신호: "다음 각 호의 어느 하나에 해당하는 자는 ... 벌금/징역/처한다"
+    # 벌칙 첫 줄 신호: 본문이 벌칙성이라도 N≥35 이면 발화
     if _PENALTY_BODY.search(body_start):
-        return True
+        max_items = max((len(p.items) for p in art.paragraphs), default=0)
+        if max_items < 35:
+            return True
     # 정의 본문 신호: "이 법에서 ... 말한다"
     if _DEFINITION_BODY.search(body_start):
         return True
