@@ -1,18 +1,18 @@
 {
   "overall": {
-    "tp": 214,
-    "fp": 140,
-    "fn": 103,
-    "tn": 1612,
-    "border_fired": 104,
-    "border_skipped": 194,
+    "tp": 213,
+    "fp": 125,
+    "fn": 104,
+    "tn": 1608,
+    "border_fired": 82,
+    "border_skipped": 185,
     "missing": 0,
-    "precision": 0.6045197740112994,
-    "recall": 0.6750788643533123,
-    "f1": 0.6378539493293591,
-    "lenient_precision": 0.6943231441048034,
-    "lenient_recall": 0.7553444180522565,
-    "lenient_f1": 0.7235494880546075
+    "precision": 0.6301775147928994,
+    "recall": 0.6719242902208202,
+    "f1": 0.650381679389313,
+    "lenient_precision": 0.7023809523809523,
+    "lenient_recall": 0.7393483709273183,
+    "lenient_f1": 0.7203907203907204
   },
   "per_rule": {
     "E-01": {
@@ -30,35 +30,20 @@
       "lenient_recall": 0.8163265306122449,
       "lenient_f1": 0.7619047619047619
     },
-    "F-01": {
-      "tp": 0,
-      "fp": 12,
-      "fn": 0,
-      "tn": 7,
-      "border_fired": 22,
-      "border_skipped": 9,
-      "missing": 0,
-      "precision": 0.0,
-      "recall": null,
-      "f1": null,
-      "lenient_precision": 0.6470588235294118,
-      "lenient_recall": 1.0,
-      "lenient_f1": 0.7857142857142858
-    },
     "F-02": {
-      "tp": 5,
+      "tp": 6,
       "fp": 0,
-      "fn": 10,
+      "fn": 9,
       "tn": 202,
       "border_fired": 0,
       "border_skipped": 15,
       "missing": 0,
       "precision": 1.0,
-      "recall": 0.3333333333333333,
-      "f1": 0.5,
+      "recall": 0.4,
+      "f1": 0.5714285714285715,
       "lenient_precision": 1.0,
-      "lenient_recall": 0.3333333333333333,
-      "lenient_f1": 0.5
+      "lenient_recall": 0.4,
+      "lenient_f1": 0.5714285714285715
     },
     "F-03": {
       "tp": 39,
@@ -76,19 +61,19 @@
       "lenient_f1": 0.7092198581560285
     },
     "F-04": {
-      "tp": 18,
-      "fp": 10,
-      "fn": 0,
-      "tn": 13,
+      "tp": 16,
+      "fp": 7,
+      "fn": 2,
+      "tn": 16,
       "border_fired": 2,
       "border_skipped": 0,
       "missing": 0,
-      "precision": 0.6428571428571429,
-      "recall": 1.0,
-      "f1": 0.782608695652174,
-      "lenient_precision": 0.6666666666666666,
-      "lenient_recall": 1.0,
-      "lenient_f1": 0.8
+      "precision": 0.6956521739130435,
+      "recall": 0.8888888888888888,
+      "f1": 0.7804878048780488,
+      "lenient_precision": 0.72,
+      "lenient_recall": 0.9,
+      "lenient_f1": 0.7999999999999999
     },
     "G-01": {
       "tp": 43,
@@ -198,19 +183,19 @@
       "lenient_f1": 0.6812227074235808
     },
     "공정성": {
-      "tp": 62,
-      "fp": 44,
-      "fn": 29,
-      "tn": 419,
-      "border_fired": 35,
-      "border_skipped": 36,
+      "tp": 61,
+      "fp": 29,
+      "fn": 30,
+      "tn": 415,
+      "border_fired": 13,
+      "border_skipped": 27,
       "missing": 0,
-      "precision": 0.5849056603773585,
-      "recall": 0.6813186813186813,
-      "f1": 0.6294416243654823,
-      "lenient_precision": 0.6879432624113475,
-      "lenient_recall": 0.7698412698412699,
-      "lenient_f1": 0.7265917602996256
+      "precision": 0.6777777777777778,
+      "recall": 0.6703296703296703,
+      "f1": 0.6740331491712707,
+      "lenient_precision": 0.7184466019417476,
+      "lenient_recall": 0.7115384615384616,
+      "lenient_f1": 0.7149758454106281
     },
     "구조": {
       "tp": 14,
@@ -258,7 +243,7 @@
       "lenient_f1": 0.7619047619047619
     }
   },
-  "n_verdicts": 2069,
+  "n_verdicts": 2050,
   "fp_fn_cases": [
     {
       "fid": "F-03-004@건설기술진흥법",
@@ -303,12 +288,6 @@
       "evidence": "정의조문 각목 다단"
     },
     {
-      "fid": "F-01-009@게임산업진흥에관한법률",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "행정처분 — F-03 영역"
-    },
-    {
       "fid": "E-01-042@공동주택관리법",
       "kind": "FP",
       "category": "효율성",
@@ -337,12 +316,6 @@
       "kind": "FP",
       "category": "효율성",
       "evidence": "선거비용 예외 단문"
-    },
-    {
-      "fid": "F-01-095@공직선거법",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "직무 자격 제한"
     },
     {
       "fid": "G-01-017@공직선거법",
@@ -825,12 +798,6 @@
       "evidence": "정의조문 ~말한다"
     },
     {
-      "fid": "F-04-001@주택법",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "지방의회 30일 의제(기관간)"
-    },
-    {
       "fid": "E-01-069@지방세특례제한법",
       "kind": "FP",
       "category": "효율성",
@@ -871,6 +838,12 @@
       "kind": "FN",
       "category": "거버넌스",
       "evidence": "제척기간 단서중첩"
+    },
+    {
+      "fid": "F-04-001@할부거래에관한법률",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "부동의 미표시시 동의(7일)"
     },
     {
       "fid": "G-01-014@항공안전법",
@@ -1047,12 +1020,6 @@
       "evidence": "수익적 정보제공 조문"
     },
     {
-      "fid": "F-01-014@공공주택특별법",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "국유재산 관리"
-    },
-    {
       "fid": "L-01-001@공공주택특별법",
       "kind": "FP",
       "category": "적법성",
@@ -1069,12 +1036,6 @@
       "kind": "FP",
       "category": "적법성",
       "evidence": "벌칙조항 — 권리제한 아님"
-    },
-    {
-      "fid": "F-01-014@공유수면관리및매립에관한법률",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "국유재산 관리"
     },
     {
       "fid": "F-03-002@금융실명거래및비밀보장에관한법률",
@@ -1107,16 +1068,10 @@
       "evidence": "화재면책 단서 고의·과실"
     },
     {
-      "fid": "F-04-001@상법",
-      "kind": "FP",
+      "fid": "F-04-003@상법",
+      "kind": "FN",
       "category": "공정성",
-      "evidence": "상거래관계 낙부통지 의무"
-    },
-    {
-      "fid": "F-04-002@상법",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "30일 낙부통지(상사 확립)"
+      "evidence": "10일 단기·고지요건 미흡"
     },
     {
       "fid": "F-03-001@새마을금고법",
@@ -1167,66 +1122,6 @@
       "evidence": "건축규제 다수 일괄완화 위임"
     },
     {
-      "fid": "F-01-005@건설폐기물의재활용촉진에관한법률",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "행정처분 — F-03 영역"
-    },
-    {
-      "fid": "F-01-002@결혼중개업의관리에관한법률",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "직역간 행위제한"
-    },
-    {
-      "fid": "F-01-017@공항시설법",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "기관·시설 제한"
-    },
-    {
-      "fid": "F-01-019@국가유산수리등에관한법률",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "근로자 임금 보호"
-    },
-    {
-      "fid": "F-01-013@외국인투자촉진법",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "벌칙조문"
-    },
-    {
-      "fid": "F-01-001@재외국민등록법",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "직역간 행위제한"
-    },
-    {
-      "fid": "F-01-012@5ㆍ18민주유공자예우및단체설립에관한법률",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "직역간 행위제한"
-    },
-    {
-      "fid": "F-01-012@감정평가및감정평가사에관한법률",
-      "kind": "FP",
-      "category": "공정성",
-      "evidence": "행정처분 — F-03 영역"
-    },
-    {
-      "fid": "G-01-011@공직자윤리법",
-      "kind": "FP",
-      "category": "거버넌스",
-      "evidence": "신고자보호 단서"
-    },
-    {
-      "fid": "F-02-001@공직자윤리법",
-      "kind": "FN",
-      "category": "공정성",
-      "evidence": "선관주의로 일체 손해 책임 X"
-    },
-    {
       "fid": "G-01-002@공유재산및물품관리법",
       "kind": "FN",
       "category": "거버넌스",
@@ -1243,6 +1138,12 @@
       "kind": "FP",
       "category": "공정성",
       "evidence": "간판 철거(취소처분 후속)"
+    },
+    {
+      "fid": "G-01-011@공직자윤리법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "신고자보호 단서"
     },
     {
       "fid": "G-01-001@보호소년등의처우에관한법률",
@@ -1459,6 +1360,90 @@
       "kind": "FN",
       "category": "공정성",
       "evidence": "알고도 알리지 아니한 경우 책임"
+    },
+    {
+      "fid": "S-04-002@국가유공자등단체설립에관한법률",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "수익사업 정지/취소 14개"
+    },
+    {
+      "fid": "F-02-001@국제항해선박등에대한해적행위피해예방에관한법률",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "정당한 사유 면책 — 과실기준無"
+    },
+    {
+      "fid": "S-04-002@기부금품의모집ㆍ사용및기부문화활성화에관한법률",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "등록말소 재량처분 10개"
+    },
+    {
+      "fid": "S-04-001@남북교류협력에관한법률",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "승인취소 재량처분 11개"
+    },
+    {
+      "fid": "G-03-001@생활체육진흥법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "외부감독 단문, 절차 전무"
+    },
+    {
+      "fid": "F-03-002@정신건강증진및정신질환자복지서비스지원에관한법률",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "강제입원 기준 모호"
+    },
+    {
+      "fid": "L-01-001@주민등록법",
+      "kind": "FN",
+      "category": "적법성",
+      "evidence": "제17조 전입신고 6개 법률 의제"
+    },
+    {
+      "fid": "F-03-004@지하안전관리에관한특별법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "행정처분 현황 보고조문"
+    },
+    {
+      "fid": "S-04-001@진로교육법",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "센터 업무 10호+위임"
+    },
+    {
+      "fid": "S-04-002@총포ㆍ도검ㆍ화약류등의안전관리에관한법률",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "협회 사업 10호+포괄"
+    },
+    {
+      "fid": "S-04-002@치매관리법",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "센터 업무 10호+포괄위임"
+    },
+    {
+      "fid": "S-04-002@한강수계상수원수질개선및주민지원등에관한법률",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "기금 용도 10호+위임"
+    },
+    {
+      "fid": "S-04-002@한국해양진흥공사법",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "공사 업무 13호+포괄위임"
+    },
+    {
+      "fid": "S-04-001@해상풍력보급촉진및산업육성에관한특별법",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "위원회 심의 11호+포괄"
     }
   ]
 }

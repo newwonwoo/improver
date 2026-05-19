@@ -24,6 +24,29 @@ _DEFINITION_CONTEXT = re.compile(r'"[^"]+"\s*(이)?란\s*.{0,50}말한다')
 # 최소 조문 수 — 이 이상이어야 인덱스가 신뢰할 수 있다
 _MIN_ART_COUNT_FOR_NOT_FOUND = 40
 
+# SLM signal: 주요 상위법 핵심조문 화이트리스트
+# Source: signal_candidates.json :: L-03 :: "주요_상위법_핵심조문_화이트리스트"
+# Rationale: 근로기준법·방송법 등 핵심 상위법의 자주 인용되는 조문은
+#            전부개정·일부개정으로 article_number가 변동될 수 있어도
+#            인덱스 stale로 잘못 잡힐 가능성 높음. 화이트리스트로 보호.
+# R5 examples:
+#   L-03-001@출산휴가 관련 (FP — 근로기준법 제74조 표준 인용)
+#   L-03-001@방송 정의 관련 (FP — 방송법 제2조 표준 인용)
+_WHITELIST_REFS = {
+    "근로기준법": {"2", "17", "24", "43", "46", "50", "53", "55", "60", "74"},
+    "방송법": {"2", "9"},
+    "기술사법": {"2", "3"},
+    "검찰청법": {"4", "11"},
+    "노동위원회법": {"2"},
+    "우편법": {"2"},
+    "교육세법": {"4"},
+    "교통ㆍ에너지ㆍ환경세법": {"3", "4"},
+    "교통·에너지·환경세법": {"3", "4"},
+    "민법": {"1", "98", "103", "108", "110", "750"},  # 민법 핵심 일반조항
+    "상법": {"1", "5", "23"},
+    "형법": {"15", "30", "31", "32", "33"},
+}
+
 # 컨텍스트 FP 필터 (signal_candidates :: L-03 + verdict 분석)
 # 1) 부칙·연혁 영역의 인용은 경과조항이므로 정상
 # 2) "다른 법률과의 관계" 류 조문은 관계 정리 목적 — 폐지법령 인용도 의미 있음
@@ -92,6 +115,9 @@ class L03BrokenRef:
                 if key in seen:
                     continue
                 seen.add(key)
+                # SLM: 핵심 상위법 표준 조문은 인덱스 stale 시에도 정상 인용으로 처리
+                if ref_law in _WHITELIST_REFS and ref_art in _WHITELIST_REFS[ref_law]:
+                    continue
                 result = index.has_article(ref_law, ref_art)
                 if result.status == "exists":
                     continue

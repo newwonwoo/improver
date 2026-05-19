@@ -1,18 +1,18 @@
 {
   "overall": {
-    "tp": 214,
-    "fp": 128,
-    "fn": 103,
-    "tn": 1605,
+    "tp": 213,
+    "fp": 125,
+    "fn": 104,
+    "tn": 1608,
     "border_fired": 82,
     "border_skipped": 185,
     "missing": 0,
-    "precision": 0.6257309941520468,
-    "recall": 0.6750788643533123,
-    "f1": 0.6494688922610016,
-    "lenient_precision": 0.6981132075471698,
-    "lenient_recall": 0.7418546365914787,
-    "lenient_f1": 0.7193195625759415
+    "precision": 0.6301775147928994,
+    "recall": 0.6719242902208202,
+    "f1": 0.650381679389313,
+    "lenient_precision": 0.7023809523809523,
+    "lenient_recall": 0.7393483709273183,
+    "lenient_f1": 0.7203907203907204
   },
   "per_rule": {
     "E-01": {
@@ -31,19 +31,19 @@
       "lenient_f1": 0.7619047619047619
     },
     "F-02": {
-      "tp": 5,
+      "tp": 6,
       "fp": 0,
-      "fn": 10,
+      "fn": 9,
       "tn": 202,
       "border_fired": 0,
       "border_skipped": 15,
       "missing": 0,
       "precision": 1.0,
-      "recall": 0.3333333333333333,
-      "f1": 0.5,
+      "recall": 0.4,
+      "f1": 0.5714285714285715,
       "lenient_precision": 1.0,
-      "lenient_recall": 0.3333333333333333,
-      "lenient_f1": 0.5
+      "lenient_recall": 0.4,
+      "lenient_f1": 0.5714285714285715
     },
     "F-03": {
       "tp": 39,
@@ -61,19 +61,19 @@
       "lenient_f1": 0.7092198581560285
     },
     "F-04": {
-      "tp": 18,
-      "fp": 10,
-      "fn": 0,
-      "tn": 13,
+      "tp": 16,
+      "fp": 7,
+      "fn": 2,
+      "tn": 16,
       "border_fired": 2,
       "border_skipped": 0,
       "missing": 0,
-      "precision": 0.6428571428571429,
-      "recall": 1.0,
-      "f1": 0.782608695652174,
-      "lenient_precision": 0.6666666666666666,
-      "lenient_recall": 1.0,
-      "lenient_f1": 0.8
+      "precision": 0.6956521739130435,
+      "recall": 0.8888888888888888,
+      "f1": 0.7804878048780488,
+      "lenient_precision": 0.72,
+      "lenient_recall": 0.9,
+      "lenient_f1": 0.7999999999999999
     },
     "G-01": {
       "tp": 43,

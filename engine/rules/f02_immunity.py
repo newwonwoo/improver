@@ -14,6 +14,12 @@ _PATTERN_C = re.compile(
     r"(일체의\s*책임|어떠한.{0,20}책임을?\s*(지지\s*아니|없|면)"
     r"|모든\s*책임을?\s*(지지\s*아니|면\s*하|없\s*다))"
 )
+# SLM signal: 전면 면책 시그니처 (signal_candidates :: F-02 :: "전면 면책 시그니처 TP 부스트")
+# Rationale: "어떠한 경우에도 ... 책임 X" 같은 절대적 면책 + 고의·중과실 부재 = 명백 TP
+_FULL_IMMUNITY_SIGNATURE = re.compile(
+    r"(어떠한\s*경우에도|어떠한\s*의무나?\s*책임|일체의?\s*손해"
+    r"|원상회복의?\s*책임을?\s*지지\s*아니|책임을?\s*부담하지\s*아니)"
+)
 # 고의·중과실 예외 — 넓은 패턴
 # 강한 예외: "중과실" 또는 "중대한 과실" 이 명시적으로 보호됨 → 정상 입법
 # Source: signal_candidates F-02 + LLM verdict 분석
@@ -192,7 +198,8 @@ class F02Immunity:
             # Aggressive: GENERAL + UNKNOWN + NONE (1 TP / 9 FP — net 8)
             if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "NONE":
                 continue
-            is_full = bool(_PATTERN_C.search(text))
+            # SLM: 전면 면책 시그니처도 is_full 로 처리 (TP 부스트)
+            is_full = bool(_PATTERN_C.search(text) or _FULL_IMMUNITY_SIGNATURE.search(text))
             is_partial = bool(_PATTERN_A.search(text) or _PATTERN_B.search(text))
             if not (is_full or is_partial):
                 continue
