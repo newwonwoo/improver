@@ -96,9 +96,11 @@ class S02Delegation:
             # FP: 그 밖에 + 구성·운영 + 대통령령 — 위원회 운영 위임
             if _CATCHALL_OPERATION.search(text):
                 continue
-            # 구체적 기준/절차도 함께 위임되면 경감
+            # 구체적 기준/절차도 함께 위임되면 정상 입법 패턴 → 보고하지 않음
             has_specific = bool(_SPECIFIC_SUBJECT.search(text))
-            severity = "주의" if has_specific else "경고"
+            if has_specific:
+                continue
+            severity = "경고"
             catchall_arts.append(art)
             idx += 1
             findings.append(
