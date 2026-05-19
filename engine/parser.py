@@ -14,7 +14,7 @@ _ARTICLE_HEAD_PAT = re.compile(
     r"^제(?P<num>\d+)조(?P<insert>(?:의\d+)*)\s*(?:[\(（](?P<title>[^)）]+)[\)）])?",
     re.MULTILINE,
 )
-_PARA_HEAD_PAT = re.compile(r"^(?P<num>[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])", re.MULTILINE)
+_PARA_HEAD_PAT = re.compile(r"^\*?\*?(?P<num>[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])", re.MULTILINE)
 _ITEM_HEAD_PAT = re.compile(r"^\s+(?P<num>\d+)\\?\.\s+", re.MULTILINE)
 _SUBITEM_HEAD_PAT = re.compile(r"^\s+(?P<num>[가-힣])\\?\.\s+", re.MULTILINE)
 _DATE_PAT = re.compile(r"\d{4}\.\s*\d{1,2}\.\s*\d{1,2}\.")

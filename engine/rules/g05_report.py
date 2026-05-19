@@ -7,12 +7,13 @@ from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
 
-_REPORT_OBLIG = re.compile(r"(보고하여야|제출하여야|통보하여야)")
+# 실질 보고 의무만 (단순 제출·통보는 제외)
+_REPORT_OBLIG = re.compile(r"(보고하여야\s*한다|보고를?\s*하여야|정기적으로\s*보고)")
 _ELEMENTS = {
-    "보고 주기": re.compile(r"(매년|분기|반기|매월|매분기|매반기|수시)"),
-    "보고 양식": re.compile(r"(별지|서식|양식)"),
-    "보고 방법": re.compile(r"(전자적 방법|서면|정보통신망|온라인)"),
-    "지연 제재": re.compile(r"(과태료|벌금|징역|제재|영업정지)"),
+    "보고 주기": re.compile(r"(매년|분기|반기|매월|매분기|매반기|수시|정기)"),
+    "보고 양식": re.compile(r"(별지|서식|양식|보고서)"),
+    "보고 방법": re.compile(r"(전자적\s*방법|서면|정보통신망|온라인|문서)"),
+    "지연 제재": re.compile(r"(과태료|벌금|징역|영업정지|취소|제재)"),
 }
 
 _SUBCHECK_MAP = {
@@ -21,6 +22,13 @@ _SUBCHECK_MAP = {
     "보고 방법": "G-05-c",
     "지연 제재": "G-05-d",
 }
+
+# FP 필터: 내부 보고 (감사원, 국회 보고 등 상위기관 포함)
+_INTERNAL_REPORT = re.compile(
+    r"(국회에?\s*보고|감사원에?\s*보고|대통령에게?\s*보고|소관\s*위원회|국무회의)"
+)
+# FP 필터: 결과 보고 → 심의/의결 후 단순 통지
+_RESULT_REPORT = re.compile(r"(결과를?\s*보고|결과를?\s*알려|현황을?\s*보고)")
 
 
 class G05Report:
@@ -32,14 +40,29 @@ class G05Report:
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:
-            if not _REPORT_OBLIG.search(art.full_text):
+            if art.is_penalty() or art.is_definition() or art.is_purpose():
                 continue
             text = art.full_text
+            if not _REPORT_OBLIG.search(text):
+                continue
+            # 내부/상위기관 보고는 절차 요건 적용 불필요
+            if _INTERNAL_REPORT.search(text):
+                continue
+            # 단순 결과 통보
+            if _RESULT_REPORT.search(text) and not _REPORT_OBLIG.search(text.replace("결과를 보고", "")):
+                continue
             missing = [name for name, pat in _ELEMENTS.items() if not pat.search(text)]
             met = len(_ELEMENTS) - len(missing)
-            if met >= 3:
-                continue  # 양호
-            severity = "경고" if met == 0 else "주의"
+            if met >= 2:
+                continue  # 양호 (2개 이상 요소 충족)
+            # 제재 요소가 없으면 한 단계 상향
+            missing_sanction = "지연 제재" in missing
+            if met == 0:
+                severity = "경고"
+            elif missing_sanction:
+                severity = "주의"
+            else:
+                continue
             idx += 1
             findings.append(
                 make_finding(

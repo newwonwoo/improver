@@ -79,11 +79,11 @@ class E01Conditions:
             # FP 감쇄: 순수 열거(단서 없음, 가목 없음)
             if _PURE_ENUM.search(text) and "다만" not in text and "가." not in text and "가\\." not in text:
                 stages = max(0, stages - 2)
-            if stages < 4:          # 임계값 상향: 3→4
+            if stages < 5:
                 continue
-            if stages >= 6:
+            if stages >= 9:
                 severity = "심각"
-            elif stages >= 5:
+            elif stages >= 7:
                 severity = "경고"
             else:
                 severity = "주의"

@@ -1,6 +1,7 @@
 """S-02 위임 검증 — 단계1 (포괄위임) + 단계2 (하위법령 이행).
 
 설계서 §3.2 S-02: MCP 인덱스 사용 가능 시 시행령 이행 여부도 함께 판정.
+포괄위임: 구체적 기준 없이 "그 밖에 필요한 사항" 등 catch-all만 있는 경우.
 """
 from __future__ import annotations
 
@@ -12,7 +13,21 @@ from .base import PatternResult, make_finding
 
 
 _PRIMARY = re.compile(r"(대통령령|시행령|총리령|부령|시행규칙|고시)으?로\s*정(?:하|한|할|해|함)")
-_VAGUE_SCOPE = re.compile(r"(필요한 사항|그 밖에|기타 사항|에 관한 사항)")
+# 포괄위임 패턴: 구체 기준 없이 "그 밖에/기타 필요한 사항"만 위임
+_CATCHALL_DELEG = re.compile(
+    r"(그\s*밖에|기타)\s*.{0,30}(필요한\s*사항|에\s*관한\s*사항|에\s*관하여\s*필요한)\s*은?\s*"
+    r"(대통령령|시행령|총리령|부령|시행규칙|고시)으?로\s*정"
+)
+# TP 필터: 조문 제목이나 내용에 위임 대상이 명확한 경우
+_SPECIFIC_SUBJECT = re.compile(
+    r"(기준|절차|방법|범위|요건|한도|서식|서류|자격|요율|금액|기간|규모)"
+    r".{0,30}(대통령령|시행령|총리령|부령)으?로\s*정"
+)
+# FP 필터: 기술적 사양 위임 (불가피한 위임)
+_TECH_SPEC = re.compile(
+    r"(서식|양식|전산|전자|전기|기술적|규격|통신|정보시스템)"
+    r".{0,30}(대통령령|시행령|부령)으?로\s*정"
+)
 
 
 class S02Delegation:
@@ -20,7 +35,8 @@ class S02Delegation:
     pattern_name = "위임 검증"
     category = "구조"
 
-    def __init__(self, index: LawIndex | None = None, *, check_decree: bool = True):
+    def __init__(self, index: LawIndex | None = None, *, check_decree: bool = False):
+        # check_decree=False by default until enforcement decree index is populated
         self._index = index
         self._check_decree = check_decree
 
@@ -38,15 +54,27 @@ class S02Delegation:
         idx = 0
         index = self._idx() if self._check_decree else None
 
-        # 단계1: 포괄위임 식별
         delegating: list[Article] = []
+        catchall_arts: list[Article] = []
+
         for art in law.articles:
-            if not _PRIMARY.search(art.full_text):
+            if art.is_definition() or art.is_purpose() or art.is_penalty():
+                continue
+            text = art.full_text
+            if not _PRIMARY.search(text):
                 continue
             delegating.append(art)
-            vague_hits = _VAGUE_SCOPE.findall(art.full_text)
-            if not vague_hits:
+
+            # 포괄위임 감지: catch-all 표현만 있고 구체적 주제 없음
+            if not _CATCHALL_DELEG.search(text):
                 continue
+            # 기술적 사양 위임은 FP
+            if _TECH_SPEC.search(text):
+                continue
+            # 구체적 기준/절차도 함께 위임되면 경감
+            has_specific = bool(_SPECIFIC_SUBJECT.search(text))
+            severity = "주의" if has_specific else "경고"
+            catchall_arts.append(art)
             idx += 1
             findings.append(
                 make_finding(
@@ -54,9 +82,10 @@ class S02Delegation:
                     idx,
                     PatternResult(
                         article=art,
-                        severity="주의",
-                        matched_text=", ".join(set(vague_hits)),
-                        summary=f"포괄위임 {len(vague_hits)}건: 위임 범위 불명확",
+                        severity=severity,
+                        matched_text="포괄위임",
+                        summary="포괄위임: 위임 범위 불명확 (그 밖에 필요한 사항)"
+                        + (" + 구체 기준 병기" if has_specific else ""),
                         fix_type="replace",
                     ),
                 )
@@ -71,7 +100,7 @@ class S02Delegation:
             return findings
         if not parent.get("has_enforcement_decree"):
             # 시행령 자체 없음 → 위임 다수면 심각
-            if len(delegating) >= 3:
+            if len(delegating) >= 5:
                 idx += 1
                 findings.append(
                     make_finding(
@@ -95,7 +124,6 @@ class S02Delegation:
         unmatched = 0
         for art in delegating:
             base = art.number_raw
-            # 근방 ±3조 매칭 (휴리스틱)
             try:
                 b = int(base)
             except ValueError:
@@ -105,24 +133,20 @@ class S02Delegation:
             )
             if not near:
                 unmatched += 1
-                idx += 1
-                findings.append(
-                    make_finding(
-                        self,
-                        idx,
-                        PatternResult(
-                            article=art,
-                            severity="경고",
-                            matched_text=art.number,
-                            summary=f"{art.number} 위임 대응 시행령 조문 미확인",
-                            fix_type="sub_legislation",
-                        ),
-                    )
+        # 미이행이 5건 이상인 경우만 보고 (노이즈 감소)
+        if unmatched >= 5:
+            idx += 1
+            findings.append(
+                make_finding(
+                    self,
+                    idx,
+                    PatternResult(
+                        article=delegating[0],
+                        severity="경고",
+                        matched_text="시행령 이행 미확인",
+                        summary=f"위임 {unmatched}건 대응 시행령 조문 미확인",
+                        fix_type="sub_legislation",
+                    ),
                 )
-        if unmatched >= 3 and findings:
-            findings[-unmatched].severity = "심각"
-            findings[-unmatched].severity_score = 10
-            findings[-unmatched].summary = (
-                f"위임 {unmatched}건 미이행: 시행령에 대응 조문 다수 누락"
             )
         return findings

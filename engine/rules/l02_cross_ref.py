@@ -28,9 +28,9 @@ class L02CrossRef:
             if not refs:
                 continue
             unique_laws = {r[0] for r in refs}
-            if len(unique_laws) >= 5:
+            if len(unique_laws) >= 7:
                 severity = "경고"
-            elif len(unique_laws) >= 3:
+            elif len(unique_laws) >= 5:
                 severity = "주의"
             else:
                 continue
