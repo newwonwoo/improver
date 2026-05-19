@@ -78,7 +78,11 @@ _PROCEDURE_RX = re.compile(
     r"((인가|허가|승인|등록|면허|지정)을?\s*받(아야|을\s*수\s*있다)"
     r"|신청을?\s*받은|신청서를?\s*제출|심사하여야)"
 )
-_PROHIBITION_RX = re.compile(r"(하여서는\s*아니\s*된다|하지\s*못한다|할\s*수\s*없다)")
+# PROHIBITION: 행위 금지에 한정. 면책 "책임을 지지 아니한다"는 제외.
+_PROHIBITION_RX = re.compile(
+    r"(하여서는\s*아니\s*된다|하지\s*못한다|할\s*수\s*없다)"
+    r"(?!.*책임을\s*지지)"
+)
 _PLAN_RX = re.compile(r"(기본계획|종합계획|시행계획|진흥계획).{0,30}(수립|마련|확정)")
 _PURPOSE_RX = re.compile(r"함을\s*목적으로\s*한다")
 
@@ -215,6 +219,8 @@ def decompose(art: Article) -> ArticleDecomposition:
     para_subjects: list[Subject] = []
     if art.paragraphs:
         paras = [(i, p.text) for i, p in enumerate(art.paragraphs) if p.text.strip()]
+        if not paras:  # single-line article — paragraphs exist but empty
+            paras = [(0, text)]
     else:
         paras = [(0, text)]
     for idx, pt in paras:

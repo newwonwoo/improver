@@ -171,9 +171,18 @@ class F02Immunity:
                 continue
             if t == ArticleType.PROHIBITION:
                 continue
-            # GENERAL + OPERATOR (0 TP / 3 FP — 사업자 행위 한정)
-            if t == ArticleType.GENERAL and s == "OPERATOR":
+            # 3-axis: GENERAL + UNKNOWN + MUST (0/4)
+            from ..structure import Modal
+            modal_str = "NONE"
+            for p in decomp.paragraphs:
+                if p.modal != Modal.NONE: modal_str = p.modal.value; break
+            if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "MUST":
                 continue
+            # GENERAL + OPERATOR + NONE modal (사업자 행위 일반 규정 —
+            # 면책 본문 신호(_PATTERN_A/B/C) 없으면 FP)
+            if t == ArticleType.GENERAL and s == "OPERATOR" and modal_str == "NONE":
+                if not (_PATTERN_A.search(text) or _PATTERN_B.search(text) or _PATTERN_C.search(text)):
+                    continue
             is_full = bool(_PATTERN_C.search(text))
             is_partial = bool(_PATTERN_A.search(text) or _PATTERN_B.search(text))
             if not (is_full or is_partial):

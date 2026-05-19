@@ -79,10 +79,12 @@ def test_g05_report_missing_elements():
 
 
 def test_l01_citation_overflow():
+    # SLM gate now skips GENERAL+UNKNOWN+NONE — add explicit obligation
+    # so the article has identifiable subject/modal beyond bare citation.
     laws = "「" + "법」, 「".join(
-        ["가법", "나법", "다법", "라법", "마법", "바법", "사법"]
+        ["가법", "나법", "다법", "라법", "마법", "바법", "사법", "아법"]
     ) + "법」"
-    text = f"제9조(인용) 이 조문은 {laws}에 따른다."
+    text = f"제9조(인용) 장관은 이 조문에서 {laws}에 따라 인가하여야 한다."
     findings = L01Citation().scan(_law(text))
     assert len(findings) == 1
 

@@ -121,11 +121,31 @@ class L01Citation:
             # Structural FP gates (verdict 분석): 0 TP / 다수 FP 조합
             decomp = decompose(art)
             t, s = decomp.type, decomp.primary_subject.value
+            from ..structure import Modal
+            modal_str = "NONE"
+            for p in decomp.paragraphs:
+                if p.modal != Modal.NONE: modal_str = p.modal.value; break
+            # 사전 인용 수 계산 — 게이트가 다수 인용 본질을 놓치지 않도록
+            cites_pre = _CITE_PAT.findall(art.full_text)
+            laws_pre = {c for c in cites_pre if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
+            many_cites = len(laws_pre) >= 12
             if t == ArticleType.DELEGATION and s == "EVERYONE":
                 continue
             if t == ArticleType.DISPOSITION and s == "AGENCY":
-                continue  # 처분 사유 열거에서 타법령 인용은 정상
-            cites = _CITE_PAT.findall(art.full_text)
+                continue
+            # 3-axis gates — 인용 12개 이상이면 본질적 정탐 가능성 → gate 통과
+            if not many_cites:
+                if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "NONE":
+                    continue
+                if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "NONE":
+                    continue
+            if t == ArticleType.PROHIBITION:
+                continue  # 모든 PROHIBITION 조문 — 다른 룰 영역
+            if t == ArticleType.DISPOSITION and s == "OPERATOR" and modal_str == "MUST":
+                continue
+            if t == ArticleType.DELEGATION and s == "OPERATOR" and modal_str == "MAY":
+                continue
+            cites = cites_pre
             # 법령명만 카운트 — 동일 법령명은 1회로
             laws = {c for c in cites if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
             # TP 부스트: 의제·특례 조문의 과다 인용은 한 단계 상향

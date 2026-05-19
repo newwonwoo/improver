@@ -90,11 +90,25 @@ class E01Conditions:
         for art in law.articles:
             if _is_fp_article(art):
                 continue
-            # Structural gate (verdict analysis): pure-FP type combinations
-            # PROHIBITION 타입은 다른 룰(F-01) 영역 — E-01 미발화
+            # Structural gates (verdict analysis): pure-FP combinations
             decomp = decompose(art)
             if decomp.type == ArticleType.PROHIBITION:
                 continue
+            # 3-axis pure-FP combos from verdict-data
+            from ..structure import Modal
+            s = decomp.primary_subject.value
+            modal_str = "NONE"
+            for p in decomp.paragraphs:
+                if p.modal != Modal.NONE:
+                    modal_str = p.modal.value
+                    break
+            triple = (decomp.type, s, modal_str)
+            if (decomp.type == ArticleType.DELEGATION and s == "AGENCY"
+                    and modal_str in ("MUST", "DEFINITION")):
+                continue
+            if decomp.type in (ArticleType.DELEGATION, ArticleType.GENERAL):
+                if s == "OFFICIAL" and modal_str == "MAY":
+                    continue
             text = art.full_text
             # 항별 최고 복잡도 사용 — 열거 호/목이 전체 카운트를 부풀리는 오탐 방지
             para_texts = [p.text for p in art.paragraphs if p.text.strip()] if art.paragraphs else []

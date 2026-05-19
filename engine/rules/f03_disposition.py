@@ -77,12 +77,24 @@ class F03Disposition:
             # FP 필터 5: 조문제목이 벌칙/과태료/양벌규정
             if art.title and _SANCTION_ONLY.match(art.title.strip()):
                 continue
-            # Structural gate (verdict 분석): 순수 FP 타입 조합
-            # COMMITTEE 운영·PROCEDURE+AGENCY·PROHIBITION+UNKNOWN
+            # Structural gates (verdict 분석)
             decomp = decompose(art)
             if decomp.type == ArticleType.COMMITTEE:
                 continue
-            if decomp.type == ArticleType.PROHIBITION and decomp.primary_subject.value == "UNKNOWN":
+            s = decomp.primary_subject.value
+            if decomp.type == ArticleType.PROHIBITION and s == "UNKNOWN":
+                continue
+            # GENERAL+UNKNOWN with MUST/NONE/DEFINITION modal = pure FP (9 FP total)
+            from ..structure import Modal
+            modal_str = "NONE"
+            for p in decomp.paragraphs:
+                if p.modal != Modal.NONE:
+                    modal_str = p.modal.value
+                    break
+            if decomp.type == ArticleType.GENERAL and s == "UNKNOWN" and modal_str in (
+                    "MUST", "NONE", "DEFINITION"):
+                continue
+            if decomp.type == ArticleType.GENERAL and s == "AGENCY" and modal_str == "MUST":
                 continue
             # FP 필터 6: 사인간 민사 해지·해제 조문
             text = art.full_text

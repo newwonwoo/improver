@@ -68,9 +68,22 @@ class G01Exception:
             # FP 필터: 정의·벌칙·목적 조문
             if art.is_definition() or art.is_penalty() or art.is_purpose():
                 continue
-            # Structural gate: PROHIBITION 타입 + UNKNOWN 주체 = 순수 FP 패턴
+            # Structural gates (verdict 분석)
             decomp = decompose(art)
-            if decomp.type == ArticleType.PROHIBITION and decomp.primary_subject.value == "UNKNOWN":
+            s = decomp.primary_subject.value
+            from ..structure import Modal
+            modal_str = "NONE"
+            for p in decomp.paragraphs:
+                if p.modal != Modal.NONE:
+                    modal_str = p.modal.value
+                    break
+            if decomp.type == ArticleType.PROHIBITION and s == "UNKNOWN":
+                continue
+            if decomp.type == ArticleType.GENERAL and s == "OPERATOR" and modal_str == "DEFINITION":
+                continue
+            if decomp.type == ArticleType.PROCEDURE and s == "UNKNOWN" and modal_str == "NONE":
+                continue
+            if decomp.type == ArticleType.DELEGATION and s == "OFFICIAL" and modal_str == "MAY":
                 continue
             text = art.full_text
             title = art.title or ""

@@ -43,8 +43,13 @@ def test_s01_deep_inserted_critical():
 
 
 def test_s04_enumeration_warning():
+    # SLM gate filters most GENERAL+UNKNOWN combos; use adversarial type
+    # by giving title that triggers DISPOSITION recognition.
     items = "\n".join(f"  {i}. 항목{i}" for i in range(1, 21))
-    text = f"제5조(목록)\n① 다음 각 호의 사항.\n{items}\n"
+    text = (
+        f"제5조(목록) 장관은 다음 각 호의 어느 하나에 해당하면 허가를 취소할 수 있다.\n"
+        f"① 다음 각 호의 사항.\n{items}\n"
+    )
     findings = S04Enumeration().scan(_law(text))
     assert findings and findings[0].severity == "경고"
 
