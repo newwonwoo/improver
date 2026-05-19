@@ -47,6 +47,19 @@ _PRIVATE_TERMINATION = re.compile(
 _THIRD_PARTY_REQUEST = re.compile(
     r"(법원|법원소년부|허가관청|시\s*[ㆍ·]\s*도지사)에게\s*.{0,30}(신청|요구|요청)할\s*수\s*있다"
 )
+# Method B 분석: "요청·요구·의뢰" 어미는 직접 처분 아님 (다른 기관에 요청)
+# Source: Method B inline classification of F-03 FP cases
+# R5 examples:
+#   F-03-004@건설기술진흥법 (FP — 영업정지 요청)
+#   F-03-006@건설산업기본법 (FP — 시정명령 요구)
+#   F-03-002@건축법 (FP — 안전영향평가 의뢰)
+_REQUEST_NOT_DISPOSITION = re.compile(
+    r"(요청할\s*수\s*있다|요구할\s*수\s*있다|의뢰할\s*수\s*있다"
+    r"|요청한다|요구한다|의뢰한다"
+    r"|건의할\s*수\s*있다)"
+)
+# Method B 분석: 운전자·고용주 등의 "주의의무" 는 의무 부과지 행정처분 아님
+_DUTY_OF_CARE_TITLE = re.compile(r"(주의\s*의무|안전의무|보호의무)")
 
 
 class F03Disposition:
@@ -133,6 +146,13 @@ class F03Disposition:
                 continue
             # 타기관 신청·요청 (처분권자가 본 조문 주체 아님)
             if _THIRD_PARTY_REQUEST.search(text) and not _STRONG.search(text):
+                continue
+            # Method B: 주의의무·안전의무 조문은 의무부과지 처분 아님
+            # Source: Method B inline classification of F-03 FP cases
+            # R5 examples:
+            #   F-03-002@도로교통법 (FP — 운전자 주의의무)
+            #   F-03-007@도로교통법 (FP — 고용주 주의의무)
+            if _DUTY_OF_CARE_TITLE.search(title):
                 continue
             if _STRONG.search(text):
                 strength = "강"
