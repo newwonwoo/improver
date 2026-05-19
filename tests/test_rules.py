@@ -16,7 +16,7 @@ def _law(text: str, name: str = "테스트법", category: str = "일반"):
 
 
 def test_s03_vague_obligation_two_keywords_severe():
-    law = _law("제10조(의무) 장관은 정당한 사유 없이 필요하다고 인정하는 경우 조치를 하여야 한다.")
+    law = _law("제10조(의무) 장관은 합리적인 이유 없이 필요하다고 인정하는 경우 조치를 하여야 한다.")
     findings = S03Vague().scan(law)
     assert len(findings) == 1
     assert findings[0].severity == "심각"

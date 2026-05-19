@@ -28,6 +28,26 @@ _EXEMPT_OR_DEEMED = re.compile(
 )
 # FP 필터: 정의/벌칙/목적 등
 _PROC_REFERENCE = re.compile(r"제\d+조에?\s*따른\s*(인가|허가|승인|등록|신고)")
+# FP 필터: 내부 임명·지정 (외부 인허가 아님)
+# 소속 공무원·담당관·위원·이사 등의 지정은 G-02 영역 아님
+_INTERNAL_DESIGNATION = re.compile(
+    r"(소속\s*공무원|담당관을?\s*지정|위원장을?\s*지정|위원을?\s*지정"
+    r"|이사를?\s*지정|간사를?\s*지정|직원\s*중에서|소속\s*직원|소속\s*기관)"
+)
+# FP 필터: 내부 행정 의사결정 (법원·심사위원회→장관 허가 등)
+_INTERNAL_ADMIN_APPROVAL = re.compile(
+    r"(심사위원회.{0,30}(허가를?\s*신청|결정한\s*경우)"
+    r"|법무부장관에게.{0,20}허가를?\s*신청"
+    r"|정관을?\s*변경.{0,15}인가"
+    r"|정관의?\s*변경.{0,15}인가"
+    r"|회계연도|예산안.{0,15}승인"
+    r"|사업계획.{0,15}승인.{0,20}받아야)"
+)
+# FP 필터: 자격·결격·취소 사유 열거 조문 (인허가 처리가 아닌 사유 열거)
+_DISQUALIFICATION_LIST = re.compile(
+    r"(허가의?\s*기준|허가를?\s*하여서는\s*아니\s*된다"
+    r"|허가를?\s*하지?\s*아니|결격\s*사유|취소\s*사유)"
+)
 
 
 class G02Permit:
@@ -51,6 +71,15 @@ class G02Permit:
                 continue
             # 다른 조문 참조만 하는 경우 → FP
             if _PROC_REFERENCE.search(text) and not _PROCESSING_VERB.search(text):
+                continue
+            # 내부 임명·지정 (담당관 지정 등)은 FP
+            if _INTERNAL_DESIGNATION.search(text):
+                continue
+            # 내부 행정 의사결정 (심사위원회→장관 허가, 정관 변경 인가 등)은 FP
+            if _INTERNAL_ADMIN_APPROVAL.search(text):
+                continue
+            # 결격·취소 사유 열거 조문 (실제 인허가 처리 X)
+            if _DISQUALIFICATION_LIST.search(text):
                 continue
             # 직접 처리 동사가 없으면 skip
             if not _PROCESSING_VERB.search(text):

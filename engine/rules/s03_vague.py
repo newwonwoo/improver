@@ -37,6 +37,13 @@ _DELEG_TAIL = re.compile(r"(그 밖에|기타)[^.]{0,40}(대통령령|시행령|
 _ENFORCEMENT_CONTEXT = re.compile(r"(취소|정지|처분|명령|제한|금지|의무|위반|과태료|과징금|벌금|징역)")
 # FP 필터: 피동적 권리선언 (주의 사항 명시만)
 _PASSIVE_DECL = re.compile(r"(보호받는다|보장된다|누릴 수 있다|존중되어야)")
+# FP 필터: "정당한 사유 없이" / "정당한 이유 없이" — 거부·미이행 한정의 표준 입법 표현
+_STD_REFUSAL_PHRASE = re.compile(r"정당한\s*(사유|이유)\s*없이")
+# FP 필터: 형사·민사·행정심판 절차 도메인 — "상당한 이유" 등은 표준 용어
+_LEGAL_PROCEDURE_DOMAIN = re.compile(
+    r"(보호관찰|수사|체포|구속|압수|수색|감정|증거|기소|공소|항소|상고|재심"
+    r"|행정심판|행정소송|민사소송|형사소송|재판|소송|심판|공판|심리)"
+)
 
 
 def _find_high_risk(text: str) -> list[str]:
@@ -61,6 +68,12 @@ class S03Vague:
             text = art.full_text
             # 위임 결합 표현은 한 번씩만 제거
             cleaned = _DELEG_TAIL.sub("", text)
+            # 표준 입법 표현 "정당한 사유 없이" 는 모호 평가 대상 아님
+            cleaned = _STD_REFUSAL_PHRASE.sub("", cleaned)
+
+            # 형사·민사·행정심판 절차 도메인: 표준 용어 다수 사용 → S-03 적용 제외
+            if _LEGAL_PROCEDURE_DOMAIN.search(text):
+                continue
 
             high_hits = _find_high_risk(cleaned)
             mid_hits = _find_mid_risk(cleaned)

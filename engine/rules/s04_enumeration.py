@@ -8,8 +8,14 @@ from .base import PatternResult, make_finding
 
 # FP 필터 패턴
 _PERMIT_DEEMED = re.compile(r"(인[\s·ㆍ]?허가.{0,10}의제|다른\s*법(률|령)에\s*따른\s*인[\s·ㆍ]?허가)")
-_ARTICLES_OF_ASSOC = re.compile(r"정관.{0,10}(기재|포함|사항)")
+_ARTICLES_OF_ASSOC = re.compile(r"정관.{0,30}(기재|포함|사항|규정)")
 _PUBLIC_INSTITUTION = re.compile(r"(사업\s*범위|사업의\s*종류|공공기관의\s*운영)")
+# FP: 정관 기재사항·회원자격·수입·수수료·면제·비과세 등 표준 열거
+_STD_LIST_TITLE = re.compile(
+    r"(정관|회원|회비|수수료|수입|세입|세출|예산|결산|회계|급여|면제|비과세|감면"
+    r"|업무|사업|시설|기준|등록\s*요건|허가\s*요건|결격\s*사유|취소\s*사유"
+    r"|위반행위|준수사항)"
+)
 # 포괄위임 종결호 — 호 자체가 아니라 마지막 호에서만 확인
 _CATCHALL_ITEM = re.compile(r"그\s*밖에.{0,30}(대통령령|총리령|부령|규칙)으로\s*정하는")
 
@@ -24,12 +30,20 @@ def _is_fp_article(art: Article) -> bool:
     # 인허가의제 조문 — 법적 의제 열거 불가피
     if _PERMIT_DEEMED.search(title) or _PERMIT_DEEMED.search(text[:300]):
         return True
-    # 정관 기재사항 — 민법·상법 표준 형식
-    if _ARTICLES_OF_ASSOC.search(title) or _ARTICLES_OF_ASSOC.search(text[:200]):
+    # 정관 기재사항 — 민법·상법 표준 형식 (제목 단독 "정관" 포함)
+    if _ARTICLES_OF_ASSOC.search(title) or _ARTICLES_OF_ASSOC.search(text[:300]):
+        return True
+    if title.strip() == "정관":
         return True
     # 공공기관 사업범위 열거 — 설립근거법 표준
     if _PUBLIC_INSTITUTION.search(title):
         return True
+    # 표준 열거 제목 (회원자격·수입·면제 등): 호 30개 미만이면 FP
+    # 단, "위반행위·취소사유·결격사유" 등 침익적 열거는 보고
+    if _STD_LIST_TITLE.search(title):
+        adversarial_title = any(k in title for k in ("위반", "취소", "결격", "처분", "벌"))
+        if not adversarial_title:
+            return True
     return False
 
 

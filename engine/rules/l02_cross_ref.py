@@ -13,6 +13,27 @@ from .base import PatternResult, make_finding
 _CROSS_REF = re.compile(
     r"「([^」]+)」\s*제(\d+)조(?:의\d+)?(?:\s*제\d+항)?"
 )
+# FP: 인허가 의제 조문 — 다수 법률 참조가 본질
+_PERMIT_DEEMED = re.compile(r"(인[\s·ㆍ]?허가.{0,10}의제|다른\s*법(률|령)에\s*따른\s*인[\s·ㆍ]?허가)")
+# FP: 적용 제외·준용 등 표준 인용 컨텍스트
+_STD_REFERENCE_TITLE = re.compile(
+    r"(적용\s*제외|준용|결격\s*사유|회원의?\s*자격|자격|면제|비과세|감면"
+    r"|특례|의제|편입|승계|소관|위탁)"
+)
+
+
+def _is_fp_article(art: Article) -> bool:
+    if art.is_definition() or art.is_purpose() or art.is_penalty():
+        return True
+    title = art.title or ""
+    text = art.full_text
+    if _PERMIT_DEEMED.search(title) or _PERMIT_DEEMED.search(text[:300]):
+        return True
+    if _STD_REFERENCE_TITLE.search(title):
+        return True
+    if art.is_disqualification():
+        return True
+    return False
 
 
 class L02CrossRef:
@@ -24,6 +45,8 @@ class L02CrossRef:
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:
+            if _is_fp_article(art):
+                continue
             refs = _CROSS_REF.findall(art.full_text)
             if not refs:
                 continue

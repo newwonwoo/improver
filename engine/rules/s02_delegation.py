@@ -28,6 +28,12 @@ _TECH_SPEC = re.compile(
     r"(서식|양식|전산|전자|전기|기술적|규격|통신|정보시스템)"
     r".{0,30}(대통령령|시행령|부령)으?로\s*정"
 )
+# FP 필터: 그 밖에 앞에 구체 항목들이 나열된 경우 (조직 명칭·운영 등)
+# 예: "명칭, 관할 구역, 조직 및 정원, 그 밖에 필요한 사항"
+_ENUMERATED_BEFORE_CATCHALL = re.compile(
+    r"(명칭|관할|구역|조직|정원|구성|위원|임명|위촉|운영|소재지|영수증|기부금)"
+    r"[^.]{0,80}(그\s*밖에|기타)"
+)
 
 
 class S02Delegation:
@@ -72,6 +78,9 @@ class S02Delegation:
                 continue
             # 기술적 사양 위임은 FP
             if _TECH_SPEC.search(text):
+                continue
+            # FP: 조직·운영 구체 항목들이 그 밖에 앞에 나열된 경우
+            if _ENUMERATED_BEFORE_CATCHALL.search(text):
                 continue
             # 구체적 기준/절차도 함께 위임되면 경감
             has_specific = bool(_SPECIFIC_SUBJECT.search(text))
