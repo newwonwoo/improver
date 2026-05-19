@@ -1,9 +1,14 @@
-"""S-04 열거 과다 (항 단위 호 개수)."""
+"""S-04 열거 과다 (항 단위 호 개수).
+
+SLM-level (docs/ENGINE_PRINCIPLES.md R2): raw text 의 호 수만 보는 게 아니라
+ArticleDecomposition.type 게이트를 거쳐 발화 여부를 결정.
+"""
 from __future__ import annotations
 
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 # FP 필터 패턴
