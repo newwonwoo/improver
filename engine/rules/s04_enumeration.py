@@ -21,9 +21,47 @@ _STD_LIST_TITLE = re.compile(
 # 포괄위임 종결호 — 호 자체가 아니라 마지막 호에서만 확인
 _CATCHALL_ITEM = re.compile(r"그\s*밖에.{0,30}(대통령령|총리령|부령|규칙)으로\s*정하는")
 
+# 본문 신호 — title 이 부족할 때 본문에서 분류
+# Source: signal_candidates.json :: S-04
+# 벌칙·과태료 본문 신호 (각호가 위반행위 구성요건 열거)
+_PENALTY_BODY = re.compile(
+    r"(다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는?\s*자.{0,50}"
+    r"(징역|벌금|과태료|처한다|부과한다))"
+    r"|(\d+년\s*이하의?\s*징역|\d+(천|만|억)?\s*원\s*이하의?\s*벌금)"
+)
+# 정의 조문 본문 신호 (각호가 용어 정의)
+_DEFINITION_BODY = re.compile(
+    r"(이\s*법에서\s*(\"|『).*(\"|』)?(이?란|의\s*뜻은|는\s*다음과\s*같다)"
+    r"|이\s*법에서\s*사용하는\s*용어의?\s*뜻"
+    r'|"[^"]+"\s*(이|라)?\s*(란|함은).{0,80}말한다)'
+)
+# 처분 사유 열거 본문 신호 (취소/정지 사유)
+_DISPOSITION_GROUNDS_BODY = re.compile(
+    r"다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는?\s*(경우|때)에는?"
+    r".{0,80}(허가|등록|면허|지정|승인|인가)를?\s*(취소|정지)"
+)
+# 자료요청·기관별 권한 열거 (정보체계 인용)
+_DATA_REQUEST_BODY = re.compile(
+    r"(자료\s*제공\s*요청|정보\s*제공\s*요청|관계\s*기관의?\s*장에게)"
+    r".{0,100}다음\s*각\s*호"
+)
+# 사업범위 본문 신호 (공공기관 사업 열거)
+_BUSINESS_SCOPE_BODY = re.compile(
+    r"(공단은?|공사는?|재단은?|진흥원은?|기금은?|위원회는?)"
+    r"\s*다음\s*각\s*호의?\s*사업"
+)
+
 
 def _is_fp_article(art: Article) -> bool:
-    """열거 과다 FP 필터 — 법제상 불가피한 호 다수 조문."""
+    """열거 과다 FP 필터 — 법제상 불가피한 호 다수 조문.
+
+    Source: signal_candidates.json :: S-04 (LLM 검증 데이터셋 기반)
+    R5 examples:
+      S-04-003@선박의입항및출항등에관한법률 (FP — 제56조 벌칙 조문)
+      S-04-005@하수도법 (FP — 허가취소 13호 사유)
+      S-04-001@방송문화진흥회법 (FP — 정관 기재사항)
+      S-04-002@전세사기피해자지원및주거안정에관한특별법 (FP — 자료요청 기관별)
+    """
     # 정의·벌칙·목적 조문은 호 열거가 정상
     if art.is_definition() or art.is_penalty() or art.is_purpose():
         return True
@@ -46,6 +84,15 @@ def _is_fp_article(art: Article) -> bool:
         adversarial_title = any(k in title for k in ("위반", "취소", "결격", "처분", "벌"))
         if not adversarial_title:
             return True
+    # 본문 신호 — title 이 일반적이거나 비어있을 때만 본문 첫 200자만 보고 분류
+    # (전체 본문 매칭은 진성 TP 의 호 안에서 매칭돼 오탐 위험)
+    body_start = text[:200]
+    # 벌칙 첫 줄 신호: "다음 각 호의 어느 하나에 해당하는 자는 ... 벌금/징역/처한다"
+    if _PENALTY_BODY.search(body_start):
+        return True
+    # 정의 본문 신호: "이 법에서 ... 말한다"
+    if _DEFINITION_BODY.search(body_start):
+        return True
     return False
 
 

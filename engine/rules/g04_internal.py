@@ -55,6 +55,20 @@ class G04InternalControl:
     category = "거버넌스"
 
     def scan(self, law: Law) -> list[Finding]:
+        # SLM-level signal composition (docs/ENGINE_PRINCIPLES.md R1, R4)
+        # Source: signal_candidates.json :: G-04 :: "내부통제 진성 신호 — 본문 명시키워드"
+        # Rationale: "공단·기금·공사법" 이름만으론 내부통제 적용 대상 단정 불가.
+        #            법령 본문에 진성 내부통제 키워드가 명시된 경우에만 진짜 적용 대상.
+        # Examples (LLM verdicts that justify this gate):
+        #   G-04-001@은행법 (TP — "내부통제기준 반영 의무" 명시)
+        #   G-04-001@금융복합기업집단의감독에관한법률 (TP — "내부통제정책 수립")
+        #   G-04-001@한국투자공사법 (TP — "내부통제기준 정하여야")
+        #   G-04-001@농업협동조합법 (TP — "내부통제기준 및 준법감시인")
+        #   G-04-001@부동산투자회사법 (TP — "내부통제기준 제정")
+        # Counter-examples (FPs this gate suppresses):
+        #   G-04-001@한국가스공사법 (FP — 단순 설립조문)
+        #   G-04-001@공공자금관리기금법 (FP — 기금 통합관리 목적)
+        #   G-04-001@대한석탄공사법 (FP — 자원개발 촉진 목적)
         if not _is_applicable(law.name):
             return []
         if len(law.articles) < 5:
@@ -75,6 +89,16 @@ class G04InternalControl:
             return []
         # 법령 전체 텍스트 기준 5요소 매칭
         full = "\n".join(art.full_text for art in articles)
+
+        # R1 (signal composition): 적용 후보 법령이라 해도,
+        # 본문 어디에도 진성 내부통제 신호가 없으면 발화하지 않는다.
+        # 진성 신호 := 5요소 중 ≥1개 매칭 OR _INTERNAL_CONTROL_EXPLICIT 매칭
+        has_explicit_signal = bool(_INTERNAL_CONTROL_EXPLICIT.search(full))
+        elements_matched = [name for name, pat in _FIVE_ELEMENTS.items() if pat.search(full)]
+        if not has_explicit_signal and len(elements_matched) == 0:
+            # 단순히 "공단·기금·공사" 이름만 가진 법령 — 적용 대상 아님
+            return []
+
         missing = [name for name, pat in _FIVE_ELEMENTS.items() if not pat.search(full)]
         met = len(_FIVE_ELEMENTS) - len(missing)
         if met >= 4:

@@ -12,29 +12,72 @@ from .base import PatternResult, make_finding
 
 _CITE_PAT = re.compile(r"「([^」]+)」")
 # TP 컨텍스트: 인허가의제·특례·금지 조문 — 과도한 인용이 실질 결함
-_TP_CONTEXT = re.compile(r"(인[\s·ㆍ]?허가.{0,10}의제|특례\s*규정|금지\s*행위|이\s*법에\s*따른\s*의무)")
+# Source: signal_candidates.json :: L-01 :: "인ㆍ허가의제_조문_TP_확정"
+_TP_CONTEXT = re.compile(
+    r"(인[\s·ㆍ]?허가.{0,10}의제|특례\s*규정|금지\s*행위|이\s*법에\s*따른\s*의무"
+    r"|다른\s*법률과의?\s*관계|받은\s*것으로\s*본다)"
+)
+# 인허가의제 조문 제목 — TP 강제 트리거
+_TP_TITLE = re.compile(
+    r"(다른\s*법률과의?\s*관계|인[\s·ㆍ]?허가\s*등?의?\s*의제|허가\s*등?의?\s*의제"
+    r"|심사\s*[·ㆍ]?\s*승인\s*[·ㆍ]?\s*협의의?\s*의제"
+    r"|사무처리\s*특례)"
+)
 # FP 컨텍스트: 법제상 불가피한 타법 인용 조문 유형
+# Source: signal_candidates.json :: L-01 :: 정의/벌칙/감면/지급대상/정보체계 시리즈
 _FP_CONTEXT = re.compile(
     r"(결격\s*사유|취업\s*제한|징계\s*부가금|감면\s*대상|지급\s*대상|중복\s*수급"
-    r"|회원의?\s*자격|비과세|적용\s*제외|준용한다|준용하는|회원\s*가입)"
+    r"|회원의?\s*자격|비과세|적용\s*제외|준용한다|준용하는|회원\s*가입"
+    r"|수급권자|위원의?\s*자격|정보\s*제공\s*요청)"
 )
 _FP_TITLE = re.compile(
     r"(승계|회원의?\s*자격|비과세|면제|적용\s*제외|준용|회원\s*가입"
-    r"|결격\s*사유|감면|특별\s*공제|공제\s*대상)"
+    r"|결격\s*사유|감면|특별\s*공제|공제\s*대상|징계\s*부가금"
+    r"|취업\s*제한|비위\s*면직|정보체계|시스템|자료\s*제공|정보\s*제공"
+    r"|적용\s*특례|지원\s*대상|지급\s*대상)"
+)
+# FP: 벌칙 본문 신호 (제목이 안 잡혀도 본문으로 판별)
+# Source: signal_candidates.json :: L-01 :: "벌칙·제재조문_FP_필터"
+_PENALTY_BODY = re.compile(
+    r"(\d+년\s*이하의?\s*징역|\d+(천|만|억)?원\s*이하의?\s*벌금"
+    r"|취업할\s*수\s*없다|해임|파면|몰수|추징)"
+)
+# FP: 정보체계 구축·연계 조문 (자료원천 인용용)
+_INFO_SYSTEM = re.compile(
+    r"(정보체계|시스템).{0,50}(구축|연계|운영).{0,300}자료\s*(또는|이나|·)?\s*정보"
 )
 
 
 def _is_fp_article(art: Article) -> bool:
-    """L-01 FP 필터 — 불가피한 타법 인용 조문."""
+    """L-01 FP 필터 — 불가피한 타법 인용 조문.
+
+    Source: signal_candidates.json :: L-01
+    R5 examples (verdicts that justify):
+      L-01-001@소득세법 (FP — 정의조문)
+      L-01-001@형법 (FP — 벌칙조문)
+      L-01-001@사회보장기본법 (FP — 적용대상)
+      L-01-001@정보공개법 (FP — 정보체계 자료원천)
+    Counter-examples (TPs):
+      L-01-007@다른 법률과의 관계 (TP — 사무처리 특례)
+    """
     if art.is_definition() or art.is_penalty() or art.is_purpose():
         return True
     if art.is_disqualification():
         return True
     title = art.title or ""
+    # TP 트리거가 제목에 있으면 FP 필터 통과시키지 않음 (TP 강제)
+    if _TP_TITLE.search(title):
+        return False
     if _FP_TITLE.search(title):
         return True
     text = art.full_text
     if _FP_CONTEXT.search(text):
+        return True
+    # 본문에 형벌 신호 (제목이 모호해도 벌칙조문 식별)
+    if _PENALTY_BODY.search(text):
+        return True
+    # 정보체계 자료원천 인용
+    if _INFO_SYSTEM.search(text):
         return True
     return False
 

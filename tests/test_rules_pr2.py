@@ -77,8 +77,18 @@ def test_f02_full_immunity_critical():
     assert findings and findings[0].severity == "심각"
 
 
-def test_f02_partial_with_exception_caution():
+def test_f02_partial_with_strong_exception_skipped():
+    # LLM 정답 기준 (docs/ENGINE_PRINCIPLES.md R1):
+    # "중과실"까지 명시적으로 보호되는 면책은 정상 입법 → 발화 안 함.
     text = "제10조(면책) 운영자는 책임을 지지 아니한다. 다만, 고의 또는 중과실은 제외한다."
+    findings = F02Immunity().scan(_law(text))
+    assert findings == []
+
+
+def test_f02_partial_with_weak_exception_caution():
+    # "고의·과실"만 예외이고 "중과실" 명시 누락 → 발화 (주의).
+    # LLM TP 패턴: F-02-001@국가인권위원회법 류
+    text = "제10조(면책) 운영자는 책임을 지지 아니한다. 다만, 고의 또는 과실은 제외한다."
     findings = F02Immunity().scan(_law(text))
     assert findings and findings[0].severity == "주의"
 

@@ -56,13 +56,17 @@ def test_g03_supervision_all_missing():
 
 
 def test_g04_internal_control_only_applicable_laws():
-    articles = "\n\n".join(
-        f"제{i}조(사항{i}) 본문{i}." for i in range(1, 8)
-    )
-    # 비기관법 — 적용 제외
-    assert G04InternalControl().scan(_law(articles, name="일반법")) == []
-    # 기금법 — 5요소 매칭 0 → 심각
-    findings = G04InternalControl().scan(_law(articles, name="주택도시기금법"))
+    # 적용 가능 법령(기금·공단·금융 등)이라도 본문에 진성 내부통제 신호가
+    # 없으면 G-04 미발화 (docs/ENGINE_PRINCIPLES.md R1: 단일 키워드 발화 금지).
+    # LLM 검증 기준: G-04 적용 조건 = 법령명 화이트리스트 AND 본문에 진성 신호.
+    bare = "\n\n".join(f"제{i}조(사항{i}) 본문{i}." for i in range(1, 8))
+    assert G04InternalControl().scan(_law(bare, name="일반법")) == []
+    # 적용 후보 법령이지만 진성 신호 없음 → 미발화 (LLM 정답 기준)
+    assert G04InternalControl().scan(_law(bare, name="주택도시기금법")) == []
+    # 진성 신호(준법감시인 — 5요소엔 없지만 명시적 내부통제 키워드) 1개만 있는 경우:
+    # 5요소 0/5 + explicit 신호 존재 → 심각으로 발화
+    with_signal = bare + "\n\n제8조(준법) 준법감시인은 두지 아니한다."
+    findings = G04InternalControl().scan(_law(with_signal, name="주택도시기금법"))
     assert len(findings) == 1
     assert findings[0].severity == "심각"
 
