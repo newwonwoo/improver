@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -159,6 +160,19 @@ class F02Immunity:
                 continue
             text = art.full_text
             if _is_fp_article(art, text):
+                continue
+            # Structural FP gates (verdict 분석)
+            decomp = decompose(art)
+            t, s = decomp.type, decomp.primary_subject.value
+            # 위임·보고·금지 + 비-시민 주체 = 면책 조항이 아님
+            if t == ArticleType.DELEGATION:
+                continue  # 위임 조문에서 "면책" 매칭은 위임 사항 명시일 뿐
+            if t == ArticleType.REPORTING:
+                continue
+            if t == ArticleType.PROHIBITION:
+                continue
+            # GENERAL + OPERATOR (0 TP / 3 FP — 사업자 행위 한정)
+            if t == ArticleType.GENERAL and s == "OPERATOR":
                 continue
             is_full = bool(_PATTERN_C.search(text))
             is_partial = bool(_PATTERN_A.search(text) or _PATTERN_B.search(text))

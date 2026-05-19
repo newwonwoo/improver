@@ -120,6 +120,19 @@ class S04Enumeration:
         for art in law.articles:
             if _is_fp_article(art):
                 continue
+            # Structural FP gates (verdict 분석): 순수 FP 조합
+            decomp = decompose(art)
+            t, s = decomp.type, decomp.primary_subject.value
+            if t == ArticleType.COMMITTEE:
+                continue  # 위원회 운영 조문은 호 열거 본질
+            if t == ArticleType.REPORTING and s == "AGENCY":
+                continue
+            if t == ArticleType.PROHIBITION:
+                continue  # 금지조문(누구든지/UNKNOWN) — 호 열거가 사유 명시
+            if t == ArticleType.GENERAL and s in ("AGENCY", "EVERYONE"):
+                continue  # 행정청·보편 일반 조문 (사업범위·금지행위 열거)
+            if t == ArticleType.PLAN and s == "AGENCY":
+                continue  # 계획 항목 열거
             # SLM signal: 호 수만으론 TP/FP 분간 불가 (TP 평균 13.4 ≈ FP 평균 13.7).
             # 컨텍스트(처분·위반·포괄위임) 신호와 결합해야 의미 있는 발화.
             art_text = art.full_text

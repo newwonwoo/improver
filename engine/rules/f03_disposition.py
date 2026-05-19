@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -75,6 +76,13 @@ class F03Disposition:
                 continue
             # FP 필터 5: 조문제목이 벌칙/과태료/양벌규정
             if art.title and _SANCTION_ONLY.match(art.title.strip()):
+                continue
+            # Structural gate (verdict 분석): 순수 FP 타입 조합
+            # COMMITTEE 운영·PROCEDURE+AGENCY·PROHIBITION+UNKNOWN
+            decomp = decompose(art)
+            if decomp.type == ArticleType.COMMITTEE:
+                continue
+            if decomp.type == ArticleType.PROHIBITION and decomp.primary_subject.value == "UNKNOWN":
                 continue
             # FP 필터 6: 사인간 민사 해지·해제 조문
             text = art.full_text

@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -66,6 +67,10 @@ class G01Exception:
         for art in law.articles:
             # FP 필터: 정의·벌칙·목적 조문
             if art.is_definition() or art.is_penalty() or art.is_purpose():
+                continue
+            # Structural gate: PROHIBITION 타입 + UNKNOWN 주체 = 순수 FP 패턴
+            decomp = decompose(art)
+            if decomp.type == ArticleType.PROHIBITION and decomp.primary_subject.value == "UNKNOWN":
                 continue
             text = art.full_text
             title = art.title or ""

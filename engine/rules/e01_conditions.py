@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -88,6 +89,11 @@ class E01Conditions:
         idx = 0
         for art in law.articles:
             if _is_fp_article(art):
+                continue
+            # Structural gate (verdict analysis): pure-FP type combinations
+            # PROHIBITION 타입은 다른 룰(F-01) 영역 — E-01 미발화
+            decomp = decompose(art)
+            if decomp.type == ArticleType.PROHIBITION:
                 continue
             text = art.full_text
             # 항별 최고 복잡도 사용 — 열거 호/목이 전체 카운트를 부풀리는 오탐 방지

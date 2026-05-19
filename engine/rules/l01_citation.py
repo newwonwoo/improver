@@ -8,6 +8,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 _CITE_PAT = re.compile(r"「([^」]+)」")
@@ -117,6 +118,13 @@ class L01Citation:
         for art in law.articles:
             if _is_fp_article(art):
                 continue
+            # Structural FP gates (verdict 분석): 0 TP / 다수 FP 조합
+            decomp = decompose(art)
+            t, s = decomp.type, decomp.primary_subject.value
+            if t == ArticleType.DELEGATION and s == "EVERYONE":
+                continue
+            if t == ArticleType.DISPOSITION and s == "AGENCY":
+                continue  # 처분 사유 열거에서 타법령 인용은 정상
             cites = _CITE_PAT.findall(art.full_text)
             # 법령명만 카운트 — 동일 법령명은 1회로
             laws = {c for c in cites if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
