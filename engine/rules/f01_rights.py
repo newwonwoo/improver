@@ -56,7 +56,26 @@ _AUTOMATIC_STATUS_LOSS = re.compile(
 _OFFICER_QUAL = re.compile(
     r"(위원에?\s*임명될\s*수\s*없다|위원이\s*될\s*수\s*없다"
     r"|임원이?\s*될\s*수\s*없다|임원으로\s*선임될\s*수\s*없다"
-    r"|이사가?\s*될\s*수\s*없다|감사가?\s*될\s*수\s*없다)"
+    r"|이사가?\s*될\s*수\s*없다|감사가?\s*될\s*수\s*없다"
+    r"|투표\s*참관인이?\s*될\s*수\s*없다|선거\s*참관인이?\s*될\s*수\s*없다"
+    r"|감독\s*위원이?\s*될\s*수\s*없다|시험\s*위원이?\s*될\s*수\s*없다)"
+)
+# Method B (F-01_part01) 검증으로 도출된 신호:
+# Source: outputs/rule_verification_responses/F-01_part01.json :: new_signals
+# 1. 협조요청·자료요청 조문 — 시민 권리 제한 아님
+_DATA_COOPERATION_TITLE = re.compile(
+    r"(자료의?\s*협조요청|자료\s*제공\s*요청|자료\s*제출\s*요구"
+    r"|자료의?\s*제공\s*요청|정보\s*제공\s*요청)"
+)
+# 2. 행정처분 조문 (F-03 영역)
+_ADMIN_DISPOSITION_TITLE = re.compile(
+    r"(인가\s*취소|등록\s*취소|면허\s*취소|영업\s*정지|업무\s*정지|폐업\s*신고|직권\s*말소"
+    r"|징계\s*심의|규제특례\s*지정의?\s*취소)"
+)
+# 3. 시설·법인·기관 책임자 의무 (사업자 의무 — 시민 권리 X)
+_INSTITUTION_OBLIGATION_TITLE = re.compile(
+    r"(시설\s*완성검사|중앙행정기관의?\s*설치|기관의?\s*보조기관|기관의?\s*조직"
+    r"|정부조직)"
 )
 # TP 필터: 실질적 권리 박탈 키워드
 _DEPRIVATION = re.compile(
@@ -93,8 +112,23 @@ class F01Rights:
             # 주로 사업자 행위 제한 (국민 권리 침해 아님)
             if _OPERATOR.search(text) and not _CITIZEN.search(text):
                 continue
-            # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
+            # Method B (F-01_part01 verdicts): 협조요청·행정처분·정부조직 = FP
+            # Source: outputs/rule_verification_responses/F-01_part01.json
+            # R5 examples (verdicts):
+            #   F-01-001@건강검진기본법 (FP — 자료의 협조요청)
+            #   F-01-005@독립유공자예우에관한법률 (FP — 자료 제공 요청)
+            #   F-01-004@공공감사에관한법률 (FP — 자료 제출 요구)
+            #   F-01-012@감정평가법 (FP — 인가취소 = F-03 영역)
+            #   F-01-006@정보통신진흥특별법 (FP — 규제특례 지정 취소)
+            #   F-01-001@정부조직법 (FP — 정부조직 설치)
             title = art.title or ""
+            if _DATA_COOPERATION_TITLE.search(title):
+                continue
+            if _ADMIN_DISPOSITION_TITLE.search(title):
+                continue
+            if _INSTITUTION_OBLIGATION_TITLE.search(title):
+                continue
+            # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
                 "준수사항", "준수 사항", "행위제한", "광고", "영업제한",
                 "사업자의", "기관의 의무", "기관의 장",
