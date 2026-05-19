@@ -42,7 +42,19 @@ _OPERATOR_SUBJECT = re.compile(
 )
 # FP 필터: 사업주/고용주가 주체 → 근로자 보호 조문 (권리 제한 아님)
 _EMPLOYER_SUBJECT = re.compile(
-    r"(사업주|고용주|사용자|운영자|고용인).{0,30}(하지\s*못한다|아니\s*된다|할\s*수\s*없다)"
+    r"(사업주|고용주|사용자|운영자|고용인|고용하고\s*있는\s*자).{0,30}(하지\s*못한다|아니\s*된다|할\s*수\s*없다)"
+)
+# FP 필터: 자동 자격 상실 (사건 발생 시 자동 상실 — 재량적 박탈 아님)
+_AUTOMATIC_STATUS_LOSS = re.compile(
+    r"(피보험자격을?\s*상실한다|회원자격을?\s*상실한다"
+    r"|다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는\s*날에.{0,30}상실"
+    r"|이직한\s*날의?\s*다음\s*날|자격이\s*당연히)"
+)
+# FP 필터: 위원·임원 자격 제한 (자격조건 정의 — 권리 제한 아님)
+_OFFICER_QUAL = re.compile(
+    r"(위원에?\s*임명될\s*수\s*없다|위원이\s*될\s*수\s*없다"
+    r"|임원이?\s*될\s*수\s*없다|임원으로\s*선임될\s*수\s*없다"
+    r"|이사가?\s*될\s*수\s*없다|감사가?\s*될\s*수\s*없다)"
 )
 # TP 필터: 실질적 권리 박탈 키워드
 _DEPRIVATION = re.compile(
@@ -69,6 +81,12 @@ class F01Rights:
                 continue
             # 사업주/고용주가 근로자를 보호하는 조문 (근로자 권리 제한 아님)
             if _EMPLOYER_SUBJECT.search(text):
+                continue
+            # 자동 자격 상실 (사건 발생 시 자동) — 재량적 박탈 아님
+            if _AUTOMATIC_STATUS_LOSS.search(text):
+                continue
+            # 위원·임원 자격 제한 (자격 정의 조문)
+            if _OFFICER_QUAL.search(text):
                 continue
             # 주로 사업자 행위 제한 (국민 권리 침해 아님)
             if _OPERATOR.search(text) and not _CITIZEN.search(text):
