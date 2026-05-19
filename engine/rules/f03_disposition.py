@@ -82,6 +82,10 @@ class F03Disposition:
 
         # 법령 전체에서 청문 절차 존재 여부 (다른 조문에 있을 수 있음)
         has_hearing_in_law = any(_HEARING.search(a.full_text) for a in law.articles)
+        # SLM (signal_candidates :: F-03 :: "청문조항 동조 내 명시 → 다운그레이드"):
+        # 처분조 + 동일 조문 내 청문 조항 존재 → 정상 입법 (사전절차 명시)
+        def _same_art_has_hearing(art) -> bool:
+            return bool(_HEARING.search(art.full_text))
 
         for art in law.articles:
             # FP 필터 1: 벌칙·과태료 단독 조문
@@ -164,6 +168,8 @@ class F03Disposition:
                 continue
 
             has_standard = bool(_STANDARD.search(text))
+            # SLM: 동일 조문 내 청문 명시 = 사전절차 적법 → severity 한 단계 다운
+            same_art_hearing = _same_art_has_hearing(art)
 
             if strength == "강" and not has_hearing_in_law:
                 severity = "심각"
@@ -177,6 +183,9 @@ class F03Disposition:
                 severity = "양호"
 
             if severity == "양호":
+                continue
+            # SLM: 동일 조문 내 청문 명시 + has_standard → 정상 입법, skip
+            if same_art_hearing and has_standard:
                 continue
 
             idx += 1
