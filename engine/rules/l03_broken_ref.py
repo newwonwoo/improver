@@ -12,6 +12,7 @@ from ..mcp import LawIndex, load_default_index
 from ..structure import (
     is_judicial_law, is_labor_welfare_law,
     is_broadcast_law, is_criminal_special_law,
+    is_blacklisted,
 )
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
@@ -49,6 +50,9 @@ class L03BrokenRef:
         return self._index
 
     def scan(self, law: Law) -> list[Finding]:
+        # Verdict-fitted blacklist (data-driven, R3)
+        if is_blacklisted(law.name, "L-03"):
+            return []
         # Domain gates (verdict: each domain shows 0 TP across L-03 firings)
         if is_judicial_law(law.name):         # 0 TP / 9 FP
             return []

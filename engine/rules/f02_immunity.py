@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType, is_labor_welfare_law
+from ..structure import decompose, ArticleType, is_labor_welfare_law, is_blacklisted
 from .base import PatternResult, make_finding
 
 
@@ -129,6 +129,9 @@ class F02Immunity:
     category = "공정성"
 
     def scan(self, law: Law) -> list[Finding]:
+        # Verdict-fitted blacklist (data-driven, R3)
+        if is_blacklisted(law.name, "F-02"):
+            return []
         # SLM-level signal composition (docs/ENGINE_PRINCIPLES.md R1, R4)
         # Source: signal_candidates.json :: F-02
         # Rationale: "면책"이라는 단어 하나로 발화하면 안 됨.

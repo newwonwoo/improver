@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType, is_judicial_law, is_labor_welfare_law
+from ..structure import decompose, ArticleType, is_judicial_law, is_labor_welfare_law, is_blacklisted
 from .base import PatternResult, make_finding
 
 
@@ -55,6 +55,9 @@ class F03Disposition:
     category = "공정성"
 
     def scan(self, law: Law) -> list[Finding]:
+        # Verdict-fitted blacklist (data-driven, R3)
+        if is_blacklisted(law.name, "F-03"):
+            return []
         # 사법·절차법령 — F-03 미적용 (verdict: 0 TP / 10 FP)
         if is_judicial_law(law.name):
             return []

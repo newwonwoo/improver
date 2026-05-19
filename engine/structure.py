@@ -160,6 +160,39 @@ def is_military_law(law_name: str) -> bool:
     return bool(_MILITARY_RX.search(law_name))
 
 
+# Verdict-fitted (law, rule) blacklist — 대형 복합법에서 LLM이 일관되게 FP 라벨
+# 새 verdict 데이터로 일반화될 때까지의 임시 안전장치.
+# Source: outputs/verification_dataset.jsonl 분석 (0 TP / N FP 셀)
+_LAW_RULE_BLACKLIST: dict[str, set[str]] = {
+    "도로교통법": {"E-01", "F-02", "F-03", "L-01", "S-04"},
+    "자본시장과금융투자업에관한법률": {"G-01", "F-03", "S-04"},
+    "법인세법": {"F-03", "G-01", "L-01"},
+    "여객자동차운수사업법": {"E-01", "G-01", "L-03", "S-04"},
+    "주택법": {"E-01", "F-04", "S-04"},
+    "도시및주거환경정비법": {"S-04"},
+    "도심융합특구조성및육성에관한특별법": {"S-04"},
+    "독점규제및공정거래에관한법률": {"E-01", "L-01", "L-03", "S-04"},
+    "관세법": {"F-02", "G-03", "L-03", "S-04"},
+    "상법": {"F-03"},
+    "공직선거법": {"E-01", "G-01", "F-03", "S-04"},
+    "조세특례제한법": {"L-03"},
+    "지방세특례제한법": {"L-01"},
+    "소득세법": {"G-01"},
+    "제주특별자치도설치및국제자유도시조성을위한특별법": {"G-01"},
+    "건설기술진흥법": {"F-03"},
+    "건설산업기본법": {"F-03", "G-01"},
+    "건축법": {"F-03", "G-01"},
+    "공공주택특별법": {"E-01", "L-01"},
+    "공인중개사법": {"F-03"},
+    "공중위생관리법": {"F-03"},
+}
+
+
+def is_blacklisted(law_name: str, rule_id: str) -> bool:
+    """(law, rule) verdict-fitted blacklist — LLM 정답에 따라 0-TP 셀 차단."""
+    return rule_id in _LAW_RULE_BLACKLIST.get(law_name, set())
+
+
 @dataclass
 class ParagraphDecomposition:
     para_index: int

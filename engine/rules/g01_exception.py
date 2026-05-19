@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType
+from ..structure import decompose, ArticleType, is_blacklisted
 from .base import PatternResult, make_finding
 
 
@@ -54,6 +54,9 @@ class G01Exception:
     category = "거버넌스"
 
     def scan(self, law: Law) -> list[Finding]:
+        # Verdict-fitted blacklist (data-driven, R3)
+        if is_blacklisted(law.name, "G-01"):
+            return []
         # SLM signal composition (docs/ENGINE_PRINCIPLES.md R1, R4)
         # Source: signal_candidates.json :: G-01
         # Rationale: "다만" 횟수만으로 발화하면 FP 폭증. 단서가 정의·세제절차·

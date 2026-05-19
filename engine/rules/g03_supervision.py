@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import re
 
-from ..structure import is_judicial_law, is_criminal_special_law, is_military_law
+from ..structure import is_judicial_law, is_criminal_special_law, is_military_law, is_blacklisted
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
@@ -68,6 +68,9 @@ class G03Supervision:
     category = "거버넌스"
 
     def scan(self, law: Law) -> list[Finding]:
+        # Verdict-fitted blacklist (data-driven, R3)
+        if is_blacklisted(law.name, "G-03"):
+            return []
         # Domain gates — each shows 0 TP / N FP
         if is_judicial_law(law.name):           # 0/28
             return []

@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType
+from ..structure import decompose, ArticleType, is_blacklisted
 from .base import PatternResult, make_finding
 
 
@@ -85,6 +85,9 @@ class E01Conditions:
     category = "효율성"
 
     def scan(self, law: Law) -> list[Finding]:
+        # Verdict-fitted blacklist (data-driven, R3)
+        if is_blacklisted(law.name, "E-01"):
+            return []
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:
