@@ -150,6 +150,17 @@ class E01Conditions:
                 severity = "경고"
             else:
                 severity = "주의"
+            # SLM verdict 분석: DISPOSITION + AGENCY + MAY 가 심각으로 발화한 7건 모두 FP
+            # (처분 재량 — 사유 호 명시, 결함 아님). 발화 차단.
+            from ..structure import Modal
+            first_modal = next((p.modal for p in decomp.paragraphs if p.modal != Modal.NONE), Modal.NONE)
+            if (decomp.type == ArticleType.DISPOSITION and s == "AGENCY"
+                    and severity == "심각" and first_modal == Modal.MAY):
+                continue
+            # SLM verdict: GENERAL+UNKNOWN+MUST+주의 (0/3)
+            if (decomp.type == ArticleType.GENERAL and s == "UNKNOWN"
+                    and severity == "주의" and first_modal == Modal.MUST):
+                continue
             idx += 1
             findings.append(
                 make_finding(
