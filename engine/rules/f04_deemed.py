@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import is_judicial_law
 from .base import PatternResult, make_finding
 
 
@@ -19,6 +20,9 @@ class F04Deemed:
     category = "공정성"
 
     def scan(self, law: Law) -> list[Finding]:
+        # 사법·절차법령 — F-04 미적용 (verdict: 0 TP / 4 FP)
+        if is_judicial_law(law.name):
+            return []
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:

@@ -8,7 +8,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType
+from ..structure import decompose, ArticleType, is_judicial_law
 from .base import PatternResult, make_finding
 
 _CITE_PAT = re.compile(r"「([^」]+)」")
@@ -113,6 +113,9 @@ class L01Citation:
     category = "적법성"
 
     def scan(self, law: Law) -> list[Finding]:
+        # 사법·절차법령 — L-01 미적용 (verdict: 0 TP / 4 FP)
+        if is_judicial_law(law.name):
+            return []
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:

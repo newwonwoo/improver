@@ -106,6 +106,18 @@ _EVERYONE_SUBJECT_RX = re.compile(r"누구든지")
 # 빈 조문 (삭제)
 _EMPTY_RX = re.compile(r"삭제")
 
+# 사법·국회·진상규명 도메인 법령 — 대부분의 규제 결함 룰 적용 외
+# Source: verdict 분석 (F-03/F-04/G-03/G-04/L-01/L-03/S-04 각각 0 TP)
+_JUDICIAL_LAW_RX = re.compile(
+    r"(소송|심판|등기|중재|공판|^법원|국회법|선거법|국정|입법|입회|조사위원회"
+    r"|특별검사|진상규명)"
+)
+
+
+def is_judicial_law(law_name: str) -> bool:
+    """사법·절차·진상규명법 — 규제 결함 룰 적용 제외."""
+    return bool(_JUDICIAL_LAW_RX.search(law_name))
+
 
 @dataclass
 class ParagraphDecomposition:

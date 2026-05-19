@@ -8,7 +8,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType
+from ..structure import decompose, ArticleType, is_judicial_law
 from .base import PatternResult, make_finding
 
 # FP 필터 패턴
@@ -115,6 +115,9 @@ class S04Enumeration:
     category = "구조"
 
     def scan(self, law: Law) -> list[Finding]:
+        # 사법·절차법령 — S-04 미적용 (verdict: 0 TP / 7 FP)
+        if is_judicial_law(law.name):
+            return []
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:

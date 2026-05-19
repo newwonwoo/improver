@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 
+from ..structure import is_judicial_law
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
@@ -55,6 +56,9 @@ class G04InternalControl:
     category = "거버넌스"
 
     def scan(self, law: Law) -> list[Finding]:
+        # 사법·절차법령 — G-04 미적용 (verdict: 0 TP / 1 FP)
+        if is_judicial_law(law.name):
+            return []
         # SLM-level signal composition (docs/ENGINE_PRINCIPLES.md R1, R4)
         # Source: signal_candidates.json :: G-04 :: "내부통제 진성 신호 — 본문 명시키워드"
         # Rationale: "공단·기금·공사법" 이름만으론 내부통제 적용 대상 단정 불가.

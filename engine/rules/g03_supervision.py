@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 
+from ..structure import is_judicial_law
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
@@ -67,6 +68,9 @@ class G03Supervision:
     category = "거버넌스"
 
     def scan(self, law: Law) -> list[Finding]:
+        # 사법·절차법령 — G-03 미적용 (verdict: 0 TP / 28 FP)
+        if is_judicial_law(law.name):
+            return []
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:

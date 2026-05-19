@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType
+from ..structure import decompose, ArticleType, is_judicial_law
 from .base import PatternResult, make_finding
 
 
@@ -55,6 +55,9 @@ class F03Disposition:
     category = "공정성"
 
     def scan(self, law: Law) -> list[Finding]:
+        # 사법·절차법령 — F-03 미적용 (verdict: 0 TP / 10 FP)
+        if is_judicial_law(law.name):
+            return []
         findings: list[Finding] = []
         idx = 0
 
