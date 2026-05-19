@@ -63,6 +63,26 @@ _QUALIFICATION_DEFINITION = re.compile(
     r"(다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는\s*자만이?"
     r"|다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는\s*사람만이?)"
 )
+# FP 필터: 사법 절차 도메인 (법원·검사·사법경찰관)
+_JUDICIAL_DOMAIN = re.compile(
+    r"(사법경찰관|검사|법원|판사|공판|수사|체포|구속|압수|기소|공소"
+    r"|상표등록출원|특허출원|심판청구|심결|보좌인)"
+)
+# FP 필터: 신청 철회·취하·정정·변경 조문 (인허가 처리 자체 아님)
+_REVOCATION_PROC = re.compile(
+    r"(신청을?\s*철회|신청을?\s*취하|신청을?\s*변경|신청을?\s*정정"
+    r"|신청\s*철회|신청\s*취하|등록\s*취하|허가\s*취하)"
+)
+# FP 필터: 유효기간·갱신 조문 (인허가 발급이 아닌 기간 규정)
+_VALIDITY_PERIOD = re.compile(
+    r"(유효기간은?\s*\d+년|유효기간을?\s*\d+년|유효기간이?\s*\d+년"
+    r"|기간을?\s*연장|기간이?\s*만료)"
+)
+# FP 필터: 공동 신청·복수 당사자 절차
+_JOINT_APPLICATION = re.compile(
+    r"(2인\s*이상이?\s*공동|공동으로\s*상표등록|공동으로\s*특허"
+    r"|복수당사자|대표자를\s*선정)"
+)
 
 
 class G02Permit:
@@ -104,6 +124,18 @@ class G02Permit:
                 continue
             # 자격요건 정의 조문 ("…에 해당하는 자만이…")
             if _QUALIFICATION_DEFINITION.search(text):
+                continue
+            # 사법 절차 도메인 (법원·검사 등)
+            if _JUDICIAL_DOMAIN.search(text):
+                continue
+            # 신청 철회·취하·변경 조문
+            if _REVOCATION_PROC.search(text):
+                continue
+            # 유효기간·만료·연장 조문
+            if _VALIDITY_PERIOD.search(text):
+                continue
+            # 공동 신청·복수 당사자 절차
+            if _JOINT_APPLICATION.search(text):
                 continue
             # 직접 처리 동사가 없으면 skip
             if not _PROCESSING_VERB.search(text):
