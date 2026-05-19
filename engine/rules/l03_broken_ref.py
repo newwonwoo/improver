@@ -19,6 +19,17 @@ _DEFINITION_CONTEXT = re.compile(r'"[^"]+"\s*(이)?란\s*.{0,50}말한다')
 # 최소 조문 수 — 이 이상이어야 인덱스가 신뢰할 수 있다
 _MIN_ART_COUNT_FOR_NOT_FOUND = 40
 
+# 컨텍스트 FP 필터 (signal_candidates :: L-03 + verdict 분석)
+# 1) 부칙·연혁 영역의 인용은 경과조항이므로 정상
+# 2) "다른 법률과의 관계" 류 조문은 관계 정리 목적 — 폐지법령 인용도 의미 있음
+# 3) 행정제재 사유 식별을 위한 인용도 정당 (위반행위 정의)
+_CONTEXT_TITLE_FP = re.compile(
+    r"(다른\s*법률과의?\s*관계|적용\s*특례|적용\s*제외"
+    r"|경과\s*조치|경과조항|적용례|부칙|위반행위)"
+)
+# 챕터가 "부칙"이면 finding 생성 X
+_CHAPTER_BUCHIK = re.compile(r"부칙")
+
 
 class L03BrokenRef:
     pattern_id = "L-03"
@@ -34,12 +45,27 @@ class L03BrokenRef:
         return self._index
 
     def scan(self, law: Law) -> list[Finding]:
+        # SLM signal: 인용 컨텍스트가 부수적 (관계조항·위반행위·경과)이면
+        # 폐지법령 인용도 정상 입법 → finding 안 함.
+        # Source: signal_candidates :: L-03 + verdict 분석
+        # R5 examples (FPs this gate suppresses):
+        #   L-03-001@관세법 제224조 (FP — 위반행위 식별 인용)
+        #   L-03-001@외국인투자촉진법 제30조 (FP — 다른 법률과의 관계)
+        # Counter (TPs gate must keep):
+        #   L-03-001@법인세법 (TP — 본문 일반 인용)
         index = self._idx()
         findings: list[Finding] = []
         idx = 0
         seen: set[tuple[str, str, str]] = set()
         for art in law.articles:
             if art.is_definition() or art.is_purpose():
+                continue
+            # 부칙 챕터의 인용은 경과조항이므로 정상
+            if art.chapter and _CHAPTER_BUCHIK.search(art.chapter):
+                continue
+            # 컨텍스트 FP: 관계조항·위반행위·경과조치 류 조문
+            title = art.title or ""
+            if _CONTEXT_TITLE_FP.search(title):
                 continue
             text = art.full_text
             for m in _CROSS_REF.finditer(text):
