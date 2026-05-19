@@ -119,6 +119,47 @@ def is_judicial_law(law_name: str) -> bool:
     return bool(_JUDICIAL_LAW_RX.search(law_name))
 
 
+# 노동·복지·사회보험 도메인 — 규제 결함 룰 일부 적용 제외
+# Source: verdict 분석 — L-03 (0/66), F-03 (0/14), G-04 (0/8), F-02 (0/6)
+_LABOR_WELFARE_RX = re.compile(
+    r"(고용|근로|산업안전보건|임금채권|파견근로|선원|국민연금|건강보험"
+    r"|산업재해|보험료징수|장기요양|일\s*[ㆍ·]\s*가정|복지기본|채권보장"
+    r"|최저임금|기간제|단시간|가사근로|직업안정)"
+)
+
+
+def is_labor_welfare_law(law_name: str) -> bool:
+    """노동·복지·사회보험 법령 — L-03/F-03/G-04/F-02 적용 제외 대상."""
+    return bool(_LABOR_WELFARE_RX.search(law_name))
+
+
+# 방송·통신 법령 — L-03 특히 발화 많음 (옛 법령 인용)
+_BROADCAST_RX = re.compile(r"(방송|전파|미디어|언론중재)")
+
+
+def is_broadcast_law(law_name: str) -> bool:
+    """방송·통신 법령 — L-03 외 적용 제외."""
+    return bool(_BROADCAST_RX.search(law_name))
+
+
+# 형사 특별법·진상규명·특별검사 — 절차적 성격이 강해 규제 룰 발화 부적합
+_CRIMINAL_SPECIAL_RX = re.compile(
+    r"(특별검사|진상규명|성폭력|스토킹|인신매매|범죄피해자|형의?\s*집행|군에서의)"
+)
+
+
+def is_criminal_special_law(law_name: str) -> bool:
+    return bool(_CRIMINAL_SPECIAL_RX.search(law_name))
+
+
+# 군사·국방 법령
+_MILITARY_RX = re.compile(r"(군인|국군|군사|군무원|군법무관)")
+
+
+def is_military_law(law_name: str) -> bool:
+    return bool(_MILITARY_RX.search(law_name))
+
+
 @dataclass
 class ParagraphDecomposition:
     para_index: int

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import re
 
-from ..structure import is_judicial_law
+from ..structure import is_judicial_law, is_labor_welfare_law
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
@@ -58,6 +58,9 @@ class G04InternalControl:
     def scan(self, law: Law) -> list[Finding]:
         # 사법·절차법령 — G-04 미적용 (verdict: 0 TP / 1 FP)
         if is_judicial_law(law.name):
+            return []
+        # 노동·복지·사회보험 법령 — G-04 미적용 (verdict: 0 TP / 8 FP)
+        if is_labor_welfare_law(law.name):
             return []
         # SLM-level signal composition (docs/ENGINE_PRINCIPLES.md R1, R4)
         # Source: signal_candidates.json :: G-04 :: "내부통제 진성 신호 — 본문 명시키워드"

@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType
+from ..structure import decompose, ArticleType, is_labor_welfare_law
 from .base import PatternResult, make_finding
 
 
@@ -147,6 +147,9 @@ class F02Immunity:
 
         # 법령명 게이트: 도산법 영역은 전체 미적용
         if _INSOLVENCY_LAW.search(law.name):
+            return []
+        # 노동·복지·사회보험 법령 — F-02 미적용 (verdict: 0 TP / 6 FP)
+        if is_labor_welfare_law(law.name):
             return []
         # 민·상사 법령 전체 미적용 (책임 분담은 민사법의 본질)
         # R5: F-02 verdict 분석 — 상법(TP3/FP26)·민법(TP2/FP16) net +37 noise reduction

@@ -9,7 +9,10 @@ from __future__ import annotations
 import re
 
 from ..mcp import LawIndex, load_default_index
-from ..structure import is_judicial_law
+from ..structure import (
+    is_judicial_law, is_labor_welfare_law,
+    is_broadcast_law, is_criminal_special_law,
+)
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
@@ -46,8 +49,14 @@ class L03BrokenRef:
         return self._index
 
     def scan(self, law: Law) -> list[Finding]:
-        # 사법·절차법령 — L-03 미적용 (verdict: 0 TP / 9 FP)
-        if is_judicial_law(law.name):
+        # Domain gates (verdict: each domain shows 0 TP across L-03 firings)
+        if is_judicial_law(law.name):         # 0 TP / 9 FP
+            return []
+        if is_labor_welfare_law(law.name):    # 0 TP / 66 FP
+            return []
+        if is_broadcast_law(law.name):        # 0 TP / 37 FP
+            return []
+        if is_criminal_special_law(law.name): # 0 TP / 6 FP
             return []
         # SLM signal: 인용 컨텍스트가 부수적 (관계조항·위반행위·경과)이면
         # 폐지법령 인용도 정상 입법 → finding 안 함.
