@@ -20,6 +20,15 @@ _EXEMPT_DANSEO = re.compile(
 )
 # TP 부스트: 처분조 단서 중첩
 _DISPOSITION_KEY = re.compile(r"(취소|정지|명령|과징금|해임|폐쇄)")
+# SLM signal (signal_candidates :: G-01):
+# "처분조문 단서중첩 TP부스트" — 제목 (등록취소|영업정지|허가취소|면직) + 단서 3+ + 재량
+_DISPOSITION_TITLE_STRONG = re.compile(
+    r"(등록\s*취소|영업\s*정지|허가\s*취소|면직|해임|자격\s*취소)"
+)
+# "기본권관련 절차 면제 단서 TP부스트" — 면회·통신·청약철회·교육·진료 + 단서 3+
+_FUNDAMENTAL_RIGHT_CONTEXT = re.compile(
+    r"(면회|통신|서신|청약\s*철회|교육|진료|진찰|면접교섭|친권|친자)"
+)
 
 # SLM-level FP filters (signal_candidates :: G-01)
 # 정의·용어 조문 (제외/한정 단서는 정의 범위 명확화일 뿐)
@@ -131,6 +140,12 @@ class G01Exception:
             if not has_disposition and _SCOPE_LIMIT_DANSEO.search(text) and danseo_count <= 2:
                 continue
 
+            # SLM TP 부스트 (signal_candidates :: G-01):
+            # 처분조 제목 (등록취소·영업정지·면직) + 단서 ≥2 + 재량 → 한 단계 상향
+            strong_disposition_title = bool(_DISPOSITION_TITLE_STRONG.search(title))
+            # 기본권 절차 (면회·통신·교육·진료) + 단서 ≥2 → 한 단계 상향
+            fundamental_right = bool(_FUNDAMENTAL_RIGHT_CONTEXT.search(text))
+
             if danseo_count >= 4:
                 severity = "심각"
             elif danseo_count >= 3:
@@ -141,11 +156,18 @@ class G01Exception:
                 severity = "주의"
             elif danseo_count == 1 and has_vague_exc and has_disposition:
                 severity = "주의"
+            elif (strong_disposition_title or fundamental_right) and danseo_count >= 2:
+                # SLM: 처분조 제목 또는 기본권 컨텍스트 + 단서 2개 → 주의
+                severity = "주의"
             else:
                 continue
             # TP 부스트: 처분조 단서 중첩은 한 단계 상향
             if has_disposition and severity in ("주의", "개선"):
                 severity = "경고"
+            # SLM TP 부스트: 강처분 제목 또는 기본권 컨텍스트 + 단서 3+ → 한 단계 상향
+            if (strong_disposition_title or fundamental_right) and danseo_count >= 3:
+                if severity == "주의": severity = "경고"
+                elif severity == "경고": severity = "심각"
 
             idx += 1
             findings.append(

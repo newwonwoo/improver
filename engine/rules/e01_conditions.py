@@ -14,6 +14,12 @@ from .base import PatternResult, make_finding
 _CONDITION_LEAD = re.compile(r"(경우|때|요건)(?:에는|에)?")
 _AND_OR = re.compile(r"(및|또는|이고|이며|하고|하며)")
 _NESTED_HINT = re.compile(r"(에 해당하는 경우로서|충족하고|갖추어야 하며|모두 충족|다음 각 호의)")
+# SLM signal (signal_candidates :: E-01 :: "정책의무·노력조항 FP")
+# Rationale: 노력하여야·진흥·촉진 류 정책의무 + 제재 부재 = 침익성 없어 결함 아님
+_POLICY_OBLIGATION = re.compile(
+    r"(노력하여야|진흥|촉진|육성|장려|보호받는\s*문화|환경을\s*조성|이바지)"
+)
+_SANCTION_KEYWORDS = re.compile(r"(취소|정지|과태료|과징금|벌금|징역|제재|처벌|시정)")
 # TP 부스트: 처분조 + 다단 조건
 _DISPOSITION_HINT = re.compile(r"(취소|정지|명령|과징금|처분).{0,30}(경우|때)")
 # FP 감쇄: 계획수립·진흥 등 정책 조문
