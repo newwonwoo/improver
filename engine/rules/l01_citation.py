@@ -185,7 +185,9 @@ class L01Citation:
             has_tp_context = bool(_TP_CONTEXT.search(art.full_text))
             # TP 컨텍스트 있으면 임계값 낮춤 (인허가의제는 6개부터)
             # TP 컨텍스트 없으면 7개 이상이어야 발화 (정밀도 우선)
-            min_threshold = 6 if has_tp_context else 7
+            # TP_TITLE 매칭(인허가의제·다른 법률과의 관계·사무처리 특례) 시 임계값 5
+            # — verdict 분석: 5개 법률만 인용해도 진성 결함 (석면안전관리법 §4 류)
+            min_threshold = 5 if tp_title_override else (6 if has_tp_context else 7)
             if len(laws) < min_threshold:
                 continue
             if len(laws) >= 10:
