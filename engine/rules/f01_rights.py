@@ -137,6 +137,18 @@ _DISCLOSURE_RECORD_TITLE = re.compile(
     r"|신고서|신고\s*의무|기재사항|공개매수|투자설명서|모집ㆍ?매출"
     r"|고객응대직원|보호\s*조치|직원\s*보호)"
 )
+# Method B (산업안전법 분석): 사업주 안전·보건 의무 조문 (근로자·시민 보호 목적)
+# R5 examples (FP):
+#   산업안전법 제25조 (안전보건관리규정 작성) - 사업주 안전관리 의무
+#   산업안전법 제44조 (공정안전보고서) - 사업주 사고예방 의무
+#   산업안전법 제124조 (석면농도기준 준수) - 석면해체업자 의무
+#   산업안전법 제42조 (유해위험방지계획서) - 사업주 계획서 제출
+#   산업안전법 제50조 (안전보건개선계획서) - 사업주 개선계획
+_SAFETY_OBLIGATION_TITLE = re.compile(
+    r"(안전보건관리규정|안전보건교육|공정안전보고서|유해위험방지계획서"
+    r"|안전보건개선계획|석면농도기준|보호구|방호조치|화학물질안전"
+    r"|위험성평가|작업환경측정|건강진단|특수건강진단)"
+)
 # 직역 자격법의 자격제한·자격취소 조문 (변호사·세무사·회계사·약사·의료인 등)
 _PROFESSIONAL_QUAL_RESTRICTION = re.compile(
     r"^(자격\s*취소|자격\s*정지|등록\s*취소|면허\s*취소|면허\s*정지|등록의?\s*거부"
@@ -213,6 +225,9 @@ class F01Rights:
                 continue
             # 금융사업자 공시·신고·기록 의무 (자본시장법류) = FP
             if _DISCLOSURE_RECORD_TITLE.search(title):
+                continue
+            # 산업안전 사업주 안전·보건 의무 = FP (근로자 보호 목적)
+            if _SAFETY_OBLIGATION_TITLE.search(title):
                 continue
             # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
