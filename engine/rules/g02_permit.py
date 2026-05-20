@@ -8,6 +8,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ActionKind
 from .base import PatternResult, make_finding
 
 
@@ -175,7 +176,10 @@ class G02Permit:
             if _JOINT_APPLICATION.search(text):
                 continue
             # 직접 처리 동사가 없으면 skip
-            if not _PROCESSING_VERB.search(text):
+            # R2 ActionKind: _PROCESSING_VERB 키워드 OR ActionKind.GRANT 구조 신호
+            d = decompose(art)
+            has_grant_action = ActionKind.GRANT in d.actions
+            if not (_PROCESSING_VERB.search(text) or has_grant_action):
                 continue
 
             has_deadline = bool(_DEADLINE.search(text))
