@@ -18,7 +18,15 @@ _PERMIT_DEEMED = re.compile(r"(인[\s·ㆍ]?허가.{0,10}의제|다른\s*법(률
 # FP: 적용 제외·준용 등 표준 인용 컨텍스트
 _STD_REFERENCE_TITLE = re.compile(
     r"(적용\s*제외|준용|결격\s*사유|회원의?\s*자격|자격|면제|비과세|감면"
-    r"|특례|의제|편입|승계|소관|위탁)"
+    r"|특례|의제|편입|승계|소관|위탁"
+    r"|채용시험|가점|우선\s*지원|우선순위|통합\s*조정"
+    r"|적용.{0,3}특례|처분.{0,3}특례)"
+)
+# Method B (L-02_part01 inline 검증) — 지역·구역 정의 본문 신호
+# R5 examples (FP):
+#   L-02-011@건축법 제77조의15 (결합건축 대상지) - 상업지역·역세권·정비구역 인용
+_REGION_DEFINITION_BODY = re.compile(
+    r"(상업지역|역세권|정비구역|보호구역|진흥지구|특구|구역|지역).{0,40}따라\s*지정"
 )
 
 
@@ -32,6 +40,9 @@ def _is_fp_article(art: Article) -> bool:
     if _STD_REFERENCE_TITLE.search(title):
         return True
     if art.is_disqualification():
+        return True
+    # Method B: 지역·구역 정의 인용은 정상
+    if _REGION_DEFINITION_BODY.search(text[:500]):
         return True
     return False
 

@@ -1,18 +1,18 @@
 {
   "overall": {
     "tp": 215,
-    "fp": 125,
+    "fp": 130,
     "fn": 104,
-    "tn": 1615,
+    "tn": 1617,
     "border_fired": 82,
     "border_skipped": 185,
     "missing": 0,
-    "precision": 0.6323529411764706,
+    "precision": 0.6231884057971014,
     "recall": 0.6739811912225705,
-    "f1": 0.6525037936267071,
-    "lenient_precision": 0.7037914691943128,
+    "f1": 0.6475903614457832,
+    "lenient_precision": 0.6955503512880562,
     "lenient_recall": 0.7406483790523691,
-    "lenient_f1": 0.721749696233293
+    "lenient_f1": 0.7173913043478262
   },
   "per_rule": {
     "E-01": {
@@ -150,6 +150,21 @@
       "lenient_recall": 0.8043478260869565,
       "lenient_f1": 0.8222222222222223
     },
+    "L-02": {
+      "tp": 0,
+      "fp": 5,
+      "fn": 0,
+      "tn": 2,
+      "border_fired": 0,
+      "border_skipped": 0,
+      "missing": 0,
+      "precision": 0.0,
+      "recall": null,
+      "f1": null,
+      "lenient_precision": 0.0,
+      "lenient_recall": null,
+      "lenient_f1": null
+    },
     "L-03": {
       "tp": 2,
       "fp": 0,
@@ -229,18 +244,18 @@
     },
     "적법성": {
       "tp": 26,
-      "fp": 7,
+      "fp": 12,
       "fn": 11,
-      "tn": 515,
+      "tn": 517,
       "border_fired": 13,
       "border_skipped": 28,
       "missing": 0,
-      "precision": 0.7878787878787878,
+      "precision": 0.6842105263157895,
       "recall": 0.7027027027027027,
-      "f1": 0.7428571428571429,
-      "lenient_precision": 0.8478260869565217,
+      "f1": 0.6933333333333334,
+      "lenient_precision": 0.7647058823529411,
       "lenient_recall": 0.78,
-      "lenient_f1": 0.8125
+      "lenient_f1": 0.7722772277227723
     },
     "효율성": {
       "tp": 50,
@@ -258,7 +273,7 @@
       "lenient_f1": 0.7619047619047619
     }
   },
-  "n_verdicts": 2059,
+  "n_verdicts": 2066,
   "fp_fn_cases": [
     {
       "fid": "F-03-004@건설기술진흥법",
@@ -289,6 +304,12 @@
       "kind": "FP",
       "category": "거버넌스",
       "evidence": "절차기한 연장 단서"
+    },
+    {
+      "fid": "L-02-011@건축법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "지역 정의 인용"
     },
     {
       "fid": "F-03-002@건축법",
@@ -1215,6 +1236,12 @@
       "evidence": "변경허가·변경신고 구분"
     },
     {
+      "fid": "L-02-004@5ㆍ18민주유공자예우및단체설립에관한법률",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "채용시험 가점 통합조정"
+    },
+    {
       "fid": "F-02-001@국가인권위원회법",
       "kind": "FN",
       "category": "공정성",
@@ -1353,6 +1380,24 @@
       "evidence": "등록취소 사유 15개"
     },
     {
+      "fid": "L-02-004@강원특별자치도설치및미래산업글로벌도시조성을위한특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "적용 특례 조정"
+    },
+    {
+      "fid": "L-02-009@강원특별자치도설치및미래산업글로벌도시조성을위한특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "처분 특례 조정"
+    },
+    {
+      "fid": "L-02-002@경북ㆍ경남ㆍ울산초대형산불피해구제및지원등을위한특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "정책사업 통합 우선지원"
+    },
+    {
       "fid": "S-04-001@경제자유구역의지정및운영에관한특별법",
       "kind": "FN",
       "category": "구조",
@@ -1429,36 +1474,6 @@
       "kind": "FN",
       "category": "구조",
       "evidence": "센터 업무 10호+위임"
-    },
-    {
-      "fid": "S-04-002@총포ㆍ도검ㆍ화약류등의안전관리에관한법률",
-      "kind": "FN",
-      "category": "구조",
-      "evidence": "협회 사업 10호+포괄"
-    },
-    {
-      "fid": "S-04-002@치매관리법",
-      "kind": "FN",
-      "category": "구조",
-      "evidence": "센터 업무 10호+포괄위임"
-    },
-    {
-      "fid": "S-04-002@한강수계상수원수질개선및주민지원등에관한법률",
-      "kind": "FN",
-      "category": "구조",
-      "evidence": "기금 용도 10호+위임"
-    },
-    {
-      "fid": "S-04-002@한국해양진흥공사법",
-      "kind": "FN",
-      "category": "구조",
-      "evidence": "공사 업무 13호+포괄위임"
-    },
-    {
-      "fid": "S-04-001@해상풍력보급촉진및산업육성에관한특별법",
-      "kind": "FN",
-      "category": "구조",
-      "evidence": "위원회 심의 11호+포괄"
     }
   ]
 }
