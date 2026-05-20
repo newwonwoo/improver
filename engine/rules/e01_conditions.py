@@ -141,6 +141,15 @@ class E01Conditions:
             # TP 부스트: 처분 결과 조문의 조건 중첩은 더 위험
             if _DISPOSITION_HINT.search(text):
                 stages += 1
+            # Method B (E-01 MISS 49건 분석): 호 개수가 큰 경우 절차 복잡도 진성 신호
+            # 양수승계 13단계·버티포트 허가 14단계·사업시행인가 12단 등
+            max_items_in_paras = max(
+                (len(p.items) for p in art.paragraphs), default=0
+            )
+            if max_items_in_paras >= 10:
+                stages += 2  # 다호 절차 — 강한 복잡도 신호
+            elif max_items_in_paras >= 6:
+                stages += 1
             # FP 감쇄: 계획·진흥 조문의 조건은 덜 위험
             if _POLICY_HINT.search(text):
                 stages = max(0, stages - 1)
