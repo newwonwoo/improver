@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ActionKind
 from .base import PatternResult, make_finding
 
 
@@ -72,7 +73,10 @@ class G05Report:
             if art.is_penalty() or art.is_definition() or art.is_purpose():
                 continue
             text = art.full_text
-            if not _REPORT_OBLIG.search(text):
+            # R2 ActionKind 보강: 키워드 OR 구조화 REPORT 액션
+            d = decompose(art)
+            has_report_action = ActionKind.REPORT in d.actions
+            if not (_REPORT_OBLIG.search(text) or has_report_action):
                 continue
             # 내부/상위기관 보고는 절차 요건 적용 불필요
             if _INTERNAL_REPORT.search(text):
