@@ -63,6 +63,31 @@ _QUALIFICATION_DEFINITION = re.compile(
     r"(다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는\s*자만이?"
     r"|다음\s*각\s*호의?\s*어느\s*하나에?\s*해당하는\s*사람만이?)"
 )
+# Method B (Claude inline G-02_part01 검증)
+# R5 examples:
+#   G-02-047@강원특별법 (FP — 처분 취소조문)
+#   G-02-011@공유수면법 (FP — 처분 취소조문)
+#   G-02-042@공공주택특별법 (FP — 인허가의제)
+#   G-02-001@공중협박목적특별법 (FP — 자금세탁 지정)
+#   G-02-005@공직자윤리법 (FP — 재산등록 정의)
+# 처분 취소 조문 (F-03 영역)
+_G02_DISPOSITION_REVOCATION = re.compile(
+    r"(인가|허가|면허|등록|지정)(\s*등?)?(의?)\s*취소"
+    r"|^.{0,30}(취소하거나|취소하여야).{0,60}정지"
+    r"|점용.{0,5}사용허가\s*등?의?\s*취소"
+)
+# 인허가의제 (의제 조문)
+_G02_PERMIT_DEEMED_BODY = re.compile(
+    r"(인[ㆍ·]?허가등을?\s*받은\s*것으로\s*본다|받은\s*것으로\s*보(며|고))"
+)
+# 자금세탁·제재 지정
+_G02_SANCTION_DESIGNATION = re.compile(
+    r"(자금세탁|대량살상무기|제재.{0,5}지정|금융거래등?\s*제한|특수관계자\s*지정)"
+)
+# 등록의무자·재산등록 정의
+_G02_REGISTRATION_DEFINITION = re.compile(
+    r"^(등록대상|등록의무자|등록할\s*재산|등록재산|용어의?\s*뜻)"
+)
 # FP 필터: 사법 절차 도메인 (법원·검사·사법경찰관)
 _JUDICIAL_DOMAIN = re.compile(
     r"(사법경찰관|검사|법원|판사|공판|수사|체포|구속|압수|기소|공소"
@@ -124,6 +149,18 @@ class G02Permit:
                 continue
             # 자격요건 정의 조문 ("…에 해당하는 자만이…")
             if _QUALIFICATION_DEFINITION.search(text):
+                continue
+            # Method B (Claude inline G-02_part01 검증) — article-level FP 필터:
+            # 처분 취소·인허가의제·자금세탁지정·재산등록 정의는 G-02 적용 외.
+            # (verdict 분포: 9 FP / 0 TP — 룰 광범위 발화 패턴 확인됨)
+            # R5 examples: outputs/rule_verification_responses/G-02_part01.json
+            if _G02_DISPOSITION_REVOCATION.search(art.title or ""):
+                continue
+            if _G02_PERMIT_DEEMED_BODY.search(text):
+                continue
+            if _G02_SANCTION_DESIGNATION.search(text):
+                continue
+            if _G02_REGISTRATION_DEFINITION.search((art.title or "").strip()):
                 continue
             # 사법 절차 도메인 (법원·검사 등)
             if _JUDICIAL_DOMAIN.search(text):
