@@ -146,6 +146,10 @@ class G01Exception:
             # 기본권 절차 (면회·통신·교육·진료) + 단서 ≥2 → 한 단계 상향
             fundamental_right = bool(_FUNDAMENTAL_RIGHT_CONTEXT.search(text))
 
+            # Method B (article-level G-01 MISS 분석 — 17건):
+            # 단서가 여러 항에 분산되는 경우 per-paragraph max 가 낮지만
+            # article 전체로는 3-5건. 처분/금지 컨텍스트일 때 article 합산도 보조 신호.
+            danseo_article_total = len(_DANSEO.findall(text))
             if danseo_count >= 4:
                 severity = "심각"
             elif danseo_count >= 3:
@@ -157,7 +161,9 @@ class G01Exception:
             elif danseo_count == 1 and has_vague_exc and has_disposition:
                 severity = "주의"
             elif (strong_disposition_title or fundamental_right) and danseo_count >= 2:
-                # SLM: 처분조 제목 또는 기본권 컨텍스트 + 단서 2개 → 주의
+                severity = "주의"
+            elif (has_disposition or strong_disposition_title or fundamental_right) and danseo_article_total >= 3:
+                # 처분/금지/기본권 컨텍스트 + 전체 단서 3+ (다항 분산) → 주의
                 severity = "주의"
             else:
                 continue
