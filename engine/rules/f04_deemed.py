@@ -57,12 +57,18 @@ class F04Deemed:
             #   F-04-001@지방재정법류 (FP — 지방의회 의견청취)
             #   F-04-001@상법 (FP — 낙부통지 확립 법리)
             #   F-04-001@정보통신망법 (FP — 고지+철회 적법 동의)
+            # 단기 의제기간(<14일) 사전 검출 — 적법 동의 컨텍스트라도 단기는 진성 결함
+            # Method B: F-04 missed TPs 분석
+            #   F-04-003@상법 §726의4 (10일 자동차양도 — 낙부통지+단기)
+            #   F-04-001@할부거래법 §22의2 (7일 부동의→동의 — 고지+철회 갖춰도 단기)
+            _period_m = _PERIOD.search(text)
+            _short_period = bool(_period_m and 0 < int(_period_m.group(1)) < 14)
             if _INTER_AGENCY_DEEMED.search(text):
                 continue  # 기관간 절차 — 시민 의사표시 의제 X
-            if _COMMERCIAL_NOTICE.search(text) and law.name == "상법":
-                continue  # 상사 낙부통지 확립 법리
-            if _PROPER_CONSENT_DEEMED.search(text):
-                continue  # 고지+철회 명시된 적법 동의
+            if _COMMERCIAL_NOTICE.search(text) and law.name == "상법" and not _short_period:
+                continue  # 상사 낙부통지 — 단기 의제는 발화 유지
+            if _PROPER_CONSENT_DEEMED.search(text) and not _short_period:
+                continue  # 적법 동의 — 단기 의제는 발화 유지
             # 법률효과 의제 vs 의사표시 의제 — 의사표시 토큰이 없으면 다운그레이드
             is_volition_deemed = bool(re.search(
                 r"(동의|승낙|취임|승인)한?\s*것으로\s*본다", text))
