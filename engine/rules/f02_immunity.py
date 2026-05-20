@@ -177,8 +177,12 @@ class F02Immunity:
             decomp = decompose(art)
             t, s = decomp.type, decomp.primary_subject.value
             # 위임·보고·금지 + 비-시민 주체 = 면책 조항이 아님
+            # Method B: 제목에 "면책" 명시 + 강한 예외 부재 (중과실 누락) 시 통과
+            #   국제항해선박법 §11의3 (고위험해역 진입 면책 — 정당한 사유만 명시) 1 TP / 0 FP
+            _title_immunity = "면책" in (art.title or "")
             if t == ArticleType.DELEGATION:
-                continue  # 위임 조문에서 "면책" 매칭은 위임 사항 명시일 뿐
+                if not (_title_immunity and not _STRONG_EXCEPTION.search(text)):
+                    continue  # 위임 조문에서 "면책" 매칭은 위임 사항 명시일 뿐
             if t == ArticleType.REPORTING:
                 continue
             if t == ArticleType.PROHIBITION:
