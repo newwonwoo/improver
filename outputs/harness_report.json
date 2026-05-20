@@ -1,18 +1,18 @@
 {
   "overall": {
-    "tp": 213,
+    "tp": 215,
     "fp": 125,
     "fn": 104,
-    "tn": 1608,
+    "tn": 1615,
     "border_fired": 82,
     "border_skipped": 185,
     "missing": 0,
-    "precision": 0.6301775147928994,
-    "recall": 0.6719242902208202,
-    "f1": 0.650381679389313,
-    "lenient_precision": 0.7023809523809523,
-    "lenient_recall": 0.7393483709273183,
-    "lenient_f1": 0.7203907203907204
+    "precision": 0.6323529411764706,
+    "recall": 0.6739811912225705,
+    "f1": 0.6525037936267071,
+    "lenient_precision": 0.7037914691943128,
+    "lenient_recall": 0.7406483790523691,
+    "lenient_f1": 0.721749696233293
   },
   "per_rule": {
     "E-01": {
@@ -74,6 +74,21 @@
       "lenient_precision": 0.72,
       "lenient_recall": 0.9,
       "lenient_f1": 0.7999999999999999
+    },
+    "F-05": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "border_fired": 0,
+      "border_skipped": 0,
+      "missing": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "lenient_precision": 1.0,
+      "lenient_recall": 1.0,
+      "lenient_f1": 1.0
     },
     "G-01": {
       "tp": 43,
@@ -183,19 +198,19 @@
       "lenient_f1": 0.6812227074235808
     },
     "공정성": {
-      "tp": 61,
+      "tp": 63,
       "fp": 29,
       "fn": 30,
-      "tn": 415,
+      "tn": 422,
       "border_fired": 13,
       "border_skipped": 27,
       "missing": 0,
-      "precision": 0.6777777777777778,
-      "recall": 0.6703296703296703,
-      "f1": 0.6740331491712707,
-      "lenient_precision": 0.7184466019417476,
-      "lenient_recall": 0.7115384615384616,
-      "lenient_f1": 0.7149758454106281
+      "precision": 0.6847826086956522,
+      "recall": 0.6774193548387096,
+      "f1": 0.6810810810810811,
+      "lenient_precision": 0.7238095238095238,
+      "lenient_recall": 0.7169811320754716,
+      "lenient_f1": 0.7203791469194313
     },
     "구조": {
       "tp": 14,
@@ -243,7 +258,7 @@
       "lenient_f1": 0.7619047619047619
     }
   },
-  "n_verdicts": 2050,
+  "n_verdicts": 2059,
   "fp_fn_cases": [
     {
       "fid": "F-03-004@건설기술진흥법",

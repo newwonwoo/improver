@@ -31,6 +31,29 @@ _ADVERSARIAL = re.compile(
 _BENEFIT_HINTS = ("지원", "보조", "융자", "장려", "촉진", "혜택", "감면", "설치", "구성")
 _COOP_HINTS = ("협조", "요청할 수 있다", "협의할 수 있다", "요구할 수 있다")
 _INTERNAL_ADMIN = re.compile(r"(감사계획|내부\s*규정|운영\s*규정|업무\s*지침|소속\s*직원|하급\s*기관)")
+# Method B (Claude inline F-05_part01 검증) — 조사위·심의위 자체 절차 재량
+# R5 examples:
+#   F-05-002@이태원특별법 제16조 (의사의 공개) - 조사위 자체 운영
+#   F-05-005@이태원특별법 제33조 (청문회 실시) - 조사위 청문절차
+#   F-05-006@세월호특별법 제36조 (검증) - 위원회 자료 검증
+_COMMITTEE_PROCEDURAL_DISCRETION = re.compile(
+    r"(조사위원회|심의위원회|평가위원회|위원회).{0,80}(공개한다|의결|청문|검증)"
+)
+# 응급·재난·방역 공익 보호 행정
+# R5 examples:
+#   F-05-001@119구조ㆍ구급법 (응급의료)
+#   F-05-001@가축전염병예방법 (방역)
+_EMERGENCY_PROTECTION = re.compile(
+    r"(응급의료|응급환자|구급|구조|재난|전염병|방역|위기관리|긴급)"
+)
+# 수익적 처분 명령 (휴직·보상·공로금 등)
+# R5 examples:
+#   F-05-001@세월호피해구제법 (휴직 명령)
+#   F-05-001@비정규군공로자보상법 (공로금 지급)
+_BENEFICIAL_ORDER = re.compile(
+    r"(휴직을?\s*명할|보상금을?\s*지급|공로금을?\s*지급|급여를?\s*지급"
+    r"|지원금을?\s*지급|장학금|연금)"
+)
 
 
 def _is_benefit(text: str) -> bool:
@@ -57,6 +80,15 @@ class F05Discretion:
                 continue
             # 형사·민사 절차 도메인 — "필요하다고 인정" 은 표준 사법 재량
             if _LEGAL_PROCEDURE_DOMAIN.search(text):
+                continue
+            # Method B: 조사위·심의위 자체 절차 재량 = FP
+            if _COMMITTEE_PROCEDURAL_DISCRETION.search(text):
+                continue
+            # 응급·재난·방역 공익 보호 행정 = FP
+            if _EMERGENCY_PROTECTION.search(text):
+                continue
+            # 수익적 처분 명령 (휴직·보상·공로금) = FP
+            if _BENEFICIAL_ORDER.search(text):
                 continue
             # 내부 행정 규정 (감사계획, 업무지침) — 시민 영향 없음
             if _INTERNAL_ADMIN.search(text):
