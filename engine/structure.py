@@ -154,6 +154,15 @@ _EVERYONE_SUBJECT_RX = re.compile(r"누구든지")
 # 빈 조문 (삭제)
 _EMPTY_RX = re.compile(r"삭제")
 
+# 호(item) 단위 캐치올 패턴 — S-04/E-01/G-01 공통 활용 신호
+# 3단계 강도로 분류:
+#   STRICT  : "그 밖에 (대통령령/총리령/부령/규칙)으로 정하는" — 위임형 캐치올
+#   LOOSE   : "그 밖에 (필요한|정하는) 사항"            — 일반 캐치올
+#   WEAK    : "그 밖의 ~" 시작                           — 잔여 호
+_CATCHALL_STRICT = re.compile(r"그\s*밖에.{0,80}(대통령령|총리령|부령|규칙)으?로\s*정하는")
+_CATCHALL_LOOSE = re.compile(r"그\s*밖에.{0,80}(필요한|정하는)\s*사항")
+_CATCHALL_WEAK = re.compile(r"^그\s*밖의?\s")
+
 # 사법·국회·진상규명 도메인 법령 — 대부분의 규제 결함 룰 적용 외
 # Source: verdict 분석 (F-03/F-04/G-03/G-04/L-01/L-03/S-04 각각 0 TP)
 _JUDICIAL_LAW_RX = re.compile(
@@ -419,6 +428,10 @@ class ParagraphDecomposition:
     has_obligation: bool = False
     has_prohibition: bool = False
     actions: list[ActionKind] = field(default_factory=list)  # 본 항의 행위 종류들
+    # 호 단위 캐치올 강도 — S-04/E-01/G-01 공통 신호
+    # STRICT (위임형), LOOSE (필요사항), WEAK (잔여) 3단계, None = 없음
+    catchall_kind: str | None = None
+    items_count: int = 0  # 본 항의 호 개수
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -547,6 +560,25 @@ def decompose(art: Article) -> ArticleDecomposition:
 
     para_decomps: list[ParagraphDecomposition] = []
     para_subjects: list[Subject] = []
+    # 호 단위 캐치올 매핑 — paragraphs[i].items 직접 접근
+    para_catchalls: dict[int, str | None] = {}
+    para_item_counts: dict[int, int] = {}
+    if art.paragraphs:
+        for i, p in enumerate(art.paragraphs):
+            if not p.items:
+                para_catchalls[i] = None
+                para_item_counts[i] = 0
+                continue
+            para_item_counts[i] = len(p.items)
+            last_item_text = p.items[-1].text if p.items else ""
+            if _CATCHALL_STRICT.search(last_item_text):
+                para_catchalls[i] = "STRICT"
+            elif _CATCHALL_LOOSE.search(last_item_text):
+                para_catchalls[i] = "LOOSE"
+            elif _CATCHALL_WEAK.search(last_item_text):
+                para_catchalls[i] = "WEAK"
+            else:
+                para_catchalls[i] = None
     if art.paragraphs:
         paras = [(i, p.text) for i, p in enumerate(art.paragraphs) if p.text.strip()]
         if not paras:  # single-line article — paragraphs exist but empty
@@ -567,6 +599,8 @@ def decompose(art: Article) -> ArticleDecomposition:
             has_obligation=(modal == Modal.MUST),
             has_prohibition=(modal == Modal.PROHIBITED),
             actions=actions,
+            catchall_kind=para_catchalls.get(idx),
+            items_count=para_item_counts.get(idx, 0),
         ))
         para_subjects.append(subj)
     # article-level action union
