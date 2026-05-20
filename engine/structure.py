@@ -160,7 +160,13 @@ _EMPTY_RX = re.compile(r"삭제")
 #   LOOSE   : "그 밖에 (필요한|정하는) 사항"            — 일반 캐치올
 #   WEAK    : "그 밖의 ~" 시작                           — 잔여 호
 _CATCHALL_STRICT = re.compile(r"그\s*밖에.{0,80}(대통령령|총리령|부령|규칙)으?로\s*정하는")
-_CATCHALL_LOOSE = re.compile(r"그\s*밖에.{0,80}(필요한|정하는)\s*사항")
+# LOOSE: "그 밖에 …정하는·필요한·요청하는·인정하는·결정하는 [수식어] 사항/업무" — 일반 캐치올
+# (장관·청장 등이 임의로 추가하는 사항도 동일한 결함 패턴)
+# .{0,30} 으로 수식어 허용 (예: "...정하는 치매 관련 업무")
+_CATCHALL_LOOSE = re.compile(
+    r"그\s*밖에.{0,80}(정하는|필요한|요청하는|인정하는|결정하는|위탁받은|위임받은)"
+    r".{0,30}(사항|업무|사업|행위|일|것)"
+)
 _CATCHALL_WEAK = re.compile(r"^그\s*밖의?\s")
 # 단서 (다만) 패턴 — G-01 공통 활용 (per-paragraph & article-total 카운트)
 _PROVISO_RX = re.compile(r"다만[,\s]")
