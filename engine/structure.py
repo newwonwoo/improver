@@ -162,6 +162,8 @@ _EMPTY_RX = re.compile(r"삭제")
 _CATCHALL_STRICT = re.compile(r"그\s*밖에.{0,80}(대통령령|총리령|부령|규칙)으?로\s*정하는")
 _CATCHALL_LOOSE = re.compile(r"그\s*밖에.{0,80}(필요한|정하는)\s*사항")
 _CATCHALL_WEAK = re.compile(r"^그\s*밖의?\s")
+# 단서 (다만) 패턴 — G-01 공통 활용 (per-paragraph & article-total 카운트)
+_PROVISO_RX = re.compile(r"다만[,\s]")
 
 # 사법·국회·진상규명 도메인 법령 — 대부분의 규제 결함 룰 적용 외
 # Source: verdict 분석 (F-03/F-04/G-03/G-04/L-01/L-03/S-04 각각 0 TP)
@@ -432,6 +434,7 @@ class ParagraphDecomposition:
     # STRICT (위임형), LOOSE (필요사항), WEAK (잔여) 3단계, None = 없음
     catchall_kind: str | None = None
     items_count: int = 0  # 본 항의 호 개수
+    proviso_count: int = 0  # 본 항의 단서(다만) 횟수 — G-01 공통 신호
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -601,6 +604,7 @@ def decompose(art: Article) -> ArticleDecomposition:
             actions=actions,
             catchall_kind=para_catchalls.get(idx),
             items_count=para_item_counts.get(idx, 0),
+            proviso_count=len(_PROVISO_RX.findall(pt)),
         ))
         para_subjects.append(subj)
     # article-level action union
