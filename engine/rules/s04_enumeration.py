@@ -23,6 +23,14 @@ _STD_LIST_TITLE = re.compile(
     r"|위원회의?\s*기능|위원회의?\s*업무|심의사항|기금의?\s*용도|업무|용도"
     r"|대상사업|적용대상|적용\s*범위)"
 )
+# Method B 추가 FP 필터 (article-level S-04 FP 분석 — 5건 → 0):
+#   "특례" 류 한정열거 (도로교통법 §30 긴급자동차 특례), "시행규정"
+#   기재사항 (도시정비법 §53), "불공정거래·불건전 영업행위 금지" 류
+# Source: signal_candidates.json :: S-04 + verdict article-level
+_EXTRA_FP_TITLE = re.compile(
+    r"(특례|시행규정|"
+    r"(?:불공정거래|불건전\s*영업|영업\s*행위)\s*.{0,5}금지)"
+)
 # 포괄위임 종결호 — 호 자체가 아니라 마지막 호에서만 확인
 _CATCHALL_ITEM = re.compile(r"그\s*밖에.{0,30}(대통령령|총리령|부령|규칙)으로\s*정하는")
 
@@ -79,6 +87,9 @@ def _is_fp_article(art: Article) -> bool:
         return True
     text = art.full_text
     title = art.title or ""
+    # 특례·시행규정·불공정거래 금지 류 (보존된 표준 입법 형식)
+    if _EXTRA_FP_TITLE.search(title):
+        return True
     # 벌칙 조문: N≥35 인 극단치만 발화 (경범죄처벌법 제3조 41개 류)
     # (Method B 분석: 20~30 구간은 정상 입법, LLM 도 FP 판정 다수)
     if art.is_penalty():
