@@ -1,16 +1,16 @@
 {
   "overall": {
-    "tp": 139,
-    "fp": 47,
-    "fn": 180,
-    "tn": 1700,
-    "border_fired": 31,
-    "border_skipped": 236,
+    "tp": 128,
+    "fp": 19,
+    "fn": 192,
+    "tn": 1735,
+    "border_fired": 24,
+    "border_skipped": 243,
     "missing": 0,
     "unmapped": 0,
-    "precision": 0.7473118279569892,
-    "recall": 0.43573667711598746,
-    "f1": 0.5504950495049505
+    "precision": 0.8707482993197279,
+    "recall": 0.4,
+    "f1": 0.5481798715203426
   },
   "per_rule": {
     "E-01": {
@@ -79,17 +79,17 @@
       "f1": 1.0
     },
     "G-01": {
-      "tp": 31,
-      "fp": 31,
-      "fn": 38,
-      "tn": 155,
-      "border_fired": 15,
-      "border_skipped": 30,
+      "tp": 19,
+      "fp": 3,
+      "fn": 50,
+      "tn": 183,
+      "border_fired": 8,
+      "border_skipped": 37,
       "missing": 0,
       "unmapped": 0,
-      "precision": 0.5,
-      "recall": 0.4492753623188406,
-      "f1": 0.4732824427480916
+      "precision": 0.8636363636363636,
+      "recall": 0.2753623188405797,
+      "f1": 0.4175824175824176
     },
     "G-03": {
       "tp": 8,
@@ -131,17 +131,17 @@
       "f1": 0.7272727272727273
     },
     "L-02": {
-      "tp": 0,
+      "tp": 1,
       "fp": 0,
       "fn": 0,
-      "tn": 7,
+      "tn": 14,
       "border_fired": 0,
       "border_skipped": 0,
       "missing": 0,
       "unmapped": 0,
-      "precision": null,
-      "recall": null,
-      "f1": null
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
     },
     "L-03": {
       "tp": 2,
@@ -170,5 +170,5 @@
       "f1": 0.380952380952381
     }
   },
-  "n_verdicts": 2066
+  "n_verdicts": 2074
 }
