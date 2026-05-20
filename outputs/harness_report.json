@@ -1,18 +1,18 @@
 {
   "overall": {
-    "tp": 237,
+    "tp": 239,
     "fp": 174,
-    "fn": 83,
+    "fn": 81,
     "tn": 1580,
-    "border_fired": 93,
-    "border_skipped": 174,
+    "border_fired": 94,
+    "border_skipped": 173,
     "missing": 0,
-    "precision": 0.5766423357664233,
-    "recall": 0.740625,
-    "f1": 0.6484268125854993,
-    "lenient_precision": 0.6547619047619048,
-    "lenient_recall": 0.7990314769975787,
-    "lenient_f1": 0.7197382769901853
+    "precision": 0.5786924939467313,
+    "recall": 0.746875,
+    "f1": 0.6521145975443383,
+    "lenient_precision": 0.6568047337278107,
+    "lenient_recall": 0.8043478260869565,
+    "lenient_f1": 0.7231270358306189
   },
   "per_rule": {
     "E-01": {
@@ -106,19 +106,19 @@
       "lenient_f1": 0.6634146341463415
     },
     "G-03": {
-      "tp": 8,
+      "tp": 10,
       "fp": 2,
-      "fn": 2,
+      "fn": 0,
       "tn": 74,
-      "border_fired": 2,
-      "border_skipped": 12,
+      "border_fired": 3,
+      "border_skipped": 11,
       "missing": 0,
-      "precision": 0.8,
-      "recall": 0.8,
-      "f1": 0.8000000000000002,
-      "lenient_precision": 0.8333333333333334,
-      "lenient_recall": 0.8333333333333334,
-      "lenient_f1": 0.8333333333333334
+      "precision": 0.8333333333333334,
+      "recall": 1.0,
+      "f1": 0.9090909090909091,
+      "lenient_precision": 0.8666666666666667,
+      "lenient_recall": 1.0,
+      "lenient_f1": 0.9285714285714286
     },
     "G-04": {
       "tp": 11,
@@ -198,19 +198,19 @@
   },
   "per_category": {
     "거버넌스": {
-      "tp": 69,
+      "tp": 71,
       "fp": 52,
-      "fn": 23,
+      "fn": 21,
       "tn": 337,
-      "border_fired": 21,
-      "border_skipped": 41,
+      "border_fired": 22,
+      "border_skipped": 40,
       "missing": 0,
-      "precision": 0.5702479338842975,
-      "recall": 0.75,
-      "f1": 0.6478873239436619,
-      "lenient_precision": 0.6338028169014085,
-      "lenient_recall": 0.7964601769911505,
-      "lenient_f1": 0.7058823529411766
+      "precision": 0.5772357723577236,
+      "recall": 0.7717391304347826,
+      "f1": 0.6604651162790698,
+      "lenient_precision": 0.6413793103448275,
+      "lenient_recall": 0.8157894736842105,
+      "lenient_f1": 0.7181467181467183
     },
     "공정성": {
       "tp": 65,

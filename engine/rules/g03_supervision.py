@@ -87,8 +87,17 @@ class G03Supervision:
                 continue
             text = art.full_text
             # 외부 감독 대상이 없으면 skip (내부 지휘만 남은 경우)
+            # Method B: 조문제목 = "감독" + 본문 매우 짧음 + 0 요소 충족
+            #   → 외부 감독 단문 결함 (담보부사채신탁법 §94, 생활체육진흥법 §14)
+            title_stripped = (art.title or "").strip()
             if not _EXTERNAL_TARGET.search(text):
-                continue
+                # 단문 외부감독 발화 조건: 제목 "감독" 단독 + 5요소 0/5
+                bare_supervision = (title_stripped == "감독" and len(text.strip()) < 200)
+                if not bare_supervision:
+                    continue
+                missing_pre = [n for n, p in _ELEMENTS.items() if not p.search(text)]
+                if len(missing_pre) < 5:
+                    continue
             missing = [name for name, pat in _ELEMENTS.items() if not pat.search(text)]
             met = len(_ELEMENTS) - len(missing)
             if met >= 4:
