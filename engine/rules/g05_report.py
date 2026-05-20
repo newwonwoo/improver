@@ -31,6 +31,23 @@ _INTERNAL_REPORT = re.compile(
 )
 # FP 필터: 학술·교육 내부 보고
 _ACADEMIC_INTERNAL = re.compile(r"(총장이?\s*정하고.{0,30}보고|학위과정|교육과정)")
+# Method B (Claude inline G-05_part01 검증) — 행정청간 통보
+# R5 examples (FP):
+#   G-05-011@가족관계등록법 (법무부 → 시읍면장 행정통보)
+#   G-05-005@개발제한구역법 (시·도지사 → 국토부장관 행정보고)
+#   G-05-004@가축이력관리법 (장관 → 신청인 행정통보)
+_INTER_AGENCY_NOTIFICATION = re.compile(
+    r"(장관|시ㆍ?도지사|시장|군수|구청장|단장|위원장)"
+    r".{0,40}(시읍면|시ㆍ?읍ㆍ?면의?\s*장|관계\s*기관|관할\s*기관"
+    r"|상위\s*기관|국토교통부장관|보건복지부장관|질병관리청장|신청인|신청\s*대상자)"
+    r".{0,30}(보고|통보)"
+)
+# 결산·연차 단발 보고
+_ANNUAL_REPORT_TITLE = re.compile(r"(결산보고|연차보고|연도\s*보고|연간\s*보고|업무보고)")
+# 사업자 → 발주자 계약상 통보
+_CONTRACT_NOTIFICATION = re.compile(
+    r"(사업자|건설사업자|수급인).{0,30}발주자에게.{0,10}(통보|제출|보고)"
+)
 # FP 필터: 행정 내부 보고 — 주체가 공무원/소속직원인 경우만
 # 주의: '장관에게 보고하여야' 자체는 외부 수탁기관도 하므로 주체 확인 필요
 _INTERNAL_ADMIN_REPORT = re.compile(
@@ -65,6 +82,15 @@ class G05Report:
                 continue
             # 학술·교육 내부 보고 — 외부 규제 아님
             if _ACADEMIC_INTERNAL.search(text):
+                continue
+            # Method B: 행정청간 통보 (시읍면·관계기관·상위기관·신청인 등)
+            if _INTER_AGENCY_NOTIFICATION.search(text):
+                continue
+            # 결산·연차 단발 보고
+            if _ANNUAL_REPORT_TITLE.search(art.title or ""):
+                continue
+            # 사업자 → 발주자 계약상 통보
+            if _CONTRACT_NOTIFICATION.search(text):
                 continue
             # 단순 결과 통보
             if _RESULT_REPORT.search(text) and not _REPORT_OBLIG.search(text.replace("결과를 보고", "")):
