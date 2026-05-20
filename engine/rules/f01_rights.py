@@ -168,6 +168,15 @@ _STANDARD_SETTING_TITLE = re.compile(
     r"|위생검사\s*요청|위생검사등?\s*요청|검사\s*요청|점검\s*요청"
     r"|시민\s*제안|국민\s*제안)"
 )
+# Method B (소득세법 분석): 세제·납세 사업자 의무 조문
+# R5 examples (FP):
+#   소득세법 제162조의2 (신용카드가맹점 가입·발급의무) - 사업자 세무 의무
+#   소득세법 제162조의3 (현금영수증가맹점 가입·발급의무) - 사업자 세무 의무
+_TAX_OPERATOR_DUTY_TITLE = re.compile(
+    r"(가맹점\s*가입|가맹점.{0,5}의무|영수증\s*발급|영수증.{0,5}의무"
+    r"|원천징수|세금계산서|계산서\s*발급|증빙\s*수취"
+    r"|기장의?\s*의무|장부\s*비치|장부\s*기록|신고\s*납부|납세관리)"
+)
 # 직역 자격법의 자격제한·자격취소 조문 (변호사·세무사·회계사·약사·의료인 등)
 _PROFESSIONAL_QUAL_RESTRICTION = re.compile(
     r"^(자격\s*취소|자격\s*정지|등록\s*취소|면허\s*취소|면허\s*정지|등록의?\s*거부"
@@ -253,6 +262,9 @@ class F01Rights:
                 continue
             # 행정 표준 설정·시민 요청권 = FP (식품위생법류)
             if _STANDARD_SETTING_TITLE.search(title):
+                continue
+            # 세제·납세 사업자 의무 = FP
+            if _TAX_OPERATOR_DUTY_TITLE.search(title):
                 continue
             # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
