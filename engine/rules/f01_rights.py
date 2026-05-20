@@ -77,6 +77,28 @@ _INSTITUTION_OBLIGATION_TITLE = re.compile(
     r"(시설\s*완성검사|중앙행정기관의?\s*설치|기관의?\s*보조기관|기관의?\s*조직"
     r"|정부조직)"
 )
+# Method B (D등급 법령 분석 — 할부·방문판매·온라인투자연계·전자상거래·전자금융·금융실명):
+# 사업자 의무 조문 (소비자 보호 절차) 을 시민 권리 제한으로 오인하는 패턴
+# Source: outputs/slm_step1_corpus.json 6개 D 등급 법령 top-finding 분석
+# R5 examples (FPs):
+#   할부거래법 제6조 (서면주의) — 사업자 정보제공 의무
+#   금융실명거래법 제3조 (금융실명거래) — 금융회사 실명확인 의무
+#   방문판매법 제9조 (청약철회 효과) — 사업자 환급 의무
+#   온라인투자연계금융업법 제5조 (등록) — 등록요건 정의
+#   전자상거래법 제5조 (전자문서 활용) — 사업자 전자문서 의무
+_CONSUMER_PROTECTION_TITLE = re.compile(
+    r"(서면주의|할부계약의?\s*서면|청약철회.{0,5}효과|환급|소비자.{0,10}보호"
+    r"|전자문서의?\s*활용|약관.{0,5}명시|정보의?\s*제공|광고의?\s*기준)"
+)
+# 등록·허가 요건 정의 (요건 자체는 권리 제한 X)
+_REGISTRATION_REQUIREMENT_TITLE = re.compile(
+    r"^(등록|허가|인가|면허|지정|신고)(\s*요건)?(\s*등)?$"
+    r"|(등록의?|허가의?|인가의?)\s*요건"
+)
+# 금융기관·사업자의 본질적 영업 의무 (실명거래·검사 응대 등)
+_OPERATOR_BUSINESS_DUTY = re.compile(
+    r"^(금융실명|실명거래|감독.{0,5}검사|보고.{0,5}검사|업무.{0,5}보고)"
+)
 # TP 필터: 실질적 권리 박탈 키워드
 _DEPRIVATION = re.compile(
     r"(자격을?\s*정지|허가를?\s*취소|등록을?\s*취소|인가를?\s*취소|면허를?\s*취소"
@@ -127,6 +149,15 @@ class F01Rights:
             if _ADMIN_DISPOSITION_TITLE.search(title):
                 continue
             if _INSTITUTION_OBLIGATION_TITLE.search(title):
+                continue
+            # Method B (SLM 20법령 분석): 소비자 보호 절차 조문 = FP
+            if _CONSUMER_PROTECTION_TITLE.search(title):
+                continue
+            # 등록·허가 요건 정의 조문 = FP
+            if _REGISTRATION_REQUIREMENT_TITLE.search(title.strip()):
+                continue
+            # 금융기관·사업자 본질 영업 의무 (실명거래·감독응대) = FP
+            if _OPERATOR_BUSINESS_DUTY.search(title.strip()):
                 continue
             # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
