@@ -209,7 +209,9 @@ class F03Disposition:
                 # Step 51: "단체에 대한 조치|위반…조치명령" — 2 TP / 0 FP
                 r"|에\s*대한\s*조치|위반.{0,10}조치|조치명령"
                 # Step 52: 단독 "과징금" 제목 — 2 TP / 0 FP
-                r"|^과징금(\s*처분)?(\s*등)?$|^과징금)",
+                r"|^과징금(\s*처분)?(\s*등)?$|^과징금"
+                # Step 53: 단독 "폐기" 제목 — 1 TP / 0 FP (화학무기법 §10)
+                r"|^폐기$)",
                 art.title or ""
             ))
             _is_disp_type = (decomp.type == ArticleType.DISPOSITION)
