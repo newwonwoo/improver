@@ -142,7 +142,9 @@ class L01Citation:
             if not tp_title_override:
                 if t == ArticleType.DELEGATION and s == "EVERYONE":
                     continue
-                if t == ArticleType.DISPOSITION and s == "AGENCY":
+                # DISPOSITION+AGENCY 게이트: many_cites(≥12) 시 통과
+                # — 건축법 §11 (인허가의제 23개 법률)처럼 다수 인용은 진성 결함
+                if t == ArticleType.DISPOSITION and s == "AGENCY" and not many_cites:
                     continue
                 # 3-axis gates — 인용 12개 이상이면 본질적 정탐 가능성 → gate 통과
                 if not many_cites:
