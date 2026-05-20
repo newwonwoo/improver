@@ -1,18 +1,18 @@
 {
   "overall": {
     "tp": 215,
-    "fp": 130,
+    "fp": 131,
     "fn": 104,
-    "tn": 1617,
+    "tn": 1621,
     "border_fired": 82,
     "border_skipped": 185,
     "missing": 0,
-    "precision": 0.6231884057971014,
+    "precision": 0.6213872832369942,
     "recall": 0.6739811912225705,
-    "f1": 0.6475903614457832,
-    "lenient_precision": 0.6955503512880562,
+    "f1": 0.6466165413533834,
+    "lenient_precision": 0.6939252336448598,
     "lenient_recall": 0.7406483790523691,
-    "lenient_f1": 0.7173913043478262
+    "lenient_f1": 0.7165259348612787
   },
   "per_rule": {
     "E-01": {
@@ -180,6 +180,21 @@
       "lenient_recall": 0.5,
       "lenient_f1": 0.6666666666666666
     },
+    "S-02": {
+      "tp": 0,
+      "fp": 1,
+      "fn": 0,
+      "tn": 4,
+      "border_fired": 0,
+      "border_skipped": 0,
+      "missing": 0,
+      "precision": 0.0,
+      "recall": null,
+      "f1": null,
+      "lenient_precision": 0.0,
+      "lenient_recall": null,
+      "lenient_f1": null
+    },
     "S-04": {
       "tp": 14,
       "fp": 14,
@@ -229,18 +244,18 @@
     },
     "구조": {
       "tp": 14,
-      "fp": 14,
+      "fp": 15,
       "fn": 15,
-      "tn": 185,
+      "tn": 189,
       "border_fired": 10,
       "border_skipped": 61,
       "missing": 0,
-      "precision": 0.5,
+      "precision": 0.4827586206896552,
       "recall": 0.4827586206896552,
-      "f1": 0.49122807017543857,
-      "lenient_precision": 0.631578947368421,
+      "f1": 0.4827586206896552,
+      "lenient_precision": 0.6153846153846154,
       "lenient_recall": 0.6153846153846154,
-      "lenient_f1": 0.6233766233766234
+      "lenient_f1": 0.6153846153846154
     },
     "적법성": {
       "tp": 26,
@@ -273,8 +288,26 @@
       "lenient_f1": 0.7619047619047619
     }
   },
-  "n_verdicts": 2066,
+  "n_verdicts": 2071,
   "fp_fn_cases": [
+    {
+      "fid": "S-02-045@국세기본법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "사법형 기피 신청 절차"
+    },
+    {
+      "fid": "E-01-006@국세기본법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "공시송달 사유·방법 열거"
+    },
+    {
+      "fid": "G-01-001@발명진흥법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①②항 권리귀속 단서중첩"
+    },
     {
       "fid": "F-03-004@건설기술진흥법",
       "kind": "FP",
@@ -388,12 +421,6 @@
       "kind": "FN",
       "category": "효율성",
       "evidence": "자격취소 8호+필수단서"
-    },
-    {
-      "fid": "E-01-006@국세기본법",
-      "kind": "FP",
-      "category": "효율성",
-      "evidence": "공시송달 사유·방법 열거"
     },
     {
       "fid": "E-01-024@근로자퇴직급여보장법",
@@ -1284,12 +1311,6 @@
       "evidence": "①②항 동일 위임단서"
     },
     {
-      "fid": "G-01-001@발명진흥법",
-      "kind": "FN",
-      "category": "거버넌스",
-      "evidence": "①②항 권리귀속 단서중첩"
-    },
-    {
       "fid": "G-01-001@법학전문대학원설치ㆍ운영에관한법률",
       "kind": "FN",
       "category": "거버넌스",
@@ -1468,12 +1489,6 @@
       "kind": "FP",
       "category": "공정성",
       "evidence": "행정처분 현황 보고조문"
-    },
-    {
-      "fid": "S-04-001@진로교육법",
-      "kind": "FN",
-      "category": "구조",
-      "evidence": "센터 업무 10호+위임"
     }
   ]
 }
