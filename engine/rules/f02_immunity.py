@@ -196,8 +196,12 @@ class F02Immunity:
                 if not (_PATTERN_A.search(text) or _PATTERN_B.search(text) or _PATTERN_C.search(text)):
                     continue
             # Aggressive: GENERAL + UNKNOWN + NONE (1 TP / 9 FP — net 8)
+            # Method B 보강: 같은 게이트 내 weak_exc(고의·과실만 명시) 케이스는
+            # F-02-001@국가인권위원회법 §8의2 처럼 진성 TP (중과실 누락)
+            # → weak_exc=True 면 게이트 통과 허용
             if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "NONE":
-                continue
+                if not _WEAK_EXCEPTION.search(text):
+                    continue
             # SLM: 전면 면책 시그니처도 is_full 로 처리 (TP 부스트)
             is_full = bool(_PATTERN_C.search(text) or _FULL_IMMUNITY_SIGNATURE.search(text))
             is_partial = bool(_PATTERN_A.search(text) or _PATTERN_B.search(text))
