@@ -199,14 +199,15 @@ class F03Disposition:
             # SLM: 동일 조문 내 청문 명시 = 사전절차 적법 → severity 한 단계 다운
             same_art_hearing = _same_art_has_hearing(art)
 
-            # Method B (Step 48): 강한 처분 + 동일조 청문 부재 + DISPOSITION 타입
-            # + 명시적 처분 제목 (등록취소|허가취소|면허취소|영업정지 …) — verdict 7 TP / 0 FP
+            # Method B (Step 48, 51): 강한 처분 + 동일조 청문 부재 + DISPOSITION 타입
+            # + 명시적 처분 제목 — verdict 7 TP / 0 FP (Step 48), +2 TP (Step 51 "조치")
             # 사전 절차 보장이 같은 조문에 명시되지 않은 강한 처분은 결함
-            # 좁은 제목 패턴으로 law-level FP 폭증 방지
             _disp_title = bool(re.search(
                 r"(허가\s*취소|등록\s*취소|면허\s*취소|지정\s*취소|인가\s*취소"
                 r"|설립\s*허가\s*취소|영업\s*정지|업무\s*정지|자격\s*취소"
-                r"|취소\s*등|취소와\s*영업정지)",
+                r"|취소\s*등|취소와\s*영업정지"
+                # Step 51: "단체에 대한 조치|위반…조치명령" — 2 TP / 0 FP
+                r"|에\s*대한\s*조치|위반.{0,10}조치|조치명령)",
                 art.title or ""
             ))
             _is_disp_type = (decomp.type == ArticleType.DISPOSITION)
