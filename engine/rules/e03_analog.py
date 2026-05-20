@@ -41,11 +41,28 @@ _REGISTRY_DOC = re.compile(
     r"(등기관에게|등기소에|등기신청|법인등기|상업등기|부동산등기"
     r"|등기에\s*관한\s*법률|공정증서|인감증명)"
 )
+# Method B (Claude inline E-03_part01 검증)
+# R5 examples (FP):
+#   E-03-001@가사소송법 (사법 기록열람)
+#   E-03-002@세월호특별법 (동행명령장)
+#   E-03-003@건설산업기본법 (도급계약 서면 동의)
+#   E-03-004@이태원특별법 (피해자 보상 신청)
+#   E-03-008@건축법 (조정서 기명날인)
+_E03_SPECIAL_RELIEF_TITLE = re.compile(
+    r"(피해자\s*인정\s*신청|보상\s*신청|구제급여\s*신청|지원금\s*지급)"
+)
+_E03_DISPUTE_RESOLUTION_TITLE = re.compile(
+    r"(조정의?\s*효력|기록의?\s*열람|동행명령|증인.{0,5}감정|증인\s*신문)"
+)
+_E03_CONTRACT_WRITTEN_CONSENT = re.compile(
+    r"(발주자(의?)\s*서면\s*(승낙|동의|승인)"
+    r"|수급인(의?)\s*서면\s*(승낙|동의|승인))"
+)
 # TP 확인: 국민·사업자 신청·신고 맥락
 _CITIZEN_FACING = re.compile(r"(신청하여야|신고하여야|제출하여야|청구하여야|요청하여야|등록하여야)")
 
 
-def _is_fp(text: str) -> bool:
+def _is_fp(text: str, art=None) -> bool:
     """E-03 공통 FP 필터."""
     if _LEGAL_PROC.search(text):
         return True
@@ -58,6 +75,15 @@ def _is_fp(text: str) -> bool:
     if _COMMITTEE_PROCEDURE.search(text):
         return True
     if _REGISTRY_DOC.search(text):
+        return True
+    # Method B: 특별법 보상 신청 절차 / 사법형 / 도급계약 = FP
+    if art is not None:
+        title = art.title or ""
+        if _E03_SPECIAL_RELIEF_TITLE.search(title):
+            return True
+        if _E03_DISPUTE_RESOLUTION_TITLE.search(title):
+            return True
+    if _E03_CONTRACT_WRITTEN_CONSENT.search(text):
         return True
     return False
 
@@ -74,7 +100,7 @@ class E03Analog:
             if art.is_penalty() or art.is_purpose() or art.is_definition():
                 continue
             text = art.full_text
-            if _is_fp(text):
+            if _is_fp(text, art):
                 continue
             has_digital = bool(_DIGITAL.search(text))
             if _STRONG.search(text):
