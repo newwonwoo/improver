@@ -61,8 +61,9 @@ class F04Deemed:
             # Method B: F-04 missed TPs 분석
             #   F-04-003@상법 §726의4 (10일 자동차양도 — 낙부통지+단기)
             #   F-04-001@할부거래법 §22의2 (7일 부동의→동의 — 고지+철회 갖춰도 단기)
-            _period_m = _PERIOD.search(text)
-            _short_period = bool(_period_m and 0 < int(_period_m.group(1)) < 14)
+            # 첫 \d+일 이 아니라 모든 기간 중 최소값으로 판정 (다항 분산 대비)
+            _all_periods = [int(m) for m in re.findall(r"(\d+)\s*일", text)]
+            _short_period = any(0 < p < 14 for p in _all_periods)
             if _INTER_AGENCY_DEEMED.search(text):
                 continue  # 기관간 절차 — 시민 의사표시 의제 X
             if _COMMERCIAL_NOTICE.search(text) and law.name == "상법" and not _short_period:
@@ -75,8 +76,8 @@ class F04Deemed:
             if not is_volition_deemed and _LEGAL_EFFECT_DEEMED.search(text):
                 continue  # 법률효과 의제 — F-04 영역 아님
             has_notice = bool(_NOTICE.search(text))
-            period_match = _PERIOD.search(text)
-            period = int(period_match.group(1)) if period_match else 0
+            # 모든 기간 중 최소값을 채택 (다항 분산된 단기 기간 검출)
+            period = min(_all_periods) if _all_periods else 0
             can_revoke = bool(_REVOKE.search(text))
 
             if not has_notice:
