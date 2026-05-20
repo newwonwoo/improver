@@ -158,6 +158,16 @@ _OPERATOR_FORBIDDEN_ACT_TITLE = re.compile(
     r"|사후관리|사후\s*관리|판매자의?\s*의무|제작자의?\s*책임"
     r"|제조업자의?\s*의무|영업자의?\s*의무|사업자의?\s*의무)"
 )
+# Method B (식품위생법 분석): 행정 표준 설정·시민 요청권 조문
+# R5 examples (FP):
+#   식품위생법 제7조 (식품 기준 및 규격) - 식약처장 표준 고시
+#   식품위생법 제9조 (기구 및 용기 기준) - 식약처장 표준 고시
+#   식품위생법 제16조 (소비자 등의 위생검사 요청) - 시민 요청권
+_STANDARD_SETTING_TITLE = re.compile(
+    r"(기준\s*및\s*규격|기준의?\s*고시|규격의?\s*고시|표준의?\s*고시"
+    r"|위생검사\s*요청|위생검사등?\s*요청|검사\s*요청|점검\s*요청"
+    r"|시민\s*제안|국민\s*제안)"
+)
 # 직역 자격법의 자격제한·자격취소 조문 (변호사·세무사·회계사·약사·의료인 등)
 _PROFESSIONAL_QUAL_RESTRICTION = re.compile(
     r"^(자격\s*취소|자격\s*정지|등록\s*취소|면허\s*취소|면허\s*정지|등록의?\s*거부"
@@ -240,6 +250,9 @@ class F01Rights:
                 continue
             # 사업자 사후관리·금지행위·제작자 책임 = FP (사업자 행위 제한)
             if _OPERATOR_FORBIDDEN_ACT_TITLE.search(title):
+                continue
+            # 행정 표준 설정·시민 요청권 = FP (식품위생법류)
+            if _STANDARD_SETTING_TITLE.search(title):
                 continue
             # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
