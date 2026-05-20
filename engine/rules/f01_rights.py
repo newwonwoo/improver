@@ -110,6 +110,19 @@ _MEDICAL_PROFESSION_TITLE = re.compile(
     r"(진료\s*거부|진료기록|처방전|면허|개설(\s*허가)?|의료인|의료광고"
     r"|무면허\s*의료|의료기관\s*개설|진료의?\s*\S{0,8}\s*제한)"
 )
+# Method B (할부거래법·방문판매법 분석): 민사 권리·의무 분배 조문
+# R5 examples:
+#   할부거래법 제8조 (청약의 철회) - 소비자 권리 보장
+#   할부거래법 제11조 (할부계약 해제) - 사업자 권리 분배
+#   할부거래법 제13조 (기한의 이익 상실) - 민법 일반조항
+#   할부거래법 제16조 (소비자의 항변권) - 소비자 권리 보장
+#   방문판매법 제9조 (청약철회 효과) - 사업자 환급 의무
+_CIVIL_CONTRACT_TITLE = re.compile(
+    r"(청약(의?)\s*철회|청약철회.{0,5}효과|청약철회.{0,5}통보"
+    r"|할부계약(의?)\s*해제|계약(의?)\s*해제|계약(의?)\s*해지"
+    r"|항변권|기한의?\s*이익|손해배상|위약금"
+    r"|반환의?\s*의무|환급의?\s*의무|원상회복)"
+)
 # 직역 자격법의 자격제한·자격취소 조문 (변호사·세무사·회계사·약사·의료인 등)
 _PROFESSIONAL_QUAL_RESTRICTION = re.compile(
     r"^(자격\s*취소|자격\s*정지|등록\s*취소|면허\s*취소|면허\s*정지|등록의?\s*거부"
@@ -180,6 +193,9 @@ class F01Rights:
                 continue
             # 직역 자격제한·자격취소 = FP (F-03 영역)
             if _PROFESSIONAL_QUAL_RESTRICTION.search(title.strip()):
+                continue
+            # 민사 권리·의무 분배 조문 (청약철회·항변권·계약해제 등) = FP
+            if _CIVIL_CONTRACT_TITLE.search(title):
                 continue
             # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
