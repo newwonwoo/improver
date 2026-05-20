@@ -135,44 +135,49 @@ class L01Citation:
             cites_pre = _CITE_PAT.findall(art.full_text)
             laws_pre = {c for c in cites_pre if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
             many_cites = len(laws_pre) >= 12
-            if t == ArticleType.DELEGATION and s == "EVERYONE":
-                continue
-            if t == ArticleType.DISPOSITION and s == "AGENCY":
-                continue
-            # 3-axis gates — 인용 12개 이상이면 본질적 정탐 가능성 → gate 통과
-            if not many_cites:
-                if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "NONE":
+            # Method B: TP_TITLE 매칭 (인허가의제·다른 법률과의 관계·사무처리 특례)
+            # 은 verdict TP 직결 신호 → 구조적 게이트 우회 (signal_candidates :: L-01)
+            tp_title_override = bool(_TP_TITLE.search(art.title or ""))
+            # TP_TITLE override 시 모든 구조적 게이트 통과
+            if not tp_title_override:
+                if t == ArticleType.DELEGATION and s == "EVERYONE":
                     continue
-                if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "NONE":
+                if t == ArticleType.DISPOSITION and s == "AGENCY":
                     continue
-            # PROHIBITION 조문은 일반적으로 F-01/F-03 영역이지만
-            # 다수 인용 (≥12) 시 침익적 금지행위 + 과다 타법 의존 = L-01 진성 TP
-            # Source: Method B (교육환경보호법 제9조 35개 법률 금지행위 — verdict TP)
-            if t == ArticleType.PROHIBITION and not many_cites:
-                continue
-            if t == ArticleType.DISPOSITION and s == "OPERATOR" and modal_str == "MUST":
-                continue
-            if t == ArticleType.DELEGATION and s == "OPERATOR" and modal_str == "MAY":
-                continue
-            # Aggressive gates — only if not many_cites (preserve high-cite TPs)
-            if not many_cites:
-                if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "DEFINITION":
-                    continue  # 2 TP / 13 FP
-                if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
-                    continue  # 3 TP / 12 FP
-                if t == ArticleType.DELEGATION and s == "CITIZEN" and modal_str == "DEFINITION":
-                    continue  # 1 TP / 5 FP
-                if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "MAY":
-                    continue  # 1 TP / 5 FP
-                if t == ArticleType.PLAN and s == "AGENCY" and modal_str == "DEFINITION":
-                    continue  # 1 TP / 5 FP
-                # More aggressive
-                if t == ArticleType.GENERAL and s == "AGENCY" and modal_str == "MAY":
-                    continue  # 1 TP / 5 FP
-                if t == ArticleType.PLAN and s == "AGENCY" and modal_str == "DEFINITION":
+                # 3-axis gates — 인용 12개 이상이면 본질적 정탐 가능성 → gate 통과
+                if not many_cites:
+                    if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "NONE":
+                        continue
+                    if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "NONE":
+                        continue
+                # PROHIBITION 조문은 일반적으로 F-01/F-03 영역이지만
+                # 다수 인용 (≥12) 시 침익적 금지행위 + 과다 타법 의존 = L-01 진성 TP
+                # Source: Method B (교육환경보호법 제9조 35개 법률 금지행위 — verdict TP)
+                if t == ArticleType.PROHIBITION and not many_cites:
                     continue
-                if t == ArticleType.DEFINITION and s == "UNKNOWN" and modal_str == "DEFINITION":
-                    continue  # 1 TP / 4 FP
+                if t == ArticleType.DISPOSITION and s == "OPERATOR" and modal_str == "MUST":
+                    continue
+                if t == ArticleType.DELEGATION and s == "OPERATOR" and modal_str == "MAY":
+                    continue
+                # Aggressive gates — only if not many_cites (preserve high-cite TPs)
+                if not many_cites:
+                    if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "DEFINITION":
+                        continue  # 2 TP / 13 FP
+                    if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
+                        continue  # 3 TP / 12 FP
+                    if t == ArticleType.DELEGATION and s == "CITIZEN" and modal_str == "DEFINITION":
+                        continue  # 1 TP / 5 FP
+                    if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "MAY":
+                        continue  # 1 TP / 5 FP
+                    if t == ArticleType.PLAN and s == "AGENCY" and modal_str == "DEFINITION":
+                        continue  # 1 TP / 5 FP
+                    # More aggressive
+                    if t == ArticleType.GENERAL and s == "AGENCY" and modal_str == "MAY":
+                        continue  # 1 TP / 5 FP
+                    if t == ArticleType.PLAN and s == "AGENCY" and modal_str == "DEFINITION":
+                        continue
+                    if t == ArticleType.DEFINITION and s == "UNKNOWN" and modal_str == "DEFINITION":
+                        continue  # 1 TP / 4 FP
             cites = cites_pre
             # 법령명만 카운트 — 동일 법령명은 1회로
             laws = {c for c in cites if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
