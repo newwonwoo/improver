@@ -124,8 +124,18 @@ class F03Disposition:
                 continue
             # Aggressive gates (TP loss < FP cut by 4x+)
             # DISPOSITION + UNKNOWN + MAY (6 TP / 25 FP — net 19) — 주체 식별 안 된 처분
-            if decomp.type == ArticleType.DISPOSITION and s == "UNKNOWN" and modal_str == "MAY":
-                continue
+            # Method B 보강: 강한 처분 본문 + 명시적 처분제목(허가/등록/면허/지정 취소…)
+            # 시 게이트 통과 (verdict 3 TP / 2 FP — net +1)
+            _disp_title_pre = bool(re.search(
+                r"(허가\s*취소|등록\s*취소|면허\s*취소|지정\s*취소|인가\s*취소"
+                r"|영업\s*정지|업무\s*정지|자격\s*취소|취소\s*등)",
+                art.title or ""
+            ))
+            _strong_pre = bool(_STRONG.search(art.full_text))
+            if (decomp.type == ArticleType.DISPOSITION and s == "UNKNOWN"
+                    and modal_str == "MAY"):
+                if not (_strong_pre and _disp_title_pre):
+                    continue
             # DELEGATION + AGENCY + MAY (2 TP / 8 FP — net 6)
             if decomp.type == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
                 continue
