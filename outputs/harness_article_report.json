@@ -1,30 +1,30 @@
 {
   "overall": {
-    "tp": 116,
+    "tp": 120,
     "fp": 15,
-    "fn": 203,
+    "fn": 199,
     "tn": 1732,
-    "border_fired": 19,
-    "border_skipped": 248,
+    "border_fired": 20,
+    "border_skipped": 247,
     "missing": 0,
     "unmapped": 0,
-    "precision": 0.8854961832061069,
-    "recall": 0.36363636363636365,
-    "f1": 0.5155555555555555
+    "precision": 0.8888888888888888,
+    "recall": 0.3761755485893417,
+    "f1": 0.5286343612334802
   },
   "per_rule": {
     "E-01": {
-      "tp": 7,
+      "tp": 11,
       "fp": 1,
-      "fn": 61,
+      "fn": 57,
       "tn": 178,
-      "border_fired": 3,
-      "border_skipped": 50,
+      "border_fired": 4,
+      "border_skipped": 49,
       "missing": 0,
       "unmapped": 0,
-      "precision": 0.875,
-      "recall": 0.10294117647058823,
-      "f1": 0.1842105263157895
+      "precision": 0.9166666666666666,
+      "recall": 0.16176470588235295,
+      "f1": 0.275
     },
     "F-02": {
       "tp": 6,
