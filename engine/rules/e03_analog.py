@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ActionKind, Subject
 from .base import PatternResult, make_finding
 
 
@@ -121,6 +122,16 @@ class E03Analog:
                 severity = "개선"
                 level = "약"
                 sub = "E-03-a"
+            elif _WEAK.search(text) and not has_digital:
+                # R2: ActionKind.REGISTER + 시민 주체 = 시민 등록·기록 맥락
+                d = decompose(art)
+                if (ActionKind.REGISTER in d.actions
+                        and d.primary_subject == Subject.CITIZEN):
+                    severity = "개선"
+                    level = "약"
+                    sub = "E-03-a"
+                else:
+                    continue
             else:
                 continue
 
