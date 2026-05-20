@@ -201,8 +201,20 @@ class S04Enumeration:
                 if not (_title_disp_short and _max_items >= 15):
                     continue
             # DELEGATION + AGENCY + MAY (3 TP / 9 FP — net 6)
+            # Method B: 개발계획·복합개발·혁신구역·정비계획 제목 + STRICT 캐치올
+            # + 호 ≥16 은 진성 TP (verdict: 4 TP / 0 FP).
+            #   경제자유구역 §6 (n=16), 도심복합 §5 (n=17),
+            #   도시공업지역 §22 (n=21), 노후계획도시정비 §12 (n=19)
+            _plan_title_disp = bool(re.search(r"(개발계획|복합개발|혁신구역|정비계획)", art.title or ""))
+            _max_items_for_gate = max((len(p.items) for p in art.paragraphs), default=0)
+            _has_strict_catchall = any(
+                bool(re.search(r"그\s*밖에.{0,80}(대통령령|총리령|부령|규칙)으?로\s*정하는",
+                               p.items[-1].text)) if p.items else False
+                for p in art.paragraphs
+            )
             if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
-                continue
+                if not (_plan_title_disp and _has_strict_catchall and _max_items_for_gate >= 16):
+                    continue
             # GENERAL + UNKNOWN + MUST (1 TP / 6 FP)
             if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "MUST":
                 continue
