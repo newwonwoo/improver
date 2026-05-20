@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import decompose, ArticleType, is_judicial_law, is_labor_welfare_law, is_blacklisted
+from ..structure import decompose, ArticleType, ActionKind, is_judicial_law, is_labor_welfare_law, is_blacklisted
 from .base import PatternResult, make_finding
 
 

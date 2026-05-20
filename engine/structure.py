@@ -131,7 +131,7 @@ _ACTION_INVESTIGATE_RX = re.compile(
 )
 _ACTION_HEAR_RX = re.compile(
     r"(청문을?\s*(실시|하여야|할\s*수)|의견을?\s*청취|의견제출의?\s*기회"
-    r"|심의\s*[ㆍ·]?\s*의결)"
+    r"|이의\s*신청|소명할\s*기회)"
 )
 
 # Subject 식별 (문장 시작/항 시작 부근)
