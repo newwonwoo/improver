@@ -157,11 +157,18 @@ class S04Enumeration:
             return []
         findings: list[Finding] = []
         idx = 0
+        # Method B (Step 44): 공공기관 설립법 (공사법·진흥공사·공단법·진흥원법·기금법)
+        # 에서 사업/업무 + 캐치올 + N≥10 도 진성 결함 (1 TP / 0 FP)
+        _is_institution_law = bool(re.search(
+            r"(공사법|진흥공사|공단법|진흥원법|기금법)$", law.name
+        ))
         for art in law.articles:
             # Method B (Step 42): 센터·기금·용도·기능 제목 + 캐치올 + 호 ≥10
             # 우선 _inst_override 평가 후 FP 필터·구조 게이트 우회
             _early_decomp = decompose(art)
-            _inst_title_pre = bool(re.search(r"(센터|기금|용도|기능)", art.title or ""))
+            _title_inst_core = bool(re.search(r"(센터|기금|용도|기능)", art.title or ""))
+            _title_business = bool(re.search(r"(사업|업무)", art.title or ""))
+            _inst_title_pre = _title_inst_core or (_is_institution_law and _title_business)
             _inst_catchall_pre = any(
                 p.catchall_kind in ("STRICT", "LOOSE") for p in _early_decomp.paragraphs
             )
@@ -185,13 +192,8 @@ class S04Enumeration:
             #   한강수계 §22 (기금의 용도 — STRICT)
             #   한국해양진흥공사법 §11 (업무... 사실은 "기능"이 아님)
             #   지방자치분권법 §63 (기능 — LOOSE)
-            # 구조적 게이트 우회 (Subject·Modal·Type 무관 발화)
-            _inst_title = bool(re.search(r"(센터|기금|용도|기능)", art.title or ""))
-            _inst_catchall = any(
-                p.catchall_kind in ("STRICT", "LOOSE") for p in decomp.paragraphs
-            )
-            _inst_n = max((p.items_count for p in decomp.paragraphs), default=0)
-            _inst_override = _inst_title and _inst_catchall and _inst_n >= 10
+            # 구조적 게이트 우회 (Subject·Modal·Type 무관 발화) — _inst_override_pre 동기화
+            _inst_override = _inst_override_pre
             if t == ArticleType.COMMITTEE:
                 if not _inst_override:
                     continue
