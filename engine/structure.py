@@ -44,6 +44,25 @@ class Subject(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
+class ActionKind(str, Enum):
+    """행위 종류 — Method B 검증으로 정제된 10개 카테고리.
+
+    R2 (docs/ENGINE_PRINCIPLES.md): 룰이 구조화 + 역할 + 행위 종류 단위로
+    동작하면 level 3 진입. 단어 매칭이 아닌 의미적 행위 식별.
+    """
+    GRANT = "GRANT"               # 허가·인가·승인·지정·면허 부여
+    REVOKE = "REVOKE"             # 취소·박탈·정지·말소·해임
+    IMPOSE = "IMPOSE"             # 과징금·과태료·시정명령·조치명령 부과
+    REPORT = "REPORT"             # 보고·통보·신고·자료제출
+    REGISTER = "REGISTER"         # 등록·기록·기재·비치
+    DELEGATE = "DELEGATE"         # 위임 (대통령령·시행령으로 정한다)
+    RESTRICT = "RESTRICT"         # 제한·금지·아니 된다
+    DEFINE = "DEFINE"             # 정의 (말한다·본다)
+    INVESTIGATE = "INVESTIGATE"   # 조사·검사·확인
+    HEAR = "HEAR"                 # 청문·의견청취·심의
+    NONE = "NONE"                 # 미분류
+
+
 class Modal(str, Enum):
     MUST = "MUST"                 # 하여야 한다
     MAY = "MAY"                   # 할 수 있다
@@ -85,6 +104,35 @@ _PROHIBITION_RX = re.compile(
 )
 _PLAN_RX = re.compile(r"(기본계획|종합계획|시행계획|진흥계획).{0,30}(수립|마련|확정)")
 _PURPOSE_RX = re.compile(r"함을\s*목적으로\s*한다")
+
+# ActionKind 분류 — Method B 검증 패턴
+_ACTION_GRANT_RX = re.compile(
+    r"(허가|인가|승인|지정|면허|등록|인증)을?\s*(한다|할\s*수\s*있다|하여야|하며|받(아야|을\s*수))"
+)
+_ACTION_REVOKE_RX = re.compile(
+    r"(취소(한다|하여야|할\s*수\s*있다)|박탈|정지(한다|하여야|할\s*수\s*있다)"
+    r"|말소|해임|폐쇄(명령|할\s*수)|효력을?\s*잃)"
+)
+_ACTION_IMPOSE_RX = re.compile(
+    r"(과징금을?\s*부과|과태료를?\s*부과|시정\s*명령|조치\s*명령|개선\s*명령"
+    r"|시정할\s*것을\s*명|이행을?\s*명)"
+)
+_ACTION_REPORT_RX = re.compile(
+    r"(보고하여야|보고하게|통보하여야|신고하여야|제출하여야|자료를?\s*제출)"
+)
+_ACTION_REGISTER_RX = re.compile(
+    r"(등록하여야|기록하여야|기재하여야|비치하여야|보존하여야|작성하여야)"
+)
+_ACTION_DELEGATE_RX = _DELEGATION_RX  # 위에 정의됨
+_ACTION_RESTRICT_RX = _PROHIBITION_RX  # 금지
+_ACTION_DEFINE_RX = re.compile(r"(말한다|본다|이라\s*한다)")
+_ACTION_INVESTIGATE_RX = re.compile(
+    r"(조사할\s*수\s*있다|조사하여야|검사할\s*수\s*있다|검사하여야|확인할\s*수\s*있다)"
+)
+_ACTION_HEAR_RX = re.compile(
+    r"(청문을?\s*(실시|하여야|할\s*수)|의견을?\s*청취|의견제출의?\s*기회"
+    r"|심의\s*[ㆍ·]?\s*의결)"
+)
 
 # Subject 식별 (문장 시작/항 시작 부근)
 _AGENCY_SUBJECT_RX = re.compile(
@@ -370,6 +418,10 @@ class ParagraphDecomposition:
     has_disposition: bool = False
     has_obligation: bool = False
     has_prohibition: bool = False
+    actions: list[ActionKind] = field(default_factory=list)  # 본 항의 행위 종류들
+
+    def has_action(self, kind: ActionKind) -> bool:
+        return kind in self.actions
 
 
 @dataclass
@@ -389,6 +441,11 @@ class ArticleDecomposition:
     has_procedure_signal: bool = False
     has_prohibition_signal: bool = False
     has_plan_signal: bool = False
+    # 행위 종류 집합 (article-level union of paragraph actions)
+    actions: set[ActionKind] = field(default_factory=set)
+
+    def has_action(self, kind: ActionKind) -> bool:
+        return kind in self.actions
 
 
 def _classify_subject(text: str) -> Subject:
@@ -417,6 +474,26 @@ def _classify_modal(text: str) -> Modal:
     if "말한다" in text or "본다" in text:
         return Modal.DEFINITION
     return Modal.NONE
+
+
+def _classify_actions(text: str) -> list[ActionKind]:
+    """텍스트에서 행위 종류들 식별 (다중 가능).
+
+    R2 진정한 SLM 효과: 한 문단에 여러 행위 (예: 허가+취소+청문) 가 있으면
+    그 조합 자체가 규제 의미. 룰은 actions 조합 보고 판단.
+    """
+    actions: list[ActionKind] = []
+    if _ACTION_GRANT_RX.search(text): actions.append(ActionKind.GRANT)
+    if _ACTION_REVOKE_RX.search(text): actions.append(ActionKind.REVOKE)
+    if _ACTION_IMPOSE_RX.search(text): actions.append(ActionKind.IMPOSE)
+    if _ACTION_REPORT_RX.search(text): actions.append(ActionKind.REPORT)
+    if _ACTION_REGISTER_RX.search(text): actions.append(ActionKind.REGISTER)
+    if _ACTION_DELEGATE_RX.search(text): actions.append(ActionKind.DELEGATE)
+    if _ACTION_RESTRICT_RX.search(text): actions.append(ActionKind.RESTRICT)
+    if _ACTION_DEFINE_RX.search(text): actions.append(ActionKind.DEFINE)
+    if _ACTION_INVESTIGATE_RX.search(text): actions.append(ActionKind.INVESTIGATE)
+    if _ACTION_HEAR_RX.search(text): actions.append(ActionKind.HEAR)
+    return actions
 
 
 def _classify_article_type(art: Article) -> ArticleType:
@@ -479,6 +556,7 @@ def decompose(art: Article) -> ArticleDecomposition:
     for idx, pt in paras:
         subj = _classify_subject(pt)
         modal = _classify_modal(pt)
+        actions = _classify_actions(pt)
         para_decomps.append(ParagraphDecomposition(
             para_index=idx,
             text=pt,
@@ -488,8 +566,13 @@ def decompose(art: Article) -> ArticleDecomposition:
             has_disposition=bool(_DISPOSITION_RX.search(pt)),
             has_obligation=(modal == Modal.MUST),
             has_prohibition=(modal == Modal.PROHIBITED),
+            actions=actions,
         ))
         para_subjects.append(subj)
+    # article-level action union
+    all_actions = set()
+    for pd in para_decomps:
+        all_actions.update(pd.actions)
 
     # primary subject — 가장 자주 등장하는 비-UNKNOWN 주체
     non_unknown = [s for s in para_subjects if s != Subject.UNKNOWN]
@@ -513,4 +596,5 @@ def decompose(art: Article) -> ArticleDecomposition:
         has_procedure_signal=bool(_PROCEDURE_RX.search(text)),
         has_prohibition_signal=bool(_PROHIBITION_RX.search(text)),
         has_plan_signal=bool(_PLAN_RX.search(text)),
+        actions=all_actions,
     )
