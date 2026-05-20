@@ -158,11 +158,29 @@ class F03Disposition:
             #   F-03-007@도로교통법 (FP — 고용주 주의의무)
             if _DUTY_OF_CARE_TITLE.search(title):
                 continue
+            # Method B (Step 49): 제목 신호로 처분 강도 보완
+            # 본문 _STRONG/_MID/_WEAK 미매칭이지만 제목이 "제재처분|행정처분|위반…조치|제재"
+            # 인 경우 진성 처분조문 (승계·계속·후의 등 후속 조항 제외). verdict 4 TP / 0 FP
+            _disposition_title_signal = bool(re.search(
+                r"(제재처분|행정처분|위반.{0,10}조치|위반.{0,10}처분|^제재(\s|$))",
+                title
+            ))
+            _post_disposition_title = bool(re.search(
+                r"(승계|계속|후의|효과의?\s*승계|업무수행|상속)",
+                title
+            ))
+            _title_only_disposition = (
+                _disposition_title_signal and not _post_disposition_title
+            )
+
             if _STRONG.search(text):
                 strength = "강"
             elif _MID.search(text):
                 strength = "중"
             elif _WEAK.search(text):
+                strength = "약"
+            elif _title_only_disposition:
+                # 제목만 처분 신호 — 약한 처분으로 분류 (severity = 개선/주의)
                 strength = "약"
             else:
                 continue
