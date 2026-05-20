@@ -149,6 +149,15 @@ _SAFETY_OBLIGATION_TITLE = re.compile(
     r"|안전보건개선계획|석면농도기준|보호구|방호조치|화학물질안전"
     r"|위험성평가|작업환경측정|건강진단|특수건강진단)"
 )
+# Method B (자동차관리법 분석): 사업자 사후관리·금지행위 조문
+# R5 examples (FP):
+#   자동차관리법 제32조의2 (자기인증 사후관리) - 자동차제작자 의무
+#   자동차관리법 제57조 (자동차관리사업자 금지 행위) - 사업자 부정행위 금지
+_OPERATOR_FORBIDDEN_ACT_TITLE = re.compile(
+    r"(.{0,15}\s*사업자\s*(등)?\s*(의)?\s*금지\s*행위"
+    r"|사후관리|사후\s*관리|판매자의?\s*의무|제작자의?\s*책임"
+    r"|제조업자의?\s*의무|영업자의?\s*의무|사업자의?\s*의무)"
+)
 # 직역 자격법의 자격제한·자격취소 조문 (변호사·세무사·회계사·약사·의료인 등)
 _PROFESSIONAL_QUAL_RESTRICTION = re.compile(
     r"^(자격\s*취소|자격\s*정지|등록\s*취소|면허\s*취소|면허\s*정지|등록의?\s*거부"
@@ -228,6 +237,9 @@ class F01Rights:
                 continue
             # 산업안전 사업주 안전·보건 의무 = FP (근로자 보호 목적)
             if _SAFETY_OBLIGATION_TITLE.search(title):
+                continue
+            # 사업자 사후관리·금지행위·제작자 책임 = FP (사업자 행위 제한)
+            if _OPERATOR_FORBIDDEN_ACT_TITLE.search(title):
                 continue
             # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
