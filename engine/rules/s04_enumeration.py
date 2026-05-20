@@ -158,38 +158,73 @@ class S04Enumeration:
         findings: list[Finding] = []
         idx = 0
         for art in law.articles:
-            if _is_fp_article(art):
+            # Method B (Step 42): 센터·기금·용도·기능 제목 + 캐치올 + 호 ≥10
+            # 우선 _inst_override 평가 후 FP 필터·구조 게이트 우회
+            _early_decomp = decompose(art)
+            _inst_title_pre = bool(re.search(r"(센터|기금|용도|기능)", art.title or ""))
+            _inst_catchall_pre = any(
+                p.catchall_kind in ("STRICT", "LOOSE") for p in _early_decomp.paragraphs
+            )
+            _inst_n_pre = max((p.items_count for p in _early_decomp.paragraphs), default=0)
+            _inst_override_pre = _inst_title_pre and _inst_catchall_pre and _inst_n_pre >= 10
+
+            if not _inst_override_pre and _is_fp_article(art):
                 continue
             # Structural FP gates (verdict 분석): 순수 FP 조합
-            decomp = decompose(art)
+            decomp = _early_decomp
             t, s = decomp.type, decomp.primary_subject.value
             from ..structure import Modal
             modal_str = "NONE"
             for p in decomp.paragraphs:
                 if p.modal != Modal.NONE: modal_str = p.modal.value; break
+            # Method B (Step 42): 센터·기금·용도·기능 제목 + 캐치올 + 호 ≥10
+            # → 기관 업무 열거 + 임의 추가 조항의 명백 결함 패턴 (verdict 4 TP / 1 FP)
+            # R5 examples:
+            #   진로교육법 §15 (국가진로교육센터 — LOOSE 캐치올)
+            #   치매관리법 §16의2 (광역치매센터 — LOOSE)
+            #   한강수계 §22 (기금의 용도 — STRICT)
+            #   한국해양진흥공사법 §11 (업무... 사실은 "기능"이 아님)
+            #   지방자치분권법 §63 (기능 — LOOSE)
+            # 구조적 게이트 우회 (Subject·Modal·Type 무관 발화)
+            _inst_title = bool(re.search(r"(센터|기금|용도|기능)", art.title or ""))
+            _inst_catchall = any(
+                p.catchall_kind in ("STRICT", "LOOSE") for p in decomp.paragraphs
+            )
+            _inst_n = max((p.items_count for p in decomp.paragraphs), default=0)
+            _inst_override = _inst_title and _inst_catchall and _inst_n >= 10
             if t == ArticleType.COMMITTEE:
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.REPORTING and s == "AGENCY":
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.PROHIBITION:
                 continue
             if t == ArticleType.GENERAL and s in ("AGENCY", "EVERYONE"):
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.PLAN and s == "AGENCY":
-                continue
+                if not _inst_override:
+                    continue
             # 3-axis gates
             if t == ArticleType.DISPOSITION and s == "AGENCY" and modal_str == "MUST":
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.DISPOSITION and s == "UNKNOWN" and modal_str in ("MAY", "PROHIBITED"):
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "DEFINITION":
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "MUST":
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.PROCEDURE and s == "UNKNOWN" and modal_str == "MUST":
-                continue
+                if not _inst_override:
+                    continue
             if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str in ("NONE", "MAY"):
-                continue
+                if not _inst_override:
+                    continue
             # Aggressive (TP loss < FP cut by 4x)
             # DISPOSITION + AGENCY + MAY (4 TP / 32 FP — net 28)
             # Method B 보강: 처분 제목(취소/말소/정지/폐쇄) + 호 ≥15 는 진성 TP
@@ -214,16 +249,19 @@ class S04Enumeration:
             )
             if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
                 if not (_plan_title_disp and _has_strict_catchall and _max_items_for_gate >= 16):
-                    continue
+                    if not _inst_override_pre:
+                        continue
             # GENERAL + UNKNOWN + MUST (1 TP / 6 FP)
             if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "MUST":
-                continue
+                if not _inst_override_pre:
+                    continue
             # DELEGATION + EVERYONE + PROHIBITED (1 TP / 6 FP)
             if t == ArticleType.DELEGATION and s == "EVERYONE" and modal_str == "PROHIBITED":
                 continue
             # GENERAL + UNKNOWN + DEFINITION (1 TP / 4 FP)
             if t == ArticleType.GENERAL and s == "UNKNOWN" and modal_str == "DEFINITION":
-                continue
+                if not _inst_override_pre:
+                    continue
             # SLM signal: 호 수만으론 TP/FP 분간 불가 (TP 평균 13.4 ≈ FP 평균 13.7).
             # 컨텍스트(처분·위반·포괄위임) 신호와 결합해야 의미 있는 발화.
             art_text = art.full_text
@@ -233,7 +271,11 @@ class S04Enumeration:
             for para in art.paragraphs:
                 n = len(para.items)
                 # 적대적 컨텍스트 없으면 임계값 상향 (15호 이상만 발화)
-                min_n = 10 if has_adversarial_context else 15
+                # _inst_override_pre 시: 호 ≥10 로 임계값 완화 (기관 업무+캐치올)
+                if _inst_override_pre:
+                    min_n = 10
+                else:
+                    min_n = 10 if has_adversarial_context else 15
                 if n < min_n:
                     continue
                 if n >= 30:

@@ -1,16 +1,16 @@
 {
   "overall": {
-    "tp": 141,
-    "fp": 18,
-    "fn": 179,
-    "tn": 1736,
-    "border_fired": 25,
-    "border_skipped": 242,
+    "tp": 145,
+    "fp": 19,
+    "fn": 175,
+    "tn": 1735,
+    "border_fired": 28,
+    "border_skipped": 239,
     "missing": 0,
     "unmapped": 0,
-    "precision": 0.8867924528301887,
-    "recall": 0.440625,
-    "f1": 0.5887265135699373
+    "precision": 0.8841463414634146,
+    "recall": 0.453125,
+    "f1": 0.5991735537190083
   },
   "per_rule": {
     "E-01": {
@@ -157,17 +157,17 @@
       "f1": 0.6666666666666666
     },
     "S-04": {
-      "tp": 13,
-      "fp": 1,
-      "fn": 16,
-      "tn": 198,
-      "border_fired": 1,
-      "border_skipped": 70,
+      "tp": 17,
+      "fp": 2,
+      "fn": 12,
+      "tn": 197,
+      "border_fired": 4,
+      "border_skipped": 67,
       "missing": 0,
       "unmapped": 0,
-      "precision": 0.9285714285714286,
-      "recall": 0.4482758620689655,
-      "f1": 0.6046511627906977
+      "precision": 0.8947368421052632,
+      "recall": 0.5862068965517241,
+      "f1": 0.7083333333333333
     }
   },
   "n_verdicts": 2074
