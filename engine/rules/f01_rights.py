@@ -99,6 +99,22 @@ _REGISTRATION_REQUIREMENT_TITLE = re.compile(
 _OPERATOR_BUSINESS_DUTY = re.compile(
     r"^(금융실명|실명거래|감독.{0,5}검사|보고.{0,5}검사|업무.{0,5}보고)"
 )
+# Method B (의료법 분석): 의료직 직역 의무 조문
+# R5 examples:
+#   의료법 제15조 (진료거부 금지) - 의료인 진료의무
+#   의료법 제17조의2 (처방전) - 의사 처방권 + 의약분업
+#   의료법 제22조 (진료기록부) - 의료인 기록의무
+#   의료법 제33조 (개설 등) - 의료기관 개설 제한
+#   의료법 제64조 (개설 허가 취소) - F-03 영역
+_MEDICAL_PROFESSION_TITLE = re.compile(
+    r"(진료\s*거부|진료기록|처방전|면허|개설(\s*허가)?|의료인|의료광고"
+    r"|무면허\s*의료|의료기관\s*개설|진료의?\s*\S{0,8}\s*제한)"
+)
+# 직역 자격법의 자격제한·자격취소 조문 (변호사·세무사·회계사·약사·의료인 등)
+_PROFESSIONAL_QUAL_RESTRICTION = re.compile(
+    r"^(자격\s*취소|자격\s*정지|등록\s*취소|면허\s*취소|면허\s*정지|등록의?\s*거부"
+    r"|자격의?\s*\S{0,5}\s*제한|업무\s*정지)"
+)
 # TP 필터: 실질적 권리 박탈 키워드
 _DEPRIVATION = re.compile(
     r"(자격을?\s*정지|허가를?\s*취소|등록을?\s*취소|인가를?\s*취소|면허를?\s*취소"
@@ -158,6 +174,12 @@ class F01Rights:
                 continue
             # 금융기관·사업자 본질 영업 의무 (실명거래·감독응대) = FP
             if _OPERATOR_BUSINESS_DUTY.search(title.strip()):
+                continue
+            # 의료직 직역 의무 (진료거부 금지·처방전·진료기록 등) = FP
+            if _MEDICAL_PROFESSION_TITLE.search(title):
+                continue
+            # 직역 자격제한·자격취소 = FP (F-03 영역)
+            if _PROFESSIONAL_QUAL_RESTRICTION.search(title.strip()):
                 continue
             # 조문 제목이 사업자·기관 준수사항/광고/금지 조문이면 FP
             if any(k in title for k in (
