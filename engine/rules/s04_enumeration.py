@@ -162,13 +162,25 @@ class S04Enumeration:
         _is_institution_law = bool(re.search(
             r"(공사법|진흥공사|공단법|진흥원법|기금법)$", law.name
         ))
+        # Method B (Step 45): 협회/조합/연합회의 사업 열거 본문 신호
+        # ("협회는 다음 각 호의 사업을 한다" 시작 형태)
+        _ASSOC_BUSINESS_BODY = re.compile(
+            r"(협회|조합|연합회|학회)(는|은)\s*다음\s*각\s*호의?\s*사업"
+        )
         for art in law.articles:
             # Method B (Step 42): 센터·기금·용도·기능 제목 + 캐치올 + 호 ≥10
             # 우선 _inst_override 평가 후 FP 필터·구조 게이트 우회
             _early_decomp = decompose(art)
             _title_inst_core = bool(re.search(r"(센터|기금|용도|기능)", art.title or ""))
             _title_business = bool(re.search(r"(사업|업무)", art.title or ""))
-            _inst_title_pre = _title_inst_core or (_is_institution_law and _title_business)
+            # 협회/조합 사업 열거 본문 신호 — institution_law 미해당 법에서도 적용
+            # R5: 총포ㆍ도검법 §52 "협회는 다음 각 호의 사업을 한다" (1 TP / 0 FP)
+            _assoc_business_body = bool(_ASSOC_BUSINESS_BODY.search(art.full_text[:300]))
+            _inst_title_pre = (
+                _title_inst_core
+                or (_is_institution_law and _title_business)
+                or _assoc_business_body
+            )
             _inst_catchall_pre = any(
                 p.catchall_kind in ("STRICT", "LOOSE") for p in _early_decomp.paragraphs
             )
