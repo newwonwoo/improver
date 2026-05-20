@@ -207,7 +207,9 @@ class F03Disposition:
                 r"|설립\s*허가\s*취소|영업\s*정지|업무\s*정지|자격\s*취소"
                 r"|취소\s*등|취소와\s*영업정지"
                 # Step 51: "단체에 대한 조치|위반…조치명령" — 2 TP / 0 FP
-                r"|에\s*대한\s*조치|위반.{0,10}조치|조치명령)",
+                r"|에\s*대한\s*조치|위반.{0,10}조치|조치명령"
+                # Step 52: 단독 "과징금" 제목 — 2 TP / 0 FP
+                r"|^과징금(\s*처분)?(\s*등)?$|^과징금)",
                 art.title or ""
             ))
             _is_disp_type = (decomp.type == ArticleType.DISPOSITION)
