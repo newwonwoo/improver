@@ -171,6 +171,24 @@ class F03Disposition:
             # SLM: 동일 조문 내 청문 명시 = 사전절차 적법 → severity 한 단계 다운
             same_art_hearing = _same_art_has_hearing(art)
 
+            # Method B (Step 48): 강한 처분 + 동일조 청문 부재 + DISPOSITION 타입
+            # + 명시적 처분 제목 (등록취소|허가취소|면허취소|영업정지 …) — verdict 7 TP / 0 FP
+            # 사전 절차 보장이 같은 조문에 명시되지 않은 강한 처분은 결함
+            # 좁은 제목 패턴으로 law-level FP 폭증 방지
+            _disp_title = bool(re.search(
+                r"(허가\s*취소|등록\s*취소|면허\s*취소|지정\s*취소|인가\s*취소"
+                r"|설립\s*허가\s*취소|영업\s*정지|업무\s*정지|자격\s*취소"
+                r"|취소\s*등|취소와\s*영업정지)",
+                art.title or ""
+            ))
+            _is_disp_type = (decomp.type == ArticleType.DISPOSITION)
+            _strong_disp_no_local_hearing = (
+                strength == "강"
+                and not same_art_hearing
+                and _is_disp_type
+                and _disp_title
+            )
+
             if strength == "강" and not has_hearing_in_law:
                 severity = "심각"
             elif strength == "강" and not has_standard:
@@ -179,6 +197,9 @@ class F03Disposition:
                 severity = "주의"
             elif strength == "약":
                 severity = "개선"
+            elif _strong_disp_no_local_hearing and has_standard and has_hearing_in_law:
+                # 강 + 처분제목 + 동일조 청문부재 = 사전 청문 cross-ref 누락 결함
+                severity = "주의"
             else:
                 severity = "양호"
 
