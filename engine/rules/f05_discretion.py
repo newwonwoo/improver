@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ActionKind
 from .base import PatternResult, make_finding
 
 
@@ -99,7 +100,13 @@ class F05Discretion:
 
             has_high = bool(_HIGH_VAGUE.search(text))
             has_mid = bool(_MID_VAGUE.search(text))
-            has_adversarial = bool(_ADVERSARIAL.search(text))
+            # R2 ActionKind 보강: 키워드 패턴 OR 구조화 액션 (REVOKE|IMPOSE|RESTRICT)
+            # Source: docs/ENGINE_PRINCIPLES.md R2 — 단어 매칭 대신 구조 신호
+            d = decompose(art)
+            adversarial_actions = d.actions & {
+                ActionKind.REVOKE, ActionKind.IMPOSE, ActionKind.RESTRICT
+            }
+            has_adversarial = bool(_ADVERSARIAL.search(text)) or bool(adversarial_actions)
 
             if has_high and has_adversarial:
                 severity = "심각"
