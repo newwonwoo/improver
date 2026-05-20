@@ -192,8 +192,14 @@ class S04Enumeration:
                 continue
             # Aggressive (TP loss < FP cut by 4x)
             # DISPOSITION + AGENCY + MAY (4 TP / 32 FP — net 28)
+            # Method B 보강: 처분 제목(취소/말소/정지/폐쇄) + 호 ≥15 는 진성 TP
+            #   사료관리법 §25 (등록취소 19호), 하수도법 §54 (등록취소 15호),
+            #   해운법 §19 (면허취소 18호) — verdict TP 3건, FP 1건만 (net +2)
+            _title_disp_short = bool(re.search(r"(취소|말소|정지|폐쇄)", art.title or ""))
+            _max_items = max((len(p.items) for p in art.paragraphs), default=0)
             if t == ArticleType.DISPOSITION and s == "AGENCY" and modal_str == "MAY":
-                continue
+                if not (_title_disp_short and _max_items >= 15):
+                    continue
             # DELEGATION + AGENCY + MAY (3 TP / 9 FP — net 6)
             if t == ArticleType.DELEGATION and s == "AGENCY" and modal_str == "MAY":
                 continue
