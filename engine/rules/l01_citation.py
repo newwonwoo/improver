@@ -145,8 +145,11 @@ class L01Citation:
                     continue
                 if t == ArticleType.DELEGATION and s == "UNKNOWN" and modal_str == "NONE":
                     continue
-            if t == ArticleType.PROHIBITION:
-                continue  # 모든 PROHIBITION 조문 — 다른 룰 영역
+            # PROHIBITION 조문은 일반적으로 F-01/F-03 영역이지만
+            # 다수 인용 (≥12) 시 침익적 금지행위 + 과다 타법 의존 = L-01 진성 TP
+            # Source: Method B (교육환경보호법 제9조 35개 법률 금지행위 — verdict TP)
+            if t == ArticleType.PROHIBITION and not many_cites:
+                continue
             if t == ArticleType.DISPOSITION and s == "OPERATOR" and modal_str == "MUST":
                 continue
             if t == ArticleType.DELEGATION and s == "OPERATOR" and modal_str == "MAY":
