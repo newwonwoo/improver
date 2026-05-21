@@ -143,8 +143,9 @@ class E01Conditions:
                 stages += 1
             # Method B (E-01 MISS 49건 분석): 호 개수가 큰 경우 절차 복잡도 진성 신호
             # 양수승계 13단계·버티포트 허가 14단계·사업시행인가 12단 등
+            # R2 구조 신호 활용: decomp.paragraphs[i].items_count 사용
             max_items_in_paras = max(
-                (len(p.items) for p in art.paragraphs), default=0
+                (p.items_count for p in decomp.paragraphs), default=0
             )
             if max_items_in_paras >= 10:
                 stages += 2  # 다호 절차 — 강한 복잡도 신호

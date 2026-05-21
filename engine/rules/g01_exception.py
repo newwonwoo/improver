@@ -49,12 +49,24 @@ _SCOPE_LIMIT_DANSEO = re.compile(
 
 
 def _max_danseo_per_para(art: Article) -> int:
-    """단일 항에서 최대 단서(다만) 수. 다항 조문에서 항별 집계로 오탐 감소."""
+    """단일 항에서 최대 단서(다만) 수. 다항 조문에서 항별 집계로 오탐 감소.
+
+    호환을 위한 fallback — 신규 코드는 decompose(art).paragraphs[i].proviso_count 사용.
+    """
     if art.paragraphs:
         para_texts = [p.text for p in art.paragraphs if p.text.strip()]
         if para_texts:
             return max(len(_DANSEO.findall(pt)) for pt in para_texts)
     return len(_DANSEO.findall(art.full_text))
+
+
+def _max_proviso_from_decomp(decomp) -> int:
+    """R2 구조 신호: ParagraphDecomposition.proviso_count 의 최대값.
+    동일 의미를 구조화분해기 신호로 표현 (전수 R구조화).
+    """
+    if decomp.paragraphs:
+        return max((p.proviso_count for p in decomp.paragraphs), default=0)
+    return 0
 
 
 class G01Exception:
@@ -133,7 +145,8 @@ class G01Exception:
             if _ADMIN_PROC_REF.search(text):
                 continue
             # 항별 최대 단서 수로 평가 (다항 조문의 항당 1개 단서는 정상)
-            danseo_count = _max_danseo_per_para(art)
+            # R2 구조 신호 활용: decompose 결과의 proviso_count 사용
+            danseo_count = _max_proviso_from_decomp(decomp) or _max_danseo_per_para(art)
             has_vague_exc = bool(_VAGUE_EXC.search(text))
             has_disposition = bool(_DISPOSITION_KEY.search(text))
             # FP 필터: 효력범위·면제 한정 단서 (처분 부재시)
