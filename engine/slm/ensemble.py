@@ -43,16 +43,27 @@ def _norm(s: str) -> str:
     return s.replace(" ", "").strip() if s else ""
 
 
+# 카테고리별 SLM 단독 임계값 — 적법성·거버넌스는 SLM 신호 잡음 많아 높임
+_CAT_SLM_THRESHOLD: dict[str, float] = {
+    "구조": 0.70,
+    "공정성": 0.70,
+    "적법성": 0.85,   # cited_laws 신호 잡음 보호
+    "거버넌스": 0.80,  # has_standard 신호 잡음 보호
+    "효율성": 0.65,
+}
+
+
 def ensemble_analyze(
     law: Law,
     findings: list[Finding],
     *,
-    slm_threshold: float = 0.70,
+    slm_threshold: float | None = None,
 ) -> dict[str, list[EnsembleVerdict]]:
     """룰 findings + SLM 분석 → 카테고리별 앙상블 진단.
 
     - rule fire 가 있으면 → "rule" 또는 "both"
     - rule fire 없지만 SLM score >= slm_threshold → "slm"
+    - slm_threshold=None 시 카테고리별 _CAT_SLM_THRESHOLD 활용
     """
     # Rule fire 인덱스: (category, article_number) → [Finding...]
     rule_fires: dict[tuple[str, str], list[Finding]] = {}
@@ -95,16 +106,18 @@ def ensemble_analyze(
                     score=_SEV_TO_SCORE.get(best.severity, 0.5),
                     source="rule",
                 ))
-            elif diag.score >= slm_threshold:
-                # SLM 단독 — 정밀도 보호 위해 임계값 더 높임
-                results[cat].append(EnsembleVerdict(
-                    article_number=art.number,
-                    article_title=art.title or "",
-                    category=cat,
-                    severity=diag.severity,
-                    score=diag.score,
-                    source="slm",
-                ))
+            else:
+                # SLM 단독 — 카테고리별 임계값 적용
+                t = slm_threshold if slm_threshold is not None else _CAT_SLM_THRESHOLD.get(cat, 0.75)
+                if diag.score >= t:
+                    results[cat].append(EnsembleVerdict(
+                        article_number=art.number,
+                        article_title=art.title or "",
+                        category=cat,
+                        severity=diag.severity,
+                        score=diag.score,
+                        source="slm",
+                    ))
     return results
 
 
