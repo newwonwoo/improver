@@ -66,8 +66,8 @@ class F04Deemed:
             # Method B: F-04 missed TPs 분석
             #   F-04-003@상법 §726의4 (10일 자동차양도 — 낙부통지+단기)
             #   F-04-001@할부거래법 §22의2 (7일 부동의→동의 — 고지+철회 갖춰도 단기)
-            # 첫 \d+일 이 아니라 모든 기간 중 최소값으로 판정 (다항 분산 대비)
-            _all_periods = [int(m) for m in re.findall(r"(\d+)\s*일", text)]
+            # R2 구조 신호 활용: ArticleDecomposition.deadlines_days (사전 정규화)
+            _all_periods = list(d.deadlines_days) or [int(m) for m in re.findall(r"(\d+)\s*일", text)]
             _short_period = any(0 < p < 14 for p in _all_periods)
             if _INTER_AGENCY_DEEMED.search(text):
                 continue  # 기관간 절차 — 시민 의사표시 의제 X
