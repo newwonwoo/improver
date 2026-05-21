@@ -145,8 +145,8 @@ class G01Exception:
             if _ADMIN_PROC_REF.search(text):
                 continue
             # 항별 최대 단서 수로 평가 (다항 조문의 항당 1개 단서는 정상)
-            # R2 구조 신호 활용: decompose 결과의 proviso_count 사용
-            danseo_count = _max_proviso_from_decomp(decomp) or _max_danseo_per_para(art)
+            # R2 구조 신호 활용: ArticleDecomposition.proviso_max_per_para
+            danseo_count = decomp.proviso_max_per_para or _max_danseo_per_para(art)
             has_vague_exc = bool(_VAGUE_EXC.search(text))
             has_disposition = bool(_DISPOSITION_KEY.search(text))
             # FP 필터: 효력범위·면제 한정 단서 (처분 부재시)
@@ -162,7 +162,8 @@ class G01Exception:
             # Method B (article-level G-01 MISS 분석 — 17건):
             # 단서가 여러 항에 분산되는 경우 per-paragraph max 가 낮지만
             # article 전체로는 3-5건. 처분/금지 컨텍스트일 때 article 합산도 보조 신호.
-            danseo_article_total = len(_DANSEO.findall(text))
+            # R2 구조 신호 활용: proviso_total
+            danseo_article_total = decomp.proviso_total or len(_DANSEO.findall(text))
             if danseo_count >= 4:
                 severity = "심각"
             elif danseo_count >= 3:

@@ -136,7 +136,8 @@ class L01Citation:
             for p in decomp.paragraphs:
                 if p.modal != Modal.NONE: modal_str = p.modal.value; break
             # 사전 인용 수 계산 — 게이트가 다수 인용 본질을 놓치지 않도록
-            cites_pre = _CITE_PAT.findall(art.full_text)
+            # R2 구조 신호 활용: ArticleDecomposition.cited_laws (사전 추출됨)
+            cites_pre = list(decomp.cited_laws) if decomp.cited_laws else _CITE_PAT.findall(art.full_text)
             laws_pre = {c for c in cites_pre if c.endswith("법") or c.endswith("법률") or "관한 법" in c}
             many_cites = len(laws_pre) >= 12
             # Method B: TP_TITLE 매칭 (인허가의제·다른 법률과의 관계·사무처리 특례)

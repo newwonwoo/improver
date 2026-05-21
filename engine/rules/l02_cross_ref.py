@@ -64,10 +64,11 @@ class L02CrossRef:
             d = decompose(art)
             if d.type == ArticleType.DEFINITION:
                 continue
+            # R2 구조 신호 활용: ArticleDecomposition.cited_laws (사전 추출됨)
             refs = _CROSS_REF.findall(art.full_text)
             if not refs:
                 continue
-            unique_laws = {r[0] for r in refs}
+            unique_laws = {r[0] for r in refs} if refs else set(d.cited_laws)
             if len(unique_laws) >= 7:
                 severity = "경고"
             elif len(unique_laws) >= 5:
