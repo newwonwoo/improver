@@ -8,6 +8,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -54,6 +55,10 @@ class E05Sanction:
             if art.is_penalty() or art.is_definition() or art.is_purpose():
                 continue
             if art.is_policy_obligation():
+                continue
+            # R2 구조 신호: PLAN·COMMITTEE 타입은 정책 의무 — 제재 공백 본질 X
+            d = decompose(art)
+            if d.type in (ArticleType.PLAN, ArticleType.COMMITTEE):
                 continue
             text = art.full_text
             if not _OBLIG.search(text):

@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose  # noqa: F401 (R2 인프라 가용성 보장)
 from .base import PatternResult, make_finding
 
 

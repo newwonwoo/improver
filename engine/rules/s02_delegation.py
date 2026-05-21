@@ -9,6 +9,7 @@ import re
 
 from ..mcp import LawIndex, load_default_index
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -74,6 +75,10 @@ class S02Delegation:
 
         for art in law.articles:
             if art.is_definition() or art.is_purpose() or art.is_penalty():
+                continue
+            # R2 구조 신호: COMMITTEE 타입 — 위원회 운영 위임은 자체 표준 (구성·운영 위임 자연스러움)
+            d = decompose(art)
+            if d.type == ArticleType.COMMITTEE:
                 continue
             text = art.full_text
             if not _PRIMARY.search(text):

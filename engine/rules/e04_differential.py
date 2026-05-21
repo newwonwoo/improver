@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import ClassVar
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose  # noqa: F401 (R2 인프라 가용성 보장)
 from .base import PatternResult, make_finding
 
 _DICT_PATH = Path(__file__).resolve().parent.parent.parent / "config" / "type_keywords.json"

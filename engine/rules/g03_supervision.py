@@ -7,7 +7,10 @@ from __future__ import annotations
 
 import re
 
-from ..structure import is_judicial_law, is_criminal_special_law, is_military_law, is_blacklisted
+from ..structure import (
+    is_judicial_law, is_criminal_special_law, is_military_law, is_blacklisted,
+    decompose, ArticleType,
+)
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
 
@@ -84,6 +87,10 @@ class G03Supervision:
             if not _SUPERVISE.search(art.full_text):
                 continue
             if _is_fp_article(art):
+                continue
+            # R2 구조 신호: PLAN·DELEGATION 단순 위임 타입은 감독 본질 X
+            d = decompose(art)
+            if d.type == ArticleType.PLAN:
                 continue
             text = art.full_text
             # 외부 감독 대상이 없으면 skip (내부 지휘만 남은 경우)
