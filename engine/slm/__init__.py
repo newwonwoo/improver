@@ -10,6 +10,7 @@
 - SLM → article-level 카테고리 진단 (5축 통합 진단)
 """
 from .brain import CategoryBrain, analyze_article, analyze_law
+from .ensemble import EnsembleVerdict, ensemble_analyze
 from .features import extract_features, FeatureVector
 
 __all__ = [
@@ -18,4 +19,6 @@ __all__ = [
     "analyze_law",
     "extract_features",
     "FeatureVector",
+    "EnsembleVerdict",
+    "ensemble_analyze",
 ]
