@@ -171,6 +171,32 @@ _CATCHALL_WEAK = re.compile(r"^그\s*밖의?\s")
 # 단서 (다만) 패턴 — G-01 공통 활용 (per-paragraph & article-total 카운트)
 _PROVISO_RX = re.compile(r"다만[,\s]")
 
+# 처분 강도 분류 — F-03·S-04·G-01 공통 활용
+# STRONG : 영업정지·인허가/등록/면허/허가/지정/자격 취소·폐쇄명령·해임요구
+_DISP_STRENGTH_STRONG = re.compile(
+    r"(영업정지|인허가\s*취소|등록\s*취소|폐쇄\s*명령|해임\s*요구"
+    r"|인가\s*취소|허가\s*취소|면허\s*취소|지정\s*취소|자격\s*취소)"
+)
+# MID    : 시정명령·과징금·업무정지
+_DISP_STRENGTH_MID = re.compile(r"(시정\s*명령|과징금|업무\s*정지)")
+# WEAK   : 시정권고·개선명령·경고
+_DISP_STRENGTH_WEAK = re.compile(
+    r"(시정\s*권고|개선\s*명령|경고\s*처분|구두\s*경고|서면\s*경고|공식\s*경고"
+    r"|경고를\s*할\s*수\s*있다|경고를\s*하여야)"
+)
+
+# 청문·사전절차 신호
+_HEARING_RX = re.compile(
+    r"(청문|의견제출|의견\s*제출|이의신청|이의\s*신청"
+    r"|사전\s*통지|미리\s*알려|미리\s*통지|불복|행정심판|행정소송"
+    r"|의견을?\s*들어야|의견을?\s*제출할\s*수\s*있다)"
+)
+# 처분 기준 신호 (별표·기준·등급·다음 각 호의 어느 하나)
+_STANDARD_RX = re.compile(
+    r"(별표|기준|등급|다음\s*각\s*호의?\s*어느\s*하나에?\s*해당"
+    r"|다음\s*각\s*호와\s*같다|위반행위|위반\s*횟수|적합하지\s*아니)"
+)
+
 # 사법·국회·진상규명 도메인 법령 — 대부분의 규제 결함 룰 적용 외
 # Source: verdict 분석 (F-03/F-04/G-03/G-04/L-01/L-03/S-04 각각 0 TP)
 _JUDICIAL_LAW_RX = re.compile(
@@ -441,6 +467,8 @@ class ParagraphDecomposition:
     catchall_kind: str | None = None
     items_count: int = 0  # 본 항의 호 개수
     proviso_count: int = 0  # 본 항의 단서(다만) 횟수 — G-01 공통 신호
+    # 처분 강도 — F-03 공통 활용 (강/중/약/None)
+    disposition_strength: str | None = None
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -465,6 +493,10 @@ class ArticleDecomposition:
     has_plan_signal: bool = False
     # 행위 종류 집합 (article-level union of paragraph actions)
     actions: set[ActionKind] = field(default_factory=set)
+    # F-03 공통 활용 신호 (article-level)
+    disposition_strength: str | None = None  # 강/중/약/None — 최강 strength 합산
+    has_hearing: bool = False  # 동일 article 내 청문·사전절차 명시
+    has_standard: bool = False  # 별표·기준·다음 각 호의 어느 하나 명시
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -496,6 +528,17 @@ def _classify_modal(text: str) -> Modal:
     if "말한다" in text or "본다" in text:
         return Modal.DEFINITION
     return Modal.NONE
+
+
+def _classify_disposition_strength(text: str) -> str | None:
+    """처분 강도 분류 — 강/중/약/None."""
+    if _DISP_STRENGTH_STRONG.search(text):
+        return "강"
+    if _DISP_STRENGTH_MID.search(text):
+        return "중"
+    if _DISP_STRENGTH_WEAK.search(text):
+        return "약"
+    return None
 
 
 def _classify_actions(text: str) -> list[ActionKind]:
@@ -598,6 +641,7 @@ def decompose(art: Article) -> ArticleDecomposition:
         subj = _classify_subject(pt)
         modal = _classify_modal(pt)
         actions = _classify_actions(pt)
+        disp_strength = _classify_disposition_strength(pt)
         para_decomps.append(ParagraphDecomposition(
             para_index=idx,
             text=pt,
@@ -611,12 +655,22 @@ def decompose(art: Article) -> ArticleDecomposition:
             catchall_kind=para_catchalls.get(idx),
             items_count=para_item_counts.get(idx, 0),
             proviso_count=len(_PROVISO_RX.findall(pt)),
+            disposition_strength=disp_strength,
         ))
         para_subjects.append(subj)
     # article-level action union
     all_actions = set()
     for pd in para_decomps:
         all_actions.update(pd.actions)
+    # article-level disposition strength (강 > 중 > 약 우선순위)
+    _strength_order = {"강": 3, "중": 2, "약": 1, None: 0}
+    art_disp_strength = None
+    for pd in para_decomps:
+        if _strength_order.get(pd.disposition_strength, 0) > _strength_order.get(art_disp_strength, 0):
+            art_disp_strength = pd.disposition_strength
+    # article-level hearing / standard signals (F-03 활용)
+    art_has_hearing = bool(_HEARING_RX.search(text))
+    art_has_standard = bool(_STANDARD_RX.search(text))
 
     # primary subject — 가장 자주 등장하는 비-UNKNOWN 주체
     non_unknown = [s for s in para_subjects if s != Subject.UNKNOWN]
@@ -641,4 +695,7 @@ def decompose(art: Article) -> ArticleDecomposition:
         has_prohibition_signal=bool(_PROHIBITION_RX.search(text)),
         has_plan_signal=bool(_PLAN_RX.search(text)),
         actions=all_actions,
+        disposition_strength=art_disp_strength,
+        has_hearing=art_has_hearing,
+        has_standard=art_has_standard,
     )
