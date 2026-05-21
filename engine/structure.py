@@ -505,6 +505,9 @@ class ArticleDecomposition:
     # L-01/L-02/L-03 공통 활용 신호
     cited_laws: frozenset[str] = field(default_factory=frozenset)  # 인용된 법령명 집합
     cited_articles_count: int = 0  # 「법령명」제N조 cross-ref 횟수
+    # G-01 공통 활용 — 단서 통계
+    proviso_total: int = 0  # 본 조문 전체 "다만" 출현 총합
+    proviso_max_per_para: int = 0  # 항별 최대 "다만" 횟수
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -682,6 +685,9 @@ def decompose(art: Article) -> ArticleDecomposition:
     # L-01/L-02/L-03: 인용 법령명·cross-ref 추출
     cited_laws_set = frozenset(_CITED_LAW_RX.findall(text))
     cited_articles_count = len(_CITED_ARTICLE_RX.findall(text))
+    # G-01: 단서 통계 (article total / per-paragraph max)
+    proviso_total = len(_PROVISO_RX.findall(text))
+    proviso_max = max((p.proviso_count for p in para_decomps), default=0)
 
     # primary subject — 가장 자주 등장하는 비-UNKNOWN 주체
     non_unknown = [s for s in para_subjects if s != Subject.UNKNOWN]
@@ -711,4 +717,6 @@ def decompose(art: Article) -> ArticleDecomposition:
         has_standard=art_has_standard,
         cited_laws=cited_laws_set,
         cited_articles_count=cited_articles_count,
+        proviso_total=proviso_total,
+        proviso_max_per_para=proviso_max,
     )
