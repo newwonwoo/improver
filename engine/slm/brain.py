@@ -13,7 +13,9 @@ R2 구조 신호의 가중 결합으로 진단을 산출.
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from ..schema import Article, Law
@@ -135,15 +137,16 @@ WEIGHTS: dict[str, dict[str, float]] = {
 
 
 # Severity 임계값 — score 구간 매핑
+# 캘리브레이션 가중치 사용시 누적 score 가 커지므로 임계값 상향
 def _classify_severity(score: float) -> str | None:
     """[0,1] score → 심각/경고/주의/개선/None."""
-    if score >= 0.70:
+    if score >= 0.90:
         return "심각"
-    if score >= 0.55:
+    if score >= 0.75:
         return "경고"
-    if score >= 0.40:
+    if score >= 0.60:
         return "주의"
-    if score >= 0.25:
+    if score >= 0.45:
         return "개선"
     return None
 
@@ -160,9 +163,31 @@ class CategoryBrain:
     bias: float = 0.0
 
     @classmethod
-    def for_category(cls, category: str) -> "CategoryBrain":
+    def for_category(cls, category: str, *, calibrated: bool = True) -> "CategoryBrain":
+        """카테고리별 신경망 모듈.
+
+        calibrated=True (기본): outputs/slm_weights_calibrated.json 우선 로드.
+        파일 부재시 도메인 지식 기반 WEIGHTS 활용.
+        """
         if category not in WEIGHTS:
             raise ValueError(f"unknown category: {category}")
+        if calibrated:
+            calib_path = Path("outputs/slm_weights_calibrated.json")
+            if calib_path.exists():
+                try:
+                    calibrated_weights = json.loads(calib_path.read_text(encoding="utf-8"))
+                    if category in calibrated_weights:
+                        # 도메인 가중치 + 캘리브레이션 가중치 평균 (양쪽 모두 있을 때)
+                        merged = dict(WEIGHTS[category])
+                        for sig, w in calibrated_weights[category].items():
+                            if sig in merged:
+                                merged[sig] = (merged[sig] + w) / 2  # 평균
+                            else:
+                                merged[sig] = w * 0.5  # 캘리브레이션 단독 — 보수적
+                        # 정상 입법 baseline — 모든 카테고리 동일 bias
+                        return cls(category=category, weights=merged, bias=-0.10)
+                except (json.JSONDecodeError, OSError):
+                    pass
         return cls(category=category, weights=dict(WEIGHTS[category]))
 
     def forward(self, fv: FeatureVector) -> CategoryDiagnosis:
