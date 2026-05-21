@@ -13,6 +13,7 @@ from ..structure import (
     is_judicial_law, is_labor_welfare_law,
     is_broadcast_law, is_criminal_special_law,
     is_blacklisted,
+    decompose, ArticleType,
 )
 from ..schema import Article, Finding, Law
 from .base import PatternResult, make_finding
@@ -99,6 +100,10 @@ class L03BrokenRef:
         seen: set[tuple[str, str, str]] = set()
         for art in law.articles:
             if art.is_definition() or art.is_purpose():
+                continue
+            # R2 구조 신호: PENALTY 타입 — 벌칙 인용은 법체계상 정상
+            d = decompose(art)
+            if d.type == ArticleType.PENALTY:
                 continue
             # 부칙 챕터의 인용은 경과조항이므로 정상
             if art.chapter and _CHAPTER_BUCHIK.search(art.chapter):

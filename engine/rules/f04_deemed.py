@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
-from ..structure import is_judicial_law, is_blacklisted
+from ..structure import is_judicial_law, is_blacklisted, decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -51,6 +51,11 @@ class F04Deemed:
                 continue
             text = art.full_text
             if not _DEEMED.search(text):
+                continue
+            # R2 구조 신호: PURPOSE 타입은 의제 본질 X
+            # (DEFINITION 은 효과 정의에 의제가 본질일 수 있으므로 제외)
+            d = decompose(art)
+            if d.type == ArticleType.PURPOSE:
                 continue
             # SLM FP filters (signal_candidates :: F-04):
             # R5 examples:

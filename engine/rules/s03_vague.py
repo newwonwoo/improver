@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -64,6 +65,10 @@ class S03Vague:
         idx = 0
         for art in law.articles:
             if art.is_definition() or art.is_penalty() or art.is_purpose():
+                continue
+            # R2 구조 신호: COMMITTEE 타입은 위원회 운영 — 모호 표현 자연스러움
+            d = decompose(art)
+            if d.type == ArticleType.COMMITTEE:
                 continue
             text = art.full_text
             # 위임 결합 표현은 한 번씩만 제거

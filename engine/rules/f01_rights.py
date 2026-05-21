@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -200,6 +201,10 @@ class F01Rights:
         articles = law.articles
         for i, art in enumerate(articles):
             if art.is_penalty() or art.is_purpose() or art.is_definition():
+                continue
+            # R2 구조 신호: COMMITTEE·PLAN·REPORTING 타입은 권리 제한 본질 아님
+            d = decompose(art)
+            if d.type in (ArticleType.COMMITTEE, ArticleType.PLAN, ArticleType.REPORTING):
                 continue
             text = art.full_text
             # 단순 형사처벌 컨텍스트는 제외 (F-05 영역)
