@@ -132,19 +132,23 @@ def calibrate():
 
     print("\n캘리브레이션 데이터: outputs/slm_signal_stats.json")
 
-    # 권장 가중치 — gap 이 큰 신호를 기준으로 카테고리별 자동 생성
-    print("\n=== 권장 WEIGHTS (verdict-fitted, gap 기반) ===")
+    # 권장 가중치 — gap × (1 - fp_mean) 으로 빈도 잡음 자동 감쇄
+    # 동시에 음수 gap 은 그대로 (정상 신호로 활용)
+    print("\n=== 권장 WEIGHTS (verdict-fitted, gap × (1 - fp_mean) 보정) ===")
     suggested = {}
     for cat in CATEGORIES:
         weights_for_cat = {}
         for r in report[cat]:
-            # 최소 표본 + 최소 gap 임계
             if r["n_tp"] < 5 or r["n_fp"] < 5:
                 continue
             if abs(r["gap"]) < 0.05:
                 continue
-            # gap 을 가중치로 직접 활용 (scale 1.0)
-            weights_for_cat[r["signal"]] = round(r["gap"], 3)
+            # 핵심 보정: gap × (1 - fp_mean)
+            # → fp_mean 이 높은 빈출 신호는 가중치 자동 축소
+            adjusted = r["gap"] * (1.0 - r["fp_mean"])
+            if abs(adjusted) < 0.03:
+                continue
+            weights_for_cat[r["signal"]] = round(adjusted, 3)
         suggested[cat] = weights_for_cat
 
     Path("outputs/slm_weights_calibrated.json").write_text(
