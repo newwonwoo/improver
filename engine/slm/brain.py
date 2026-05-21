@@ -132,6 +132,10 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "is_definition": -0.30,
         "is_purpose": -0.40,
         "is_penalty": -0.20,
+        # 조건 복잡도 신호 — E-01 의 핵심
+        "condition_lead_norm": 0.20,
+        "condition_link_norm": 0.15,
+        "nested_hint_norm": 0.25,
     },
 }
 

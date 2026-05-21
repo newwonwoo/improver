@@ -86,6 +86,10 @@ class FeatureVector:
     # 시간 기한
     has_short_deadline: float = 0.0   # min deadline < 14일
     has_very_short_deadline: float = 0.0  # min < 7일
+    # 조건 복잡도 (효율성 활용)
+    condition_lead_norm: float = 0.0    # condition_lead_count / 20
+    condition_link_norm: float = 0.0    # condition_link_count / 30
+    nested_hint_norm: float = 0.0       # nested_hint_count / 10
     # 항 수
     n_paragraphs: float = 0.0       # # paragraphs / 10
     # 텍스트 분량
@@ -213,5 +217,10 @@ def extract_features(art: Article, decomp: ArticleDecomposition | None = None) -
 
     fv.n_paragraphs = _norm(len(decomp.paragraphs), 10)
     fv.body_length = _norm(len(text), 5000)
+
+    # 조건 복잡도 신호
+    fv.condition_lead_norm = _norm(decomp.condition_lead_count, 20)
+    fv.condition_link_norm = _norm(decomp.condition_link_count, 30)
+    fv.nested_hint_norm = _norm(decomp.nested_hint_count, 10)
 
     return fv

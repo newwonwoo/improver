@@ -213,6 +213,11 @@ _DEEMED_ASSENT_RX = re.compile(
 # 시간 기한 패턴 — N일/N월/N년 (F-04·G-02 활용)
 _TIME_DEADLINE_RX = re.compile(r"(\d+)\s*(일|개월|년)\s*(이내|이상|이하|이전)")
 
+# E-01 조건 복잡도 — 효율성 신경망 활용
+_CONDITION_LEAD_RX = re.compile(r"(경우|때|요건)(?:에는|에)?")
+_CONDITION_LINK_RX = re.compile(r"(및|또는|이고|이며|하고|하며)")
+_NESTED_HINT_RX = re.compile(r"(에 해당하는 경우로서|충족하고|갖추어야 하며|모두 충족|다음 각 호의)")
+
 # 사법·국회·진상규명 도메인 법령 — 대부분의 규제 결함 룰 적용 외
 # Source: verdict 분석 (F-03/F-04/G-03/G-04/L-01/L-03/S-04 각각 0 TP)
 _JUDICIAL_LAW_RX = re.compile(
@@ -525,6 +530,10 @@ class ArticleDecomposition:
     # F-04 활용 — 의사표시 의제·시간 기한
     has_deemed_assent: bool = False  # "동의/승낙/이의 없는 것으로 본다"
     deadlines_days: tuple[int, ...] = ()  # 본 조문에서 추출된 일 단위 기한들 (오름차순)
+    # E-01 조건 복잡도 (효율성 활용)
+    condition_lead_count: int = 0  # "경우|때|요건" 횟수
+    condition_link_count: int = 0  # "및|또는|이고|이며|하고|하며" 횟수
+    nested_hint_count: int = 0     # "다음 각 호의|충족하고|모두 충족" 횟수
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -711,6 +720,10 @@ def decompose(art: Article) -> ArticleDecomposition:
     internal_refs = _INTERNAL_ARTICLE_RX.findall(text_without_cited)
     internal_refs_count = len(internal_refs)
     internal_refs_unique = len({tuple(r) for r in internal_refs})
+    # E-01 조건 복잡도
+    condition_lead_count = len(_CONDITION_LEAD_RX.findall(text))
+    condition_link_count = len(_CONDITION_LINK_RX.findall(text))
+    nested_hint_count = len(_NESTED_HINT_RX.findall(text))
     # F-04: 의사표시 의제 + 일 단위 기한 추출
     has_deemed_assent = bool(_DEEMED_ASSENT_RX.search(text))
     days_found = []
@@ -759,4 +772,7 @@ def decompose(art: Article) -> ArticleDecomposition:
         internal_refs_unique=internal_refs_unique,
         has_deemed_assent=has_deemed_assent,
         deadlines_days=deadlines_days_tuple,
+        condition_lead_count=condition_lead_count,
+        condition_link_count=condition_link_count,
+        nested_hint_count=nested_hint_count,
     )
