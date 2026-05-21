@@ -201,6 +201,8 @@ _STANDARD_RX = re.compile(
 _CITED_LAW_RX = re.compile(r"「([^」]+)」")
 # 인용 법령명 + 제N조 cross-ref — L-02/L-03
 _CITED_ARTICLE_RX = re.compile(r"「([^」]+)」\s*제(\d+)조(?:의\d+)?(?:\s*제\d+항)?")
+# 동일법 내부 조문 인용 (제N조 / 제N조제M항) — E-01·F-03·G-02 활용
+_INTERNAL_ARTICLE_RX = re.compile(r"제(\d+)조(?:의\d+)?(?:제(\d+)항)?")
 
 # 사법·국회·진상규명 도메인 법령 — 대부분의 규제 결함 룰 적용 외
 # Source: verdict 분석 (F-03/F-04/G-03/G-04/L-01/L-03/S-04 각각 0 TP)
@@ -508,6 +510,9 @@ class ArticleDecomposition:
     # G-01 공통 활용 — 단서 통계
     proviso_total: int = 0  # 본 조문 전체 "다만" 출현 총합
     proviso_max_per_para: int = 0  # 항별 최대 "다만" 횟수
+    # E-01·F-03 활용 — 동일법 내부 조문 인용 (제N조)
+    internal_refs_count: int = 0  # "제N조" / "제N조제M항" 인용 횟수
+    internal_refs_unique: int = 0  # 고유 조문 인용 수
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -688,6 +693,12 @@ def decompose(art: Article) -> ArticleDecomposition:
     # G-01: 단서 통계 (article total / per-paragraph max)
     proviso_total = len(_PROVISO_RX.findall(text))
     proviso_max = max((p.proviso_count for p in para_decomps), default=0)
+    # E-01·F-03: 동일법 내부 조문 인용 (「법령명」 제외 — 본 법령의 다른 조문만)
+    # 외부법령 인용 (cited_articles) 부분은 제외하기 위해 「」가 없는 위치만 카운트
+    text_without_cited = _CITED_ARTICLE_RX.sub("", text)
+    internal_refs = _INTERNAL_ARTICLE_RX.findall(text_without_cited)
+    internal_refs_count = len(internal_refs)
+    internal_refs_unique = len({tuple(r) for r in internal_refs})
 
     # primary subject — 가장 자주 등장하는 비-UNKNOWN 주체
     non_unknown = [s for s in para_subjects if s != Subject.UNKNOWN]
@@ -719,4 +730,6 @@ def decompose(art: Article) -> ArticleDecomposition:
         cited_articles_count=cited_articles_count,
         proviso_total=proviso_total,
         proviso_max_per_para=proviso_max,
+        internal_refs_count=internal_refs_count,
+        internal_refs_unique=internal_refs_unique,
     )
