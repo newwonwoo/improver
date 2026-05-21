@@ -1115,6 +1115,30 @@
       "entry_count": 43,
       "size_kb": 91.9,
       "file": "F-04_part01.md"
+    },
+    {
+      "bundle_id": "L-01_augment01",
+      "rule_id": "L-01",
+      "file": "L-01_augment01.md",
+      "n_verdicts": 13
+    },
+    {
+      "bundle_id": "S-04_augment01",
+      "rule_id": "S-04",
+      "file": "S-04_augment01.md",
+      "n_verdicts": 13
+    },
+    {
+      "bundle_id": "F-03_augment01",
+      "rule_id": "F-03",
+      "file": "F-03_augment01.md",
+      "n_verdicts": 11
+    },
+    {
+      "bundle_id": "E-01_augment01",
+      "rule_id": "E-01",
+      "file": "E-01_augment01.md",
+      "n_verdicts": 15
     }
   ]
 }

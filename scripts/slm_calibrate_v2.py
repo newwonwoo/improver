@@ -28,15 +28,50 @@ RULE_CAT = {
     "E-01": "효율성", "E-02": "효율성", "E-03": "효율성", "E-04": "효율성", "E-05": "효율성",
 }
 
-# 외부 reference 법령 — legalize-kr 에서 import 한 5개
+# 외부 reference 법령 — legalize-kr 에서 import 한 25개 (5배 표본 확장)
 # 일반 입법 신호의 baseline (verdict 셋에 없는 corpus-wide 패턴)
-EXTERNAL_REFS = [
+EXTERNAL_REFS_BASE = [
     ("대한민국헌법", "헌법.md"),
     ("공간정보의구축및관리등에관한법률", "시행령.md"),
     ("댐건설ㆍ관리및주변지역지원등에관한법률", "시행령.md"),
     ("혁신도시조성및발전에관한특별법", "시행규칙.md"),
     ("송유관안전관리법", "시행령.md"),
 ]
+
+
+def _discover_external_refs():
+    """data/laws/raw/ 의 시행령·시행규칙·헌법 자동 탐색 (verdict-free baseline)."""
+    refs = list(EXTERNAL_REFS_BASE)
+    laws_dir = Path("data/laws/raw")
+    if not laws_dir.exists():
+        return refs
+    for ld in laws_dir.iterdir():
+        name = ld.name
+        # 본 법령 (법률.md 있음) 이 corpus 에 있으면 verdict 매칭에 활용 — 제외
+        # 시행령·시행규칙만 있는 것은 baseline 으로
+        files = list(ld.iterdir())
+        file_names = {f.name for f in files}
+        if "법률.md" in file_names:
+            continue  # 본법령 corpus
+        if "헌법.md" in file_names:
+            refs.append((name, "헌법.md"))
+        elif "대통령령.md" in file_names:
+            refs.append((name, "대통령령.md"))
+        elif "시행령.md" in file_names:
+            refs.append((name, "시행령.md"))
+        elif "시행규칙.md" in file_names:
+            refs.append((name, "시행규칙.md"))
+    # dedupe
+    seen = set()
+    out = []
+    for r in refs:
+        if r[0] not in seen:
+            seen.add(r[0])
+            out.append(r)
+    return out
+
+
+EXTERNAL_REFS = _discover_external_refs()
 
 
 def _read_law(law_name: str, file_name: str = "법률.md"):
