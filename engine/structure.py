@@ -197,6 +197,11 @@ _STANDARD_RX = re.compile(
     r"|다음\s*각\s*호와\s*같다|위반행위|위반\s*횟수|적합하지\s*아니)"
 )
 
+# 인용 법령명 패턴 — L-01/L-02/L-03 공통 활용
+_CITED_LAW_RX = re.compile(r"「([^」]+)」")
+# 인용 법령명 + 제N조 cross-ref — L-02/L-03
+_CITED_ARTICLE_RX = re.compile(r"「([^」]+)」\s*제(\d+)조(?:의\d+)?(?:\s*제\d+항)?")
+
 # 사법·국회·진상규명 도메인 법령 — 대부분의 규제 결함 룰 적용 외
 # Source: verdict 분석 (F-03/F-04/G-03/G-04/L-01/L-03/S-04 각각 0 TP)
 _JUDICIAL_LAW_RX = re.compile(
@@ -497,6 +502,9 @@ class ArticleDecomposition:
     disposition_strength: str | None = None  # 강/중/약/None — 최강 strength 합산
     has_hearing: bool = False  # 동일 article 내 청문·사전절차 명시
     has_standard: bool = False  # 별표·기준·다음 각 호의 어느 하나 명시
+    # L-01/L-02/L-03 공통 활용 신호
+    cited_laws: frozenset[str] = field(default_factory=frozenset)  # 인용된 법령명 집합
+    cited_articles_count: int = 0  # 「법령명」제N조 cross-ref 횟수
 
     def has_action(self, kind: ActionKind) -> bool:
         return kind in self.actions
@@ -671,6 +679,9 @@ def decompose(art: Article) -> ArticleDecomposition:
     # article-level hearing / standard signals (F-03 활용)
     art_has_hearing = bool(_HEARING_RX.search(text))
     art_has_standard = bool(_STANDARD_RX.search(text))
+    # L-01/L-02/L-03: 인용 법령명·cross-ref 추출
+    cited_laws_set = frozenset(_CITED_LAW_RX.findall(text))
+    cited_articles_count = len(_CITED_ARTICLE_RX.findall(text))
 
     # primary subject — 가장 자주 등장하는 비-UNKNOWN 주체
     non_unknown = [s for s in para_subjects if s != Subject.UNKNOWN]
@@ -698,4 +709,6 @@ def decompose(art: Article) -> ArticleDecomposition:
         disposition_strength=art_disp_strength,
         has_hearing=art_has_hearing,
         has_standard=art_has_standard,
+        cited_laws=cited_laws_set,
+        cited_articles_count=cited_articles_count,
     )
