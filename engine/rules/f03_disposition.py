@@ -195,9 +195,11 @@ class F03Disposition:
             else:
                 continue
 
-            has_standard = bool(_STANDARD.search(text))
+            # R2 구조 신호 활용: ArticleDecomposition.has_standard
+            has_standard = decomp.has_standard
             # SLM: 동일 조문 내 청문 명시 = 사전절차 적법 → severity 한 단계 다운
-            same_art_hearing = _same_art_has_hearing(art)
+            # R2 구조 신호 활용: ArticleDecomposition.has_hearing
+            same_art_hearing = decomp.has_hearing
 
             # Method B (Step 48, 51): 강한 처분 + 동일조 청문 부재 + DISPOSITION 타입
             # + 명시적 처분 제목 — verdict 7 TP / 0 FP (Step 48), +2 TP (Step 51 "조치")
