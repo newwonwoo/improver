@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 
 from ..schema import Article, Finding, Law
+from ..structure import decompose, ArticleType
 from .base import PatternResult, make_finding
 
 
@@ -57,6 +58,11 @@ class L02CrossRef:
         idx = 0
         for art in law.articles:
             if _is_fp_article(art):
+                continue
+            # R2 구조 신호: DEFINITION 타입은 효과 정의 (지정의 효과 등) — 인용 정상
+            # verdict TP는 PROHIBITION 타입이므로 DEFINITION 차단해도 안전
+            d = decompose(art)
+            if d.type == ArticleType.DEFINITION:
                 continue
             refs = _CROSS_REF.findall(art.full_text)
             if not refs:

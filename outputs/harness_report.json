@@ -1,18 +1,18 @@
 {
   "overall": {
     "tp": 267,
-    "fp": 212,
+    "fp": 209,
     "fn": 53,
-    "tn": 1542,
+    "tn": 1545,
     "border_fired": 102,
     "border_skipped": 165,
     "missing": 0,
-    "precision": 0.55741127348643,
+    "precision": 0.5609243697478992,
     "recall": 0.834375,
-    "f1": 0.6683354192740926,
-    "lenient_precision": 0.6351118760757315,
+    "f1": 0.670854271356784,
+    "lenient_precision": 0.6384083044982699,
     "lenient_recall": 0.8744075829383886,
-    "lenient_f1": 0.7357926221335991
+    "lenient_f1": 0.7379999999999999
   },
   "per_rule": {
     "E-01": {
@@ -152,18 +152,18 @@
     },
     "L-02": {
       "tp": 1,
-      "fp": 10,
+      "fp": 7,
       "fn": 0,
-      "tn": 4,
+      "tn": 7,
       "border_fired": 0,
       "border_skipped": 0,
       "missing": 0,
-      "precision": 0.09090909090909091,
+      "precision": 0.125,
       "recall": 1.0,
-      "f1": 0.16666666666666669,
-      "lenient_precision": 0.09090909090909091,
+      "f1": 0.2222222222222222,
+      "lenient_precision": 0.125,
       "lenient_recall": 1.0,
-      "lenient_f1": 0.16666666666666669
+      "lenient_f1": 0.2222222222222222
     },
     "L-03": {
       "tp": 2,
@@ -244,18 +244,18 @@
     },
     "적법성": {
       "tp": 33,
-      "fp": 24,
+      "fp": 21,
       "fn": 5,
-      "tn": 512,
+      "tn": 515,
       "border_fired": 14,
       "border_skipped": 27,
       "missing": 0,
-      "precision": 0.5789473684210527,
+      "precision": 0.6111111111111112,
       "recall": 0.868421052631579,
-      "f1": 0.6947368421052632,
-      "lenient_precision": 0.6619718309859155,
+      "f1": 0.7173913043478262,
+      "lenient_precision": 0.6911764705882353,
       "lenient_recall": 0.9038461538461539,
-      "lenient_f1": 0.7642276422764228
+      "lenient_f1": 0.7833333333333333
     },
     "효율성": {
       "tp": 61,
