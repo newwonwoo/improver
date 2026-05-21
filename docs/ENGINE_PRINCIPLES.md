@@ -188,3 +188,52 @@ def signal_disposition_multi_proviso(art: Article) -> float: ...
 
 > **너처럼 동작하는 로직을 만들기 위함이다.**
 > 단어를 잡지 말고, **구조를 잡고, 역할을 식별하고, 신호를 합산하고, 정답지로 보정하라.**
+
+---
+
+## 6. 뇌신경망 SLM (`engine/slm/`)
+
+룰 엔진과 병행 운영되는 SLM ladder level 4 모듈.
+
+### 6.1 입력층 (`engine/slm/features.py`)
+`extract_features(art, decomp)` → `FeatureVector` (~40 차원):
+- 범주형: ArticleType (12 one-hot), Subject (6), Modal (5), ActionKind (10 multi-hot)
+- 정량: items_max, items_total, catchall_strict/loose, proviso_total/max
+- 인용: cited_laws_count, cited_articles, internal_refs
+- 처분: disp_strong/mid/weak, has_hearing, has_standard, has_deemed_assent
+- 시간: has_short_deadline (<14일), has_very_short_deadline (<7일)
+
+### 6.2 은닉층 (`engine/slm/brain.py`)
+카테고리별 신경망 모듈 `CategoryBrain`:
+- 5 카테고리 (구조/공정성/적법성/거버넌스/효율성) 독립 가중치
+- `forward(fv)` → score [0,1] + severity (심각/경고/주의/개선) + contributing_signals
+- 가중치 = 도메인 지식 WEIGHTS + verdict-fitted calibrated_weights 평균
+
+### 6.3 캘리브레이션 (R3)
+`scripts/slm_calibrate.py`: verdict 데이터에서 신호별 TP/FP 평균 gap 산출
+- `outputs/slm_signal_stats.json`: 카테고리별 신호 통계
+- `outputs/slm_weights_calibrated.json`: gap × (1 - fp_mean) 보정 가중치
+- 빈출 신호 (fp_mean 高) 자동 감쇄로 잡음 통제
+
+### 6.4 앙상블 (`engine/slm/ensemble.py`)
+`ensemble_analyze(law, findings)` → 룰 + SLM 결합 진단:
+- source = "rule" | "slm" | "both"
+- 카테고리별 SLM 단독 임계값 `_CAT_SLM_THRESHOLD`
+
+### 6.5 사용
+```bash
+python scripts/slm_analyze.py <법령명>          # 단일 법령 카테고리 진단
+python scripts/slm_analyze.py --all              # 전체 corpus 요약
+python scripts/slm_harness.py                    # SLM 단독 평가
+python scripts/slm_ensemble_harness.py           # 룰+SLM 앙상블 평가
+```
+
+### 6.6 평가 (Step 72 기준)
+| 카테고리 | SLM 단독 F1 | 앙상블 F1 |
+|---------|-----------|-----------|
+| 구조 | 0.475 | **0.764** |
+| 공정성 | 0.455 | **0.724** |
+| 거버넌스 | 0.496 | 0.570 |
+| 적법성 | 0.435 | 0.395 |
+| 효율성 | 0.366 | 0.360 |
+| TOTAL | 0.457 | **0.559** |
