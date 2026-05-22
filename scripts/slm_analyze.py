@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from engine.parser import parse_law
 from engine.slm import analyze_law
 from engine.slm.brain import CATEGORIES
+from engine.report.template import build_law_diagnosis, render_markdown, render_json
 
 
 def _load_law(law_name: str):
@@ -34,11 +35,21 @@ def _load_law(law_name: str):
     return parse_law(text, name=law_name)
 
 
-def analyze_single(law_name: str, json_output: bool = False):
+def analyze_single(law_name: str, json_output: bool = False, report: str | None = None):
     law = _load_law(law_name)
     if law is None:
         print(f"법령 미존재: {law_name}", file=sys.stderr)
         return 1
+
+    if report == "markdown":
+        diag = build_law_diagnosis(law)
+        print(render_markdown(diag))
+        return 0
+    if report == "json":
+        diag = build_law_diagnosis(law)
+        print(render_json(diag))
+        return 0
+
     results = analyze_law(law)
 
     if json_output:
@@ -111,6 +122,7 @@ def main():
     parser.add_argument("law_name", nargs="?", help="법령명")
     parser.add_argument("--json", action="store_true", help="JSON 출력")
     parser.add_argument("--all", action="store_true", help="전체 corpus 요약")
+    parser.add_argument("--report", choices=["markdown", "json"], help="리포트 형식")
     args = parser.parse_args()
 
     if args.all:
@@ -118,7 +130,7 @@ def main():
     if not args.law_name:
         parser.print_help()
         return 1
-    return analyze_single(args.law_name, json_output=args.json)
+    return analyze_single(args.law_name, json_output=args.json, report=args.report)
 
 
 if __name__ == "__main__":

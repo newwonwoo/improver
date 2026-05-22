@@ -52,6 +52,12 @@ _CAT_SLM_THRESHOLD: dict[str, float] = {
     "효율성": 0.65,
 }
 
+# 룰 발화 시 SLM 확인 최저 임계값 — 이 값 미만이면 룰 단독 fire 억제
+# 적법성: L-01/02/03 룰이 FP가 많아 SLM backing 필수
+_RULE_CONFIRM_THRESHOLD: dict[str, float] = {
+    "적법성": 0.35,
+}
+
 
 def ensemble_analyze(
     law: Law,
@@ -64,6 +70,7 @@ def ensemble_analyze(
     - rule fire 가 있으면 → "rule" 또는 "both"
     - rule fire 없지만 SLM score >= slm_threshold → "slm"
     - slm_threshold=None 시 카테고리별 _CAT_SLM_THRESHOLD 활용
+    - 카테고리별 _RULE_CONFIRM_THRESHOLD 미만이면 룰 단독 fire 억제
     """
     # Rule fire 인덱스: (category, article_number) → [Finding...]
     rule_fires: dict[tuple[str, str], list[Finding]] = {}
@@ -84,7 +91,11 @@ def ensemble_analyze(
         for cat, diag in diagnoses.items():
             key = (cat, _norm(art.number))
             has_rule = key in rule_fires
-            if has_rule and diag.severity:
+            confirm_t = _RULE_CONFIRM_THRESHOLD.get(cat)
+            # 룰 fire 가 있어도 confirm_t 설정 시 SLM 점수 확인 필요
+            rule_confirmed = has_rule and (confirm_t is None or diag.score >= confirm_t)
+
+            if rule_confirmed and diag.severity:
                 src = "both"
                 # 둘 다 발화 시 룰 심각도 우선
                 best = max(rule_fires[key], key=lambda f: _SEV_ORDER.get(f.severity, 0))
@@ -96,7 +107,7 @@ def ensemble_analyze(
                     score=max(diag.score, _SEV_TO_SCORE.get(best.severity, 0.5)),
                     source=src,
                 ))
-            elif has_rule:
+            elif rule_confirmed:
                 best = max(rule_fires[key], key=lambda f: _SEV_ORDER.get(f.severity, 0))
                 results[cat].append(EnsembleVerdict(
                     article_number=art.number,
@@ -107,7 +118,7 @@ def ensemble_analyze(
                     source="rule",
                 ))
             else:
-                # SLM 단독 — 카테고리별 임계값 적용
+                # SLM 단독 (또는 룰 fire 있으나 confirm 실패) — 카테고리별 임계값 적용
                 t = slm_threshold if slm_threshold is not None else _CAT_SLM_THRESHOLD.get(cat, 0.75)
                 if diag.score >= t:
                     results[cat].append(EnsembleVerdict(

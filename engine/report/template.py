@@ -34,7 +34,7 @@ def build_law_diagnosis(law: Law) -> LawDiagnosisOut:
     for art in law.articles:
         if art.is_definition() or art.is_purpose():
             continue
-        diagnoses = analyze_article(art, law=law)
+        diagnoses = analyze_article(art, law=law, backend="linear")
         ranked = rank_diagnoses(diagnoses)
         for cat in CATEGORIES:
             r = ranked[cat]

@@ -83,7 +83,7 @@ def main():
             art = art_idx.get(an.replace(" ", ""))
             if not art:
                 continue
-            diagnoses = analyze_article(art)
+            diagnoses = analyze_article(art, law=law, backend="linear")
             fired = diagnoses[cat].severity is not None
             if r["verdict"] == "TP":
                 if fired:

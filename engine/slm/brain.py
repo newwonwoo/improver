@@ -100,13 +100,8 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "internal_refs": 0.10,
         # 인허가의제·관계특례 컨텍스트
         "has_delegate": 0.05,
-        # Phase 4 그래프 — graph 빌드 시 활성화 (0 fallback 안전)
-        "graph_indegree_norm": 0.20,
-        "graph_outdegree_norm": 0.15,
-        "graph_centrality_norm": 0.15,
-        # Phase 5 신호: verdict 확보 후 활성화 (현재 0-weight 비활성)
-        # "has_blanket_delegation": 0.0,  # L-04 — verdict 없으므로 비활성
-        # "has_no_deadline_binding": 0.0, # L-06 — verdict 없으므로 비활성
+        # Phase 4 그래프 신호: 적법성에는 FP 증가 → 비활성 (verdict 지지 없음)
+        # graph_indegree_norm/outdegree_norm/centrality_norm 은 L-04 verdict 확보 후 재활성화
         # 단순 정의·벌칙은 감쇄
         "is_definition": -0.25,
         "is_penalty": -0.30,
