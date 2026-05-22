@@ -99,6 +99,10 @@ class FeatureVector:
     n_paragraphs: float = 0.0       # # paragraphs / 10
     # 텍스트 분량
     body_length: float = 0.0       # len(text) / 5000 (캡)
+    # Phase 4: GraphRAG-lite 신호 — 다른 article 과의 인용 관계
+    graph_indegree_norm: float = 0.0     # 본 article 을 가리키는 다른 article 수 / 20
+    graph_outdegree_norm: float = 0.0    # 본 article 이 가리키는 article 수 / 20
+    graph_centrality_norm: float = 0.0   # corpus-wide degree centrality
 
     def to_dict(self) -> dict[str, float]:
         return {k: v for k, v in self.__dict__.items()
@@ -112,10 +116,16 @@ def _norm(value: int | float, cap: float) -> float:
     return min(float(value) / cap, 1.0)
 
 
-def extract_features(art: Article, decomp: ArticleDecomposition | None = None) -> FeatureVector:
+def extract_features(
+    art: Article,
+    decomp: ArticleDecomposition | None = None,
+    *,
+    law: "Article | None" = None,
+) -> FeatureVector:
     """Article + ArticleDecomposition → FeatureVector.
 
     decomp 미제공시 자동 분해.
+    law 제공시 Phase 4 그래프 신호도 채움 (없으면 0).
     """
     if decomp is None:
         decomp = decompose(art)
@@ -233,5 +243,16 @@ def extract_features(art: Article, decomp: ArticleDecomposition | None = None) -
     fv.hanja_ratio = min(decomp.hanja_ratio / 0.1, 1.0)
     fv.parenthetical_density = min(decomp.parenthetical_density / 5.0, 1.0)
     fv.readability_score = decomp.readability_score
+
+    # Phase 4 그래프 신호 — law 객체 제공시만 (per-article 호출 비용 최소화)
+    if law is not None:
+        try:
+            from ..graph import graph_signals_for_article
+            gs = graph_signals_for_article(law, art, decomp)
+            fv.graph_indegree_norm = gs.indegree_norm
+            fv.graph_outdegree_norm = gs.outdegree_norm
+            fv.graph_centrality_norm = gs.centrality_norm
+        except Exception:
+            pass  # graph 모듈 없거나 networkx 미설치 — 0 유지
 
     return fv

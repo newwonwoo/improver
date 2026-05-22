@@ -118,6 +118,16 @@ class ReadabilityMetrics:
 
 
 @dataclass
+class SufficiencyOut:
+    """다차원 confidence — Phase 5+ Sufficiency check."""
+    feature_coverage: float = 0.0
+    prediction_margin: float = 0.0
+    graph_support: float = 0.0
+    signal_balance: float = 0.0
+    overall: float = 0.0
+
+
+@dataclass
 class ArticleDiagnosisOut:
     """단일 조문 카테고리 진단 — JSON 표준 출력."""
     article_number: str
@@ -131,6 +141,9 @@ class ArticleDiagnosisOut:
     suggestion: str = ""
     readability: ReadabilityMetrics | None = None
     source: Literal["rule", "slm", "both", "learned"] = "slm"
+    # Phase 5+: Rerank normalize + Sufficiency
+    normalized_score: float = 0.0       # 카테고리 간 비교 가능 [0,1]
+    sufficiency: SufficiencyOut | None = None
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
@@ -140,10 +153,13 @@ class ArticleDiagnosisOut:
         ]
         d["score"] = round(d["score"], 3)
         d["confidence"] = round(d["confidence"], 3)
+        d["normalized_score"] = round(d["normalized_score"], 3)
         if d["readability"]:
             d["readability"] = {
                 k: round(v, 3) for k, v in d["readability"].items()
             }
+        if d["sufficiency"]:
+            d["sufficiency"] = {k: round(v, 3) for k, v in d["sufficiency"].items()}
         return d
 
 
@@ -182,10 +198,12 @@ class LawDiagnosisOut:
 
 
 def diagnosis_to_standard(diag, source: str = "slm",
-                          readability_dict: dict | None = None) -> ArticleDiagnosisOut:
+                          readability_dict: dict | None = None,
+                          ranked=None) -> ArticleDiagnosisOut:
     """CategoryDiagnosis (engine/slm/brain.py) → ArticleDiagnosisOut.
 
     내부 dataclass 를 외부 JSON schema 형식으로 변환.
+    ranked (RankedDiagnosis) 제공시 normalized_score + sufficiency 채움.
     """
     sigs = [
         SignalContribution(signal=name, weight=w)
@@ -203,15 +221,31 @@ def diagnosis_to_standard(diag, source: str = "slm",
             readability_score=readability_dict.get("readability_score", 0.0),
         )
 
+    normalized = 0.0
+    sufficiency = None
+    severity = diag.severity
+    if ranked is not None:
+        normalized = ranked.normalized_score
+        sufficiency = SufficiencyOut(
+            feature_coverage=ranked.sufficiency.feature_coverage,
+            prediction_margin=ranked.sufficiency.prediction_margin,
+            graph_support=ranked.sufficiency.graph_support,
+            signal_balance=ranked.sufficiency.signal_balance,
+            overall=ranked.sufficiency.overall,
+        )
+        severity = ranked.severity
+
     return ArticleDiagnosisOut(
         article_number=diag.article_number,
         article_title=diag.article_title,
         category=diag.category,
-        severity=diag.severity,
+        severity=severity,
         score=diag.score,
         confidence=diag.confidence,
         contributing_signals=sigs,
         missing_signals=missing,
         readability=readability,
         source=source,  # type: ignore
+        normalized_score=normalized,
+        sufficiency=sufficiency,
     )

@@ -98,6 +98,10 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "internal_refs": 0.10,
         # 인허가의제·관계특례 컨텍스트
         "has_delegate": 0.05,
+        # Phase 4 그래프 — 다른 조문이 본 조문을 인용 (cross-article 위임/근거 hub)
+        "graph_indegree_norm": 0.20,
+        "graph_outdegree_norm": 0.15,
+        "graph_centrality_norm": 0.15,
         # 단순 정의·벌칙은 감쇄
         "is_definition": -0.25,
         "is_penalty": -0.30,
@@ -113,6 +117,8 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "has_impose": 0.10,
         "has_report": 0.10,         # G-05 보고
         "subj_agency": 0.10,
+        # Phase 4 그래프 — 위원회·기관 허브 조문 indicator
+        "graph_centrality_norm": 0.10,
         # 정의·목적·벌칙은 감쇄
         "is_definition": -0.30,
         "is_purpose": -0.40,
@@ -129,6 +135,8 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "body_length": 0.10,
         "is_procedure": 0.10,
         "is_delegation": 0.05,
+        # Phase 4 — outdegree 가 높을수록 절차 분기 多
+        "graph_outdegree_norm": 0.15,
         "is_definition": -0.30,
         "is_purpose": -0.40,
         "is_penalty": -0.20,
@@ -233,11 +241,16 @@ class CategoryBrain:
 def analyze_article(
     art: Article,
     decomp: ArticleDecomposition | None = None,
+    *,
+    law: Law | None = None,
 ) -> dict[str, CategoryDiagnosis]:
-    """단일 조문 → 5개 카테고리 진단."""
+    """단일 조문 → 5개 카테고리 진단.
+
+    law 제공시 Phase 4 그래프 신호 활용 (없으면 0).
+    """
     if decomp is None:
         decomp = decompose(art)
-    fv = extract_features(art, decomp)
+    fv = extract_features(art, decomp, law=law)
     out: dict[str, CategoryDiagnosis] = {}
     for cat in CATEGORIES:
         brain = CategoryBrain.for_category(cat)
@@ -252,7 +265,7 @@ def analyze_law(law: Law) -> dict[str, list[CategoryDiagnosis]]:
         if art.is_definition() or art.is_purpose():
             # 분석은 하지만 출력에서는 제외
             continue
-        diagnoses = analyze_article(art)
+        diagnoses = analyze_article(art, law=law)
         for cat, diag in diagnoses.items():
             if diag.severity is not None:
                 results[cat].append(diag)

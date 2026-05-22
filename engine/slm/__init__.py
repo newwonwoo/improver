@@ -14,9 +14,18 @@ from .ensemble import EnsembleVerdict, ensemble_analyze
 from .features import extract_features, FeatureVector
 from .output_schema import (
     ArticleDiagnosisOut, LawDiagnosisOut, CategorySummary,
-    SignalContribution, ReadabilityMetrics,
+    SignalContribution, ReadabilityMetrics, SufficiencyOut,
     ARTICLE_DIAGNOSIS_SCHEMA, LAW_DIAGNOSIS_SCHEMA,
     diagnosis_to_standard,
+)
+from .sufficiency import (
+    Sufficiency,
+    RankedDiagnosis,
+    rerank_normalize,
+    compute_sufficiency,
+    reclassify_severity,
+    rank_diagnoses,
+    top_category,
 )
 
 __all__ = [
@@ -32,7 +41,15 @@ __all__ = [
     "CategorySummary",
     "SignalContribution",
     "ReadabilityMetrics",
+    "SufficiencyOut",
     "ARTICLE_DIAGNOSIS_SCHEMA",
     "LAW_DIAGNOSIS_SCHEMA",
     "diagnosis_to_standard",
+    "Sufficiency",
+    "RankedDiagnosis",
+    "rerank_normalize",
+    "compute_sufficiency",
+    "reclassify_severity",
+    "rank_diagnoses",
+    "top_category",
 ]
