@@ -26,7 +26,7 @@ except ImportError:
 from ..parser import parse_law
 from ..structure import decompose, ArticleType, Subject, Modal
 from .brain import CATEGORIES
-from .features import extract_features
+from .features import extract_features, FEATURE_NAMES
 from .learn import RULE_CAT
 
 

@@ -100,13 +100,13 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "internal_refs": 0.10,
         # 인허가의제·관계특례 컨텍스트
         "has_delegate": 0.05,
-        # Phase 4 그래프 — 다른 조문이 본 조문을 인용 (cross-article 위임/근거 hub)
+        # Phase 4 그래프 — graph 빌드 시 활성화 (0 fallback 안전)
         "graph_indegree_norm": 0.20,
         "graph_outdegree_norm": 0.15,
         "graph_centrality_norm": 0.15,
-        # Phase 5 감사패턴 신호 — L-04·L-06 직결
-        "has_blanket_delegation": 0.30,  # L-04 포괄위임
-        "has_no_deadline_binding": 0.20, # L-06 기속처분 기한 부재
+        # Phase 5 신호: verdict 확보 후 활성화 (현재 0-weight 비활성)
+        # "has_blanket_delegation": 0.0,  # L-04 — verdict 없으므로 비활성
+        # "has_no_deadline_binding": 0.0, # L-06 — verdict 없으므로 비활성
         # 단순 정의·벌칙은 감쇄
         "is_definition": -0.25,
         "is_penalty": -0.30,
@@ -194,15 +194,16 @@ class CategoryBrain:
                 try:
                     calibrated_weights = json.loads(calib_path.read_text(encoding="utf-8"))
                     if category in calibrated_weights:
-                        # 도메인 가중치 + 캘리브레이션 가중치 평균 (양쪽 모두 있을 때)
+                        # 도메인 가중치 기반 + 캘리브레이션 가중치를 additive boost 로 적용
+                        # (평균 방식은 도메인 가중치를 약화시키므로 부적합)
                         merged = dict(WEIGHTS[category])
                         for sig, w in calibrated_weights[category].items():
                             if sig in merged:
-                                merged[sig] = (merged[sig] + w) / 2  # 평균
+                                # 캘리브레이션이 도메인과 같은 방향이면 소폭 보강, 반대면 완화
+                                merged[sig] = merged[sig] + w * 0.3
                             else:
                                 merged[sig] = w * 0.5  # 캘리브레이션 단독 — 보수적
-                        # 정상 입법 baseline — 모든 카테고리 동일 bias
-                        return cls(category=category, weights=merged, bias=-0.10)
+                        return cls(category=category, weights=merged, bias=0.0)
                 except (json.JSONDecodeError, OSError):
                     pass
         return cls(category=category, weights=dict(WEIGHTS[category]))
