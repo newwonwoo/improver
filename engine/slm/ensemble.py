@@ -53,9 +53,10 @@ _CAT_SLM_THRESHOLD: dict[str, float] = {
 }
 
 # 룰 발화 시 SLM 확인 최저 임계값 — 이 값 미만이면 룰 단독 fire 억제
-# 적법성: L-01/02/03 룰이 FP가 많아 SLM backing 필수
+# 적법성·거버넌스: 룰이 FP 다수 → SLM backing 필수
 _RULE_CONFIRM_THRESHOLD: dict[str, float] = {
     "적법성": 0.35,
+    "거버넌스": 0.30,
 }
 
 
