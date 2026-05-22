@@ -228,6 +228,66 @@ def train_mlp(
     return models
 
 
+def train_mlp_smote(
+    hidden_layers: tuple[int, ...] = (32, 16),
+    test_size: float = 0.2,
+):
+    """Phase 7 — SMOTE 표본 불균형 보정 + MLP.
+
+    minority class (TP) 를 합성으로 증강 후 학습.
+    """
+    try:
+        from imblearn.over_sampling import SMOTE
+    except ImportError:
+        raise RuntimeError("imbalanced-learn not installed")
+
+    data = collect_training_data(test_size=test_size)
+    models = {}
+    for cat, (X_tr, X_te, y_tr, y_te, feat_names) in data.items():
+        # SMOTE 는 minority class 가 너무 적으면 실패 — k_neighbors 자동 조정
+        n_tp = int(y_tr.sum())
+        if n_tp < 6:
+            continue
+        k_neighbors = min(5, n_tp - 1)
+        try:
+            sm = SMOTE(random_state=42, k_neighbors=k_neighbors)
+            X_res, y_res = sm.fit_resample(X_tr, y_tr)
+        except Exception:
+            X_res, y_res = X_tr, y_tr
+
+        pipe = Pipeline([
+            ("scaler", StandardScaler()),
+            ("clf", MLPClassifier(
+                hidden_layer_sizes=hidden_layers,
+                activation="relu",
+                solver="adam",
+                alpha=1e-2,
+                max_iter=1000,
+                early_stopping=True,
+                validation_fraction=0.2,
+                n_iter_no_change=30,
+                random_state=42,
+            )),
+        ])
+        pipe.fit(X_res, y_res)
+        y_pred = pipe.predict(X_te)
+        m = _compute_metrics(y_pred, y_te)
+
+        models[cat] = {
+            "pipeline": pipe,
+            "feature_names": feat_names,
+            "n_layers": len(hidden_layers) + 1,
+            "hidden_layers": list(hidden_layers),
+            "smote_applied": True,
+            "n_train_original": len(y_tr),
+            "n_train_resampled": len(y_res),
+            "n_tp_train_original": n_tp,
+            "n_tp_train_resampled": int(y_res.sum()),
+            "metrics": m,
+        }
+    return models
+
+
 def train_logreg_poly(degree: int = 2, test_size: float = 0.2):
     """Phase 1+ — Polynomial features (interaction) + LogReg.
 

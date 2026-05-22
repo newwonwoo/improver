@@ -119,7 +119,7 @@ sklearn.preprocessing.PolynomialFeatures 활용.
 4. **고도화 (Phase 3)**: PyTorch (필요시)
 5. **확장 (Phase 5)**: Interaction features
 
-## 측정 목표 vs 실제 결과 (Step 76 측정)
+## 측정 목표 vs 실제 결과 (Step 76·78 측정)
 
 | Phase | 모델 | 예상 F1 | 실측 F1 | 비고 |
 |-------|------|---------|---------|------|
@@ -128,6 +128,10 @@ sklearn.preprocessing.PolynomialFeatures 활용.
 | 1+ | LogReg + Poly | ~0.65 | 0.488 | interaction features |
 | 2 | MLP (16,) | ~0.70 | 0.458 | 단층 |
 | 2+ | MLP (32,16) | ~0.70 | 0.468 | 다층 |
+| 6 | Hybrid (best per cat) | n/a | 0.608 | 앙상블 평가 |
+| 7 | MLP+SMOTE (32,16) | ~0.55 | 0.472 | 표본 보정 |
+| 7b | MLP+SMOTE (16,) | ~0.55 | 0.486 | 가벼운 + SMOTE |
+| 3 | PyTorch multi-task | ~0.55 | 0.418 | embedding+멀티헤드 |
 
 ## 카테고리별 비교 — 비선형성 효과 확인
 
