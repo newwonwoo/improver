@@ -19,3 +19,6 @@ outputs/verification_progress.md
 # LLM 응답 자체는 사용자 작업물이라 추적하되, _index.json은 자동 갱신용
 # outputs/llm_responses/ 는 추적
 # outputs/feedback/ 는 추적
+
+# 그래프 캐시 — corpus 에서 재생성 가능
+outputs/law_graph.pkl
