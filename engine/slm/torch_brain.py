@@ -75,26 +75,18 @@ class TorchBrain(nn.Module):
         return torch.sigmoid(self.mlp(x))
 
 
-def _extract_dense_and_cat(art):
-    """Article → (dense_vec, type_idx, subj_idx, modal_idx)."""
-    decomp = decompose(art)
-    fv = extract_features(art, decomp).to_dict()
+def _extract_dense_and_cat(art, *, law=None, feature_names=None):
+    """Article → (dense_vec, type_idx, subj_idx, modal_idx).
 
-    # dense — categorical 범주 제외
-    excluded = set()
-    for t in _AT_LIST:
-        excluded.add(f"is_{t.value.lower()}")
-    for s in _SUBJ_LIST:
-        if s == Subject.UNKNOWN: continue
-        excluded.add(f"subj_{s.value.lower()}")
-    for m in _MODAL_LIST:
-        if m == Modal.NONE: continue
-        excluded.add(f"modal_{m.value.lower()}")
-    # is_general 도 ArticleType 매핑
-    excluded.add("is_general")
-    # subj_official 등
-    # extract_features 명명 규칙은 따로 — 차라리 전체 dense 로 처리 + emb 부수적
-    dense = [v for k, v in fv.items() if isinstance(v, (int, float))]
+    feature_names 지정시 해당 순서로 dense 추출 (모델 버전 호환).
+    None 이면 FEATURE_NAMES 전체 사용.
+    """
+    from .features import FEATURE_NAMES as _FN
+    decomp = decompose(art)
+    fv = extract_features(art, decomp, law=law)
+
+    names = feature_names if feature_names is not None else _FN
+    dense = fv.to_array(names)
 
     type_idx = _AT_IDX[decomp.type]
     subj_idx = _SUBJ_IDX[decomp.primary_subject]
@@ -296,7 +288,7 @@ def train_torch(
     print(f"{'TOTAL':<10} {total['tp']:>4} {total['fp']:>4} {total['fn']:>4} {total['tn']:>4} "
           f"{p:>6.3f} {r:>6.3f} {f1:>6.3f}")
 
-    # 모델 저장
+    # 모델 저장 (feature_names 포함 — 추론 시 차원 정합성 보장)
     torch.save({
         "model_state": model.state_dict(),
         "n_dense": dense_n.shape[1],
@@ -304,5 +296,89 @@ def train_torch(
         "dropout": dropout,
         "scaler_mean": scaler.mean_.tolist(),
         "scaler_scale": scaler.scale_.tolist(),
+        "feature_names": list(FEATURE_NAMES),
     }, "outputs/slm_torch_model.pt")
     return per_cat, total
+
+
+# ────────── 추론 API ──────────
+
+_MODEL_CACHE: dict = {}
+
+
+def _load_model_cache() -> dict | None:
+    """slm_torch_model.pt 로드 (프로세스 내 캐시)."""
+    if _MODEL_CACHE:
+        return _MODEL_CACHE
+    model_path = Path("outputs/slm_torch_model.pt")
+    if not model_path.exists():
+        return None
+    try:
+        ck = torch.load(model_path, map_location="cpu", weights_only=False)
+        feature_names = ck.get("feature_names", list(FEATURE_NAMES))
+        n_dense = ck["n_dense"]
+        model = TorchBrain(
+            n_dense=n_dense,
+            n_categories=len(CATEGORIES),
+            hidden=tuple(ck["hidden"]),
+            dropout=ck.get("dropout", 0.2),
+        )
+        model.load_state_dict(ck["model_state"])
+        model.eval()
+        _MODEL_CACHE.update({
+            "model": model,
+            "feature_names": feature_names,
+            "n_dense": n_dense,
+            "scaler_mean": np.array(ck["scaler_mean"], dtype=np.float32),
+            "scaler_scale": np.array(ck["scaler_scale"], dtype=np.float32),
+        })
+        return _MODEL_CACHE
+    except Exception:
+        return None
+
+
+def torch_infer_article(art, *, law=None):
+    """TorchBrain 으로 단일 조문 5카테고리 진단.
+
+    모델 파일 없거나 차원 불일치 시 None 반환 → 호출자가 linear brain 으로 fallback.
+    """
+    if not _TORCH_OK:
+        return None
+    cache = _load_model_cache()
+    if cache is None:
+        return None
+
+    feature_names = cache["feature_names"]
+    n_dense = cache["n_dense"]
+
+    dense, ti, si, mi = _extract_dense_and_cat(art, law=law, feature_names=feature_names)
+    if len(dense) != n_dense:
+        return None
+
+    scaler_mean = cache["scaler_mean"]
+    scaler_scale = cache["scaler_scale"]
+    dense_n = (np.array(dense, dtype=np.float32) - scaler_mean) / (scaler_scale + 1e-8)
+
+    model = cache["model"]
+    d_t = torch.tensor(dense_n, dtype=torch.float32).unsqueeze(0)
+    ti_t = torch.tensor([ti], dtype=torch.long)
+    si_t = torch.tensor([si], dtype=torch.long)
+    mi_t = torch.tensor([mi], dtype=torch.long)
+
+    with torch.no_grad():
+        scores = model(d_t, ti_t, si_t, mi_t).squeeze(0).numpy()
+
+    from .brain import CategoryDiagnosis, _classify_severity
+    result = {}
+    for i, cat in enumerate(CATEGORIES):
+        score = float(scores[i])
+        result[cat] = CategoryDiagnosis(
+            category=cat,
+            article_number=art.number,
+            article_title=art.title or "",
+            score=score,
+            severity=_classify_severity(score),
+            confidence=min(1.0, abs(score - 0.5) * 2),
+            contributing_signals=[],
+        )
+    return result

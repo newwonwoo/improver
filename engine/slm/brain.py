@@ -90,6 +90,8 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "has_standard": -0.10,
         # 면책 패턴은 별도 (F-02) — 약한 양수
         "subj_operator": 0.10,
+        # Phase 5 감사패턴 신호 — F-07·F-08 직결
+        "has_subjective_criteria": 0.30,  # F-08 자의적 기준
     },
     "적법성": {
         # L-01~03 통합 신호 — 인용 다수가 핵심
@@ -102,6 +104,9 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "graph_indegree_norm": 0.20,
         "graph_outdegree_norm": 0.15,
         "graph_centrality_norm": 0.15,
+        # Phase 5 감사패턴 신호 — L-04·L-06 직결
+        "has_blanket_delegation": 0.30,  # L-04 포괄위임
+        "has_no_deadline_binding": 0.20, # L-06 기속처분 기한 부재
         # 단순 정의·벌칙은 감쇄
         "is_definition": -0.25,
         "is_penalty": -0.30,
@@ -243,11 +248,26 @@ def analyze_article(
     decomp: ArticleDecomposition | None = None,
     *,
     law: Law | None = None,
+    backend: str = "auto",
 ) -> dict[str, CategoryDiagnosis]:
     """단일 조문 → 5개 카테고리 진단.
 
+    backend="auto": torch 모델이 있으면 torch, 없으면 linear.
+    backend="linear": 항상 linear CategoryBrain 사용.
+    backend="torch": 항상 torch (없으면 RuntimeError).
     law 제공시 Phase 4 그래프 신호 활용 (없으면 0).
     """
+    if backend in ("auto", "torch"):
+        try:
+            from .torch_brain import torch_infer_article
+            result = torch_infer_article(art, law=law)
+            if result is not None:
+                return result
+        except Exception:
+            pass
+        if backend == "torch":
+            raise RuntimeError("torch backend requested but model unavailable")
+
     if decomp is None:
         decomp = decompose(art)
     fv = extract_features(art, decomp, law=law)

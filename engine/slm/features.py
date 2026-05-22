@@ -103,10 +103,46 @@ class FeatureVector:
     graph_indegree_norm: float = 0.0     # 본 article 을 가리키는 다른 article 수 / 20
     graph_outdegree_norm: float = 0.0    # 본 article 이 가리키는 article 수 / 20
     graph_centrality_norm: float = 0.0   # corpus-wide degree centrality
+    # 감사원·공정위·금감원 감사패턴 기반 신호 (Phase 5)
+    has_blanket_delegation: float = 0.0    # 포괄위임: "필요한 사항" + 구체 기준 없이 하위법령 위임
+    has_subjective_criteria: float = 0.0   # 자의적 기준: "판단하는 경우"/"인정하는 경우" + 처분
+    has_no_deadline_binding: float = 0.0   # 기속처분 기한 부재: DISPOSITION + MUST + 기한 없음
 
     def to_dict(self) -> dict[str, float]:
         return {k: v for k, v in self.__dict__.items()
                 if not k.startswith("article_")}
+
+    def to_array(self, names: list[str] | None = None) -> list[float]:
+        """지정된 feature 순서로 float list 반환 (torch 입력용)."""
+        d = self.to_dict()
+        if names is None:
+            names = list(d.keys())
+        return [float(d.get(k, 0.0)) for k in names]
+
+
+# 안정적인 feature 순서 — torch 모델 학습/추론에 사용 (추가 가능, 삭제 금지)
+FEATURE_NAMES: list[str] = [
+    "is_definition", "is_penalty", "is_delegation", "is_disposition",
+    "is_reporting", "is_committee", "is_procedure", "is_prohibition",
+    "is_purpose", "is_plan", "is_general",
+    "subj_agency", "subj_operator", "subj_citizen", "subj_official", "subj_everyone",
+    "modal_must", "modal_may", "modal_prohibited", "modal_definition",
+    "has_grant", "has_revoke", "has_impose", "has_report", "has_register",
+    "has_delegate", "has_restrict", "has_investigate", "has_hear_action",
+    "items_max", "items_total", "catchall_strict", "catchall_loose",
+    "proviso_total", "proviso_max",
+    "cited_laws_count", "cited_articles", "internal_refs",
+    "disp_strong", "disp_mid", "disp_weak",
+    "has_hearing", "has_standard", "has_deemed_assent",
+    "has_short_deadline", "has_very_short_deadline",
+    "condition_lead_norm", "condition_link_norm", "nested_hint_norm",
+    "avg_words_per_sentence", "hanja_ratio", "parenthetical_density", "readability_score",
+    "n_paragraphs", "body_length",
+    # Phase 4 graph signals (추가)
+    "graph_indegree_norm", "graph_outdegree_norm", "graph_centrality_norm",
+    # Phase 5 감사패턴 신호 (추가 — 삭제 금지)
+    "has_blanket_delegation", "has_subjective_criteria", "has_no_deadline_binding",
+]
 
 
 def _norm(value: int | float, cap: float) -> float:
@@ -254,5 +290,34 @@ def extract_features(
             fv.graph_centrality_norm = gs.centrality_norm
         except Exception:
             pass  # graph 모듈 없거나 networkx 미설치 — 0 유지
+
+    # Phase 5 감사패턴 신호
+    import re as _re
+    _BLANKET_RX = _re.compile(
+        r"필요한\s*사항(?:은|이|을)?\s*(?:대통령령|총리령|부령|[가-힣]+부령"
+        r"|행정규칙|고시|훈령|예규|지침|내부\s*규정|업무\s*규정)으로\s*정한다"
+    )
+    _CONCRETE_RX = _re.compile(
+        r"(제\d+항|제\d+호|각\s*호|다음\s*각\s*호|전항)에?\s*따른?\s*(기준|요건|범위|절차|조건)"
+    )
+    if decomp.type == ArticleType.DELEGATION and _BLANKET_RX.search(text):
+        fv.has_blanket_delegation = 0.0 if _CONCRETE_RX.search(text) else 1.0
+
+    _SUBJ_RX = _re.compile(
+        r"(?:인정|판단|결정)\s*(?:하는\s*경우|될\s*때|하면)"
+    )
+    _RESTRICT_RX = _re.compile(
+        r"(이용을?\s*제한|계약을?\s*해지|서비스를?\s*(?:중단|정지|취소)|이용\s*정지)"
+    )
+    if _SUBJ_RX.search(text) and _RESTRICT_RX.search(text):
+        if decomp.type in (ArticleType.DISPOSITION, ArticleType.PROHIBITION, ArticleType.GENERAL):
+            fv.has_subjective_criteria = 1.0
+
+    if (
+        decomp.type in (ArticleType.DISPOSITION, ArticleType.PROCEDURE)
+        and any(p.modal == Modal.MUST for p in decomp.paragraphs)
+        and not decomp.deadlines_days
+    ):
+        fv.has_no_deadline_binding = 1.0
 
     return fv
