@@ -90,6 +90,11 @@ class FeatureVector:
     condition_lead_norm: float = 0.0    # condition_lead_count / 20
     condition_link_norm: float = 0.0    # condition_link_count / 30
     nested_hint_norm: float = 0.0       # nested_hint_count / 10
+    # 가독성 신호 (prompts.chat Text Analyzer 영감)
+    avg_words_per_sentence: float = 0.0  # [0,1] 정상화 (30 이상이면 1)
+    hanja_ratio: float = 0.0             # [0,1] 정상화 (0.1 이상이면 1)
+    parenthetical_density: float = 0.0   # [0,1] 정상화 (5 이상이면 1)
+    readability_score: float = 0.0       # [0,1] 가독성 (1=쉬움, 0=어려움)
     # 항 수
     n_paragraphs: float = 0.0       # # paragraphs / 10
     # 텍스트 분량
@@ -222,5 +227,11 @@ def extract_features(art: Article, decomp: ArticleDecomposition | None = None) -
     fv.condition_lead_norm = _norm(decomp.condition_lead_count, 20)
     fv.condition_link_norm = _norm(decomp.condition_link_count, 30)
     fv.nested_hint_norm = _norm(decomp.nested_hint_count, 10)
+
+    # 가독성 신호 (이미 [0,1] 정상화됨)
+    fv.avg_words_per_sentence = min(decomp.avg_words_per_sentence / 30.0, 1.0)
+    fv.hanja_ratio = min(decomp.hanja_ratio / 0.1, 1.0)
+    fv.parenthetical_density = min(decomp.parenthetical_density / 5.0, 1.0)
+    fv.readability_score = decomp.readability_score
 
     return fv

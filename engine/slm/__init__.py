@@ -12,6 +12,12 @@
 from .brain import CategoryBrain, analyze_article, analyze_law
 from .ensemble import EnsembleVerdict, ensemble_analyze
 from .features import extract_features, FeatureVector
+from .output_schema import (
+    ArticleDiagnosisOut, LawDiagnosisOut, CategorySummary,
+    SignalContribution, ReadabilityMetrics,
+    ARTICLE_DIAGNOSIS_SCHEMA, LAW_DIAGNOSIS_SCHEMA,
+    diagnosis_to_standard,
+)
 
 __all__ = [
     "CategoryBrain",
@@ -21,4 +27,12 @@ __all__ = [
     "FeatureVector",
     "EnsembleVerdict",
     "ensemble_analyze",
+    "ArticleDiagnosisOut",
+    "LawDiagnosisOut",
+    "CategorySummary",
+    "SignalContribution",
+    "ReadabilityMetrics",
+    "ARTICLE_DIAGNOSIS_SCHEMA",
+    "LAW_DIAGNOSIS_SCHEMA",
+    "diagnosis_to_standard",
 ]
