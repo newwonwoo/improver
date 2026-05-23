@@ -52,12 +52,14 @@ class GraphSignals:
     indegree_norm: float = 0.0
     outdegree_norm: float = 0.0
     centrality_norm: float = 0.0   # betweenness centrality (cached)
+    pagerank_norm: float = 0.0     # PageRank (영향 반경 — CodeGraph impact analysis 착안)
 
     def to_dict(self) -> dict[str, float]:
         return {
             "graph_indegree_norm": self.indegree_norm,
             "graph_outdegree_norm": self.outdegree_norm,
             "graph_centrality_norm": self.centrality_norm,
+            "graph_pagerank_norm": self.pagerank_norm,
         }
 
 
@@ -78,6 +80,8 @@ class LawGraph:
     # centrality cache (computed lazily on demand; sampled for performance)
     _centrality_cache: dict[tuple[str, str], float] = field(default_factory=dict)
     _centrality_built: bool = False
+    # pagerank cache (1회 전체 계산 후 정규화 저장)
+    _pagerank_cache: dict[tuple[str, str], float] = field(default_factory=dict)
 
     # === build ===
     @classmethod
@@ -198,7 +202,28 @@ class LawGraph:
         )
         if compute_centrality:
             signals.centrality_norm = self._centrality_for(node)
+        signals.pagerank_norm = self._pagerank_for(node)
         return signals
+
+    def _pagerank_for(self, node: tuple[str, str]) -> float:
+        """PageRank 기반 영향 반경 신호 (CodeGraph impact analysis 착안).
+
+        degree 보다 전이적 중요도(허브 조문)를 잘 포착. 1회 계산 후 캐시.
+        max 값으로 정규화 → [0,1].
+        """
+        if not self._pagerank_cache:
+            try:
+                pr = nx.pagerank(self.G, alpha=0.85, max_iter=30, tol=1e-4)
+            except Exception:
+                pr = {}
+            mx = max(pr.values()) if pr else 1.0
+            # max 정규화 (희소 분포라 sqrt 스케일로 분해능 확보)
+            import math
+            self._pagerank_cache = {
+                k: min(math.sqrt(v / mx) if mx > 0 else 0.0, 1.0)
+                for k, v in pr.items()
+            }
+        return self._pagerank_cache.get(node, 0.0)
 
     def _centrality_for(self, node: tuple[str, str]) -> float:
         """Lazy centrality — degree-centrality 기반 (betweenness 는 12만 노드에서 비실용).

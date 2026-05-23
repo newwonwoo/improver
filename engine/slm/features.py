@@ -103,6 +103,7 @@ class FeatureVector:
     graph_indegree_norm: float = 0.0     # 본 article 을 가리키는 다른 article 수 / 20
     graph_outdegree_norm: float = 0.0    # 본 article 이 가리키는 article 수 / 20
     graph_centrality_norm: float = 0.0   # corpus-wide degree centrality
+    graph_pagerank_norm: float = 0.0     # PageRank 영향 반경 (CodeGraph impact analysis 착안)
     # 감사원·공정위·금감원 감사패턴 기반 신호 (Phase 5)
     has_blanket_delegation: float = 0.0    # 포괄위임: "필요한 사항" + 구체 기준 없이 하위법령 위임
     has_subjective_criteria: float = 0.0   # 자의적 기준: "판단하는 경우"/"인정하는 경우" + 처분
@@ -150,6 +151,7 @@ FEATURE_NAMES: list[str] = [
     "n_paragraphs", "body_length",
     # Phase 4 graph signals (추가)
     "graph_indegree_norm", "graph_outdegree_norm", "graph_centrality_norm",
+    "graph_pagerank_norm",
     # Phase 5 감사패턴 신호 (추가 — 삭제 금지)
     "has_blanket_delegation", "has_subjective_criteria", "has_no_deadline_binding",
     # Phase 6 공정위·인권위 사례 신호 (추가 — 삭제 금지)
@@ -303,6 +305,7 @@ def extract_features(
             fv.graph_indegree_norm = gs.indegree_norm
             fv.graph_outdegree_norm = gs.outdegree_norm
             fv.graph_centrality_norm = gs.centrality_norm
+            fv.graph_pagerank_norm = gs.pagerank_norm
         except Exception:
             pass  # graph 모듈 없거나 networkx 미설치 — 0 유지
 

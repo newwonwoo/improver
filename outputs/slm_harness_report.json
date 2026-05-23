@@ -56,5 +56,26 @@
       "scripts/border_resolution_export.py"
     ],
     "conclusion": "BORDER 267건 전부 해결(데이터셋 완전 라벨화). 단독으로는 FP증가로 holdout 하락(0.385)했으나 class weighting 결합 시 0.471로 회복(BORDER前 0.454 상회, recall 대폭 개선). 핵심 통찰: 엔진의 진짜 약점은 precision(정상조문 과발화)이며 BORDER 228 FP가 이를 정량 확인."
+  },
+  "phase8_codegraph_pagerank": {
+    "source": "colbymchenry/codegraph 외부 레포 분석 → impact analysis(영향반경) 아이디어 차용",
+    "applied": "PageRank 그래프 신호 추가 (degree 보다 전이적 허브 중요도 포착)",
+    "feature_dim": "69 → 70",
+    "top_hubs": [
+      "형법 제129조(수뢰)",
+      "국가공무원법 제33조(결격사유)",
+      "고등교육법 제2조(정의)"
+    ],
+    "torch_holdout_f1": {
+      "before_pagerank": 0.471,
+      "after_pagerank": 0.516
+    },
+    "note": "PageRank 4.3s/84K노드. precision 0.378→0.440, recall 0.62 유지. 케이스자료 신호(도메인불일치로 무효)와 달리 구조적 신호라 효과 있음.",
+    "not_applied": [
+      "FTS5/SQLite 저장(인프라)",
+      "tree-sitter 19개언어 파싱(R2분해기로 대체)",
+      "MCP/agent 통합(NN무관)",
+      "프레임워크 라우트 탐지(코드전용)"
+    ]
   }
 }
