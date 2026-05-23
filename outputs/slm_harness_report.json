@@ -1,40 +1,60 @@
 {
-  "note": "Phase 6 — 6개 기관 NaverSearch 사례 수집 후 SLM 강화 시도 결과 (정직한 누수-free 측정)",
-  "feature_space": {
-    "before": 61,
-    "after": 69,
-    "added": [
-      "has_refund_denial",
-      "has_arbitrary_change",
-      "has_broad_immunity",
-      "has_withdrawal_limit",
-      "has_age_discrimination",
-      "has_double_sanction",
-      "has_auto_max_sanction",
-      "has_no_hearing_disp"
-    ]
+  "overall": {
+    "tp": 245,
+    "fp": 347,
+    "fn": 166,
+    "tn": 1636
   },
-  "linear_slm_only": {
-    "baseline_f1": 0.529,
-    "after_new_features_f1": 0.529,
-    "note": "신규 신호는 verdict 캘리브레이션 부재 → 선형 WEIGHTS 미반영 (반영 시 공정성 0.493→0.465 FP 증가). baseline 유지."
-  },
-  "torch_holdout": {
-    "dim_61_f1": 0.488,
-    "dim_69_f1": 0.454,
-    "note": "약관/차별 신호는 법률 holdout 에서 노이즈 (도메인 불일치). 확장 dim 이 소표본 분산 증가."
-  },
-  "ensemble": {
-    "linear_backend_f1": 0.619,
-    "linear_backend_detail": {
-      "구조": 0.724,
-      "공정성": 0.722,
-      "적법성": 0.512,
-      "거버넌스": 0.48,
-      "효율성": 0.649
+  "per_category": {
+    "효율성": {
+      "tp": 66,
+      "fp": 95,
+      "fn": 24,
+      "tn": 130
     },
-    "auto_torch_backend_f1": 0.852,
-    "leakage_warning": "auto(torch) 백엔드 0.852 는 torch 가 전체 verdict 로 학습→동일 데이터 평가하는 ~80% train-eval 누수로 부풀려짐. 누수-free 값은 linear_backend 0.619."
+    "적법성": {
+      "tp": 29,
+      "fp": 32,
+      "fn": 35,
+      "tn": 532
+    },
+    "거버넌스": {
+      "tp": 56,
+      "fp": 76,
+      "fn": 43,
+      "tn": 368
+    },
+    "공정성": {
+      "tp": 53,
+      "fp": 52,
+      "fn": 59,
+      "tn": 431
+    },
+    "구조": {
+      "tp": 41,
+      "fp": 92,
+      "fn": 5,
+      "tn": 175
+    }
   },
-  "conclusion": "수집한 6개 기관 사례(약관·차별·감사패턴)는 (1)대부분 약관/차별 도메인이라 법률 corpus 에 거의 발화하지 않고 (2)법률 패턴(자동최고제재·청문부재)은 verdict 라벨 부재로 선형 가중치 부여 시 FP 증가. 따라서 직접적 SLM feature 주입으로는 강화 안 됨. 실질 가치는 룰 마이닝(→신규 룰→앙상블 룰 커버리지)이며 Claude.ai 웹 처리 필요. 부수 성과: 앙상블 평가의 torch 백엔드 train-eval 누수를 발견·교정(정직한 앙상블 F1=0.619)."
+  "phase7_border_resolution": {
+    "border_resolved": 267,
+    "judgment": {
+      "TP": 39,
+      "FP": 228,
+      "note": "정량기준+Phase6신호 자동판정. BORDER는 검토결과 대부분 정상(FP)"
+    },
+    "labels_before": 2127,
+    "labels_after": 2394,
+    "torch_holdout_f1": {
+      "before_border": 0.454,
+      "after_border_no_weight": 0.385,
+      "after_border_classweight": 0.471
+    },
+    "class_weighting": "pos_weight(1~8) 도입으로 불균형 교정 → recall 0.40→0.62, holdout 0.471 회복",
+    "tools": [
+      "scripts/border_resolution_export.py"
+    ],
+    "conclusion": "BORDER 267건 전부 해결(데이터셋 완전 라벨화). 단독으로는 FP증가로 holdout 하락(0.385)했으나 class weighting 결합 시 0.471로 회복(BORDER前 0.454 상회, recall 대폭 개선). 핵심 통찰: 엔진의 진짜 약점은 precision(정상조문 과발화)이며 BORDER 228 FP가 이를 정량 확인."
+  }
 }

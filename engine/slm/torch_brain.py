@@ -237,8 +237,17 @@ def train_torch(
     ds = TensorDataset(X_dense_tr, X_ti_tr, X_si_tr, X_mi_tr, y_tr)
     dl = DataLoader(ds, batch_size=batch_size, shuffle=True)
 
-    # Loss: BCE (masking -1)
+    # Loss: BCE (masking -1) + 클래스 가중 (TP 희소 → pos_weight 로 recall 보강)
     bce = nn.BCELoss(reduction="none")
+    # 카테고리별 양성(TP) 비율로 pos_weight 산정
+    y_tr_np = y[train_idx]
+    pos_w = []
+    for i in range(len(CATEGORIES)):
+        col = y_tr_np[:, i]
+        n_pos = float((col == 1).sum())
+        n_neg = float((col == 0).sum())
+        pos_w.append(min(max(n_neg / max(n_pos, 1.0), 1.0), 8.0))  # 1~8 범위 클립
+    pos_weight = torch.tensor(pos_w, dtype=torch.float32)
 
     model.train()
     for epoch in range(epochs):
@@ -249,7 +258,9 @@ def train_torch(
             pred = model(d, t, s, m)
             mask = (yb >= 0).float()
             yb_masked = torch.clamp(yb, 0.0, 1.0)
-            loss = (bce(pred, yb_masked) * mask).sum() / max(mask.sum().item(), 1)
+            # 양성 샘플에 pos_weight 적용 (recall 보강)
+            w = 1.0 + yb_masked * (pos_weight - 1.0)
+            loss = (bce(pred, yb_masked) * w * mask).sum() / max(mask.sum().item(), 1)
             loss.backward()
             opt.step()
             total_loss += loss.item()
