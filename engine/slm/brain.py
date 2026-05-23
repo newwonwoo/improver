@@ -92,6 +92,8 @@ WEIGHTS: dict[str, dict[str, float]] = {
         "subj_operator": 0.10,
         # Phase 5 감사패턴 신호 — F-07·F-08 직결
         "has_subjective_criteria": 0.30,  # F-08 자의적 기준
+        # Phase 6 신호(has_auto_max_sanction 등)는 선형 가중치로는 FP 유발 →
+        # WEIGHTS 미반영. torch 모델이 verdict 로부터 가중치 학습 (features.py 에 보존).
     },
     "적법성": {
         # L-01~03 통합 신호 — 인용 다수가 핵심

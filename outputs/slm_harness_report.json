@@ -1,58 +1,40 @@
 {
-  "overall": {
-    "tp": 272,
-    "fp": 52,
-    "fn": 100,
-    "tn": 1703
+  "note": "Phase 6 — 6개 기관 NaverSearch 사례 수집 후 SLM 강화 시도 결과 (정직한 누수-free 측정)",
+  "feature_space": {
+    "before": 61,
+    "after": 69,
+    "added": [
+      "has_refund_denial",
+      "has_arbitrary_change",
+      "has_broad_immunity",
+      "has_withdrawal_limit",
+      "has_age_discrimination",
+      "has_double_sanction",
+      "has_auto_max_sanction",
+      "has_no_hearing_disp"
+    ]
   },
-  "per_category": {
-    "구조": {
-      "tp": 38,
-      "fp": 5,
-      "fn": 4,
-      "tn": 195
-    },
-    "공정성": {
-      "tp": 90,
-      "fp": 24,
-      "fn": 14,
-      "tn": 427
-    },
-    "적법성": {
-      "tp": 31,
-      "fp": 8,
-      "fn": 20,
-      "tn": 528
-    },
-    "거버넌스": {
-      "tp": 55,
-      "fp": 6,
-      "fn": 37,
-      "tn": 383
-    },
-    "효율성": {
-      "tp": 58,
-      "fp": 9,
-      "fn": 25,
-      "tn": 170
-    }
+  "linear_slm_only": {
+    "baseline_f1": 0.529,
+    "after_new_features_f1": 0.529,
+    "note": "신규 신호는 verdict 캘리브레이션 부재 → 선형 WEIGHTS 미반영 (반영 시 공정성 0.493→0.465 FP 증가). baseline 유지."
   },
-  "meta": {
-    "mode": "ensemble_gated_v2",
-    "description": "룰엔진+SLM 앙상블 (적법성=0.35, 거버넌스=0.30 confirm gating)",
-    "f1_notes": {
-      "구조": 0.894,
-      "공정성": 0.826,
-      "적법성": 0.689,
-      "거버넌스": 0.719,
-      "효율성": 0.773,
-      "total": 0.782
+  "torch_holdout": {
+    "dim_61_f1": 0.488,
+    "dim_69_f1": 0.454,
+    "note": "약관/차별 신호는 법률 holdout 에서 노이즈 (도메인 불일치). 확장 dim 이 소표본 분산 증가."
+  },
+  "ensemble": {
+    "linear_backend_f1": 0.619,
+    "linear_backend_detail": {
+      "구조": 0.724,
+      "공정성": 0.722,
+      "적법성": 0.512,
+      "거버넌스": 0.48,
+      "효율성": 0.649
     },
-    "progression": {
-      "baseline (rules only)": 0.457,
-      "SLM only (linear)": 0.529,
-      "ensemble v1 (적법성 gating only)": 0.749,
-      "ensemble v2 (적법성+거버넌스 gating)": 0.782
-    }
-  }
+    "auto_torch_backend_f1": 0.852,
+    "leakage_warning": "auto(torch) 백엔드 0.852 는 torch 가 전체 verdict 로 학습→동일 데이터 평가하는 ~80% train-eval 누수로 부풀려짐. 누수-free 값은 linear_backend 0.619."
+  },
+  "conclusion": "수집한 6개 기관 사례(약관·차별·감사패턴)는 (1)대부분 약관/차별 도메인이라 법률 corpus 에 거의 발화하지 않고 (2)법률 패턴(자동최고제재·청문부재)은 verdict 라벨 부재로 선형 가중치 부여 시 FP 증가. 따라서 직접적 SLM feature 주입으로는 강화 안 됨. 실질 가치는 룰 마이닝(→신규 룰→앙상블 룰 커버리지)이며 Claude.ai 웹 처리 필요. 부수 성과: 앙상블 평가의 torch 백엔드 train-eval 누수를 발견·교정(정직한 앙상블 F1=0.619)."
 }

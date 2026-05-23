@@ -107,6 +107,16 @@ class FeatureVector:
     has_blanket_delegation: float = 0.0    # 포괄위임: "필요한 사항" + 구체 기준 없이 하위법령 위임
     has_subjective_criteria: float = 0.0   # 자의적 기준: "판단하는 경우"/"인정하는 경우" + 처분
     has_no_deadline_binding: float = 0.0   # 기속처분 기한 부재: DISPOSITION + MUST + 기한 없음
+    # 공정위 약관 시정·인권위 차별판단 사례 기반 신호 (Phase 6 — NaverSearch 수집 사례)
+    has_refund_denial: float = 0.0         # 환불 거부/제한 (OTT·오디오북·멤버십 시정 사례)
+    has_arbitrary_change: float = 0.0      # 자의적 서비스 변경·중단 ("기타 필요한 경우" 등)
+    has_broad_immunity: float = 0.0        # 광범위 면책 (사업자 귀책 포함 책임 전면 배제)
+    has_withdrawal_limit: float = 0.0      # 청약철회권 배제·제한 (법정 권리 제한)
+    has_age_discrimination: float = 0.0    # 연령 차별 (만 N세 이하/이상 출입·이용 제한)
+    # 감사원·대법원 사례 기반 법률 텍스트 신호 (Phase 6b — 법률 corpus 적용)
+    has_double_sanction: float = 0.0       # 이중제재: 같은 조에 형사벌(징역·벌금) + 과태료 병과 (BAI-02)
+    has_auto_max_sanction: float = 0.0     # 1:1 자동 최고제재: "위반한 자는 ...취소한다" 가중·감경 없음 (대법 JUD-01)
+    has_no_hearing_disp: float = 0.0       # 침익처분 + 청문 절차 부재 (BAI-03·행정절차법 §22)
 
     def to_dict(self) -> dict[str, float]:
         return {k: v for k, v in self.__dict__.items()
@@ -142,6 +152,11 @@ FEATURE_NAMES: list[str] = [
     "graph_indegree_norm", "graph_outdegree_norm", "graph_centrality_norm",
     # Phase 5 감사패턴 신호 (추가 — 삭제 금지)
     "has_blanket_delegation", "has_subjective_criteria", "has_no_deadline_binding",
+    # Phase 6 공정위·인권위 사례 신호 (추가 — 삭제 금지)
+    "has_refund_denial", "has_arbitrary_change", "has_broad_immunity",
+    "has_withdrawal_limit", "has_age_discrimination",
+    # Phase 6b 감사원·대법원 법률 텍스트 신호 (추가 — 삭제 금지)
+    "has_double_sanction", "has_auto_max_sanction", "has_no_hearing_disp",
 ]
 
 
@@ -319,5 +334,86 @@ def extract_features(
         and not decomp.deadlines_days
     ):
         fv.has_no_deadline_binding = 1.0
+
+    # Phase 6 — 공정위 약관 시정·인권위 차별판단 사례 기반 신호
+    # (NaverSearch 수집 사례에서 도출한 텍스트 패턴)
+    _REFUND_DENY_RX = _re.compile(
+        r"(환불|환급|반환)(?:은|을|를|이|하지)?\s*(?:아니하|아니한|불가|거부|제한|하지\s*않)"
+        r"|환불(?:이|을|은)?\s*되지\s*(?:아니|않)"
+    )
+    _PRO_CONSUMER_RX = _re.compile(
+        r"(환불(?:하여야|해야|받을\s*수\s*있)|전액\s*(?:환불|환급)|청약(?:의)?\s*철회(?:를|할))"
+    )
+    if _REFUND_DENY_RX.search(text) and not _PRO_CONSUMER_RX.search(text):
+        fv.has_refund_denial = 1.0
+
+    # 자의적 서비스 변경·중단 — "기타 필요한 경우" 등 불명확 사유 + 변경/중단권
+    _ARBITRARY_RX = _re.compile(
+        r"(기타\s*(?:필요한|필요하다고\s*인정|회사가\s*정한)"
+        r"|회사가?\s*(?:필요|적절)하다고\s*(?:인정|판단)"
+        r"|사업자가?\s*(?:필요|임의)로)"
+    )
+    _CHANGE_STOP_RX = _re.compile(
+        r"(변경|중단|중지|정지|폐지|종료)(?:할\s*수\s*있|하거나|하고)"
+    )
+    if _ARBITRARY_RX.search(text) and _CHANGE_STOP_RX.search(text):
+        if decomp.type not in (ArticleType.DEFINITION, ArticleType.PURPOSE, ArticleType.PENALTY):
+            fv.has_arbitrary_change = 1.0
+
+    # 광범위 면책 — 사업자 귀책 포함 책임 전면 배제
+    _IMMUNITY_RX = _re.compile(
+        r"(책임을?\s*지지\s*(?:아니|않)|책임(?:이|을)?\s*(?:없|면제|부담하지\s*아니)"
+        r"|어떠한?\s*(?:경우|책임)(?:에도|도).{0,20}(?:지지\s*아니|않|없|면제))"
+    )
+    _IMMUNITY_FP_RX = _re.compile(
+        r"(천재지변|불가항력|고객의?\s*(?:고의|과실|귀책)|제3자의?\s*(?:고의|과실|귀책))"
+    )
+    if _IMMUNITY_RX.search(text) and not _IMMUNITY_FP_RX.search(text):
+        if decomp.type not in (ArticleType.DEFINITION, ArticleType.PURPOSE, ArticleType.PENALTY):
+            fv.has_broad_immunity = 1.0
+
+    # 청약철회권 배제·제한
+    _WITHDRAW_RX = _re.compile(
+        r"청약(?:의)?\s*철회.{0,30}(?:불가|아니|않|제한|배제|없)"
+        r"|(?:해지|해제)(?:권)?(?:을|를|는)?\s*(?:배제|제한|행사할\s*수\s*없)"
+    )
+    if _WITHDRAW_RX.search(text):
+        if decomp.type not in (ArticleType.DEFINITION, ArticleType.PURPOSE, ArticleType.PENALTY):
+            fv.has_withdrawal_limit = 1.0
+
+    # 연령 차별 — 만 N세 이하/이상 출입·이용·가입 제한 (인권위 차별판단 사례)
+    _AGE_DISCRIM_RX = _re.compile(
+        r"(만\s*\d+\s*세\s*(?:이하|미만|이상|초과).{0,30}(?:제한|금지|불가|배제|거부|할\s*수\s*없)"
+        r"|\d+\s*세\s*(?:이하|미만|이상|초과)(?:의|인)?\s*(?:자|사람|아동|청소년|노인).{0,30}(?:제한|금지|불가|배제))"
+    )
+    if _AGE_DISCRIM_RX.search(text):
+        fv.has_age_discrimination = 1.0
+
+    # Phase 6b — 감사원·대법원 사례 기반 법률 텍스트 신호 (법률 corpus 적용도 높음)
+    # 이중제재 (BAI-02): 같은 조에 형사벌(징역/벌금) + 과태료 동시 규정
+    _CRIMINAL_RX = _re.compile(r"(\d+년\s*이하의?\s*징역|\d+(?:천|백|십)?만?\s*원\s*이하의?\s*벌금)")
+    _ADMIN_FINE_RX = _re.compile(r"과태료")
+    if _CRIMINAL_RX.search(text) and _ADMIN_FINE_RX.search(text):
+        fv.has_double_sanction = 1.0
+
+    # 1:1 자동 최고제재 (대법 JUD-01): "위반한 자는 ...취소/말소한다" + 가중·감경·다만 단서 없음
+    _AUTO_SANCTION_RX = _re.compile(
+        r"(위반한?\s*(?:자|경우)|거짓이나?\s*그?\s*밖의?\s*부정한?\s*방법).{0,40}"
+        r"(취소(?:하여야)?\s*한다|말소(?:하여야)?\s*한다|등록을?\s*취소한다)"
+    )
+    _MITIGATION_RX = _re.compile(r"(다만|가중|감경|경감|정상을?\s*(?:참작|고려)|2분의\s*1)")
+    if _AUTO_SANCTION_RX.search(text) and not _MITIGATION_RX.search(text):
+        if decomp.type in (ArticleType.DISPOSITION, ArticleType.PENALTY, ArticleType.GENERAL):
+            fv.has_auto_max_sanction = 1.0
+
+    # 침익처분 + 청문 부재 (BAI-03): 취소/정지/철회 처분 + 청문·의견청취 절차 없음
+    _ADVERSE_DISP_RX = _re.compile(
+        r"(허가|인가|등록|지정|승인)(?:을|를)?\s*(?:취소|철회)"
+        r"|영업(?:을|의)?\s*(?:정지|폐지)|업무(?:을|를|의)?\s*정지"
+    )
+    _HEARING_RX = _re.compile(r"(청문|의견(?:을)?\s*(?:청취|제출|진술)|소명(?:할|의)?\s*기회)")
+    if _ADVERSE_DISP_RX.search(text) and not _HEARING_RX.search(text):
+        if decomp.type in (ArticleType.DISPOSITION, ArticleType.PROHIBITION):
+            fv.has_no_hearing_disp = 1.0
 
     return fv

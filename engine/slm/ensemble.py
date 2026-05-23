@@ -65,6 +65,7 @@ def ensemble_analyze(
     findings: list[Finding],
     *,
     slm_threshold: float | None = None,
+    backend: str = "auto",
 ) -> dict[str, list[EnsembleVerdict]]:
     """룰 findings + SLM 분석 → 카테고리별 앙상블 진단.
 
@@ -72,6 +73,7 @@ def ensemble_analyze(
     - rule fire 없지만 SLM score >= slm_threshold → "slm"
     - slm_threshold=None 시 카테고리별 _CAT_SLM_THRESHOLD 활용
     - 카테고리별 _RULE_CONFIRM_THRESHOLD 미만이면 룰 단독 fire 억제
+    - backend: SLM 백엔드 ("auto"=torch 우선, "linear"=선형만 — 누수 없는 평가용)
     """
     # Rule fire 인덱스: (category, article_number) → [Finding...]
     rule_fires: dict[tuple[str, str], list[Finding]] = {}
@@ -88,7 +90,7 @@ def ensemble_analyze(
     for art in law.articles:
         if art.is_definition() or art.is_purpose():
             continue
-        diagnoses = analyze_article(art)
+        diagnoses = analyze_article(art, backend=backend)
         for cat, diag in diagnoses.items():
             key = (cat, _norm(art.number))
             has_rule = key in rule_fires
