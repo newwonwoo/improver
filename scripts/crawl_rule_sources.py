@@ -273,7 +273,7 @@ def crawl_bai(out_root: Path, max_items: int = 30) -> int:
     out_dir = out_root / "bai"
     sess = _session()
     base = "https://www.bai.go.kr"
-    list_url = f"{base}/bai/down/publication/decisionAuditList/"  # 처분요구 주요사항 목록 (구 proactive 경로 폐기)
+    list_url = f"{base}/bai/result/branch/list"  # 사용자 실측: 이 경로가 목록 표시
     saved = 0
 
     for page in range(1, 6):
@@ -579,7 +579,7 @@ SOURCES = {
 _PROBE_URLS = {
     "ftc_press": "https://www.ftc.go.kr/www/ReportUserList.do?key=164&rpttype=1",
     "ftc_decisions": "https://case.ftc.go.kr/ocp/co/ltfr.do",
-    "bai": "https://www.bai.go.kr/bai/down/publication/decisionAuditList/",
+    "bai": "https://www.bai.go.kr/bai/result/branch/list",
     "korea": "https://www.korea.kr/search/searchResult.do?query=불공정약관&section=news",
     "casenote": "https://casenote.kr/search?q=공정거래위원회+약관",
     "moleg": "https://www.moleg.go.kr/lawinfo/nwLwAnList.mo?mid=a10106020000",
@@ -603,9 +603,14 @@ def _probe() -> None:
 
 def _debug(source: str) -> None:
     """리스트 페이지의 실제 링크 구조 출력 — selector 수정용 진단 (크래시 없음)."""
+    if source == "all":
+        for sid in _PROBE_URLS:
+            _debug(sid)
+            print()
+        return
     url = _PROBE_URLS.get(source)
     if not url:
-        print(f"알 수 없는 소스: {source}. 선택: {', '.join(_PROBE_URLS)}")
+        print(f"알 수 없는 소스: {source}. 선택: all | {', '.join(_PROBE_URLS)}")
         return
     sess = _session()
     print(f"=== [{source}] 디버그: {url} ===")
