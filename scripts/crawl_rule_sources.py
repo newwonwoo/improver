@@ -104,7 +104,7 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
     out_dir = out_root / "ftc_press"
     sess = _session()
     base = "https://www.ftc.go.kr"
-    list_url = f"{base}/www/selectReportList.do"
+    list_url = f"{base}/www/ReportUserList.do"  # 구 selectReportList.do 폐기 → 신 엔드포인트
 
     keywords = ["약관", "시정", "불공정", "표준약관"]
     saved = 0
@@ -118,7 +118,7 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
         params = {
             "pageUnit": "10",
             "pageIndex": str(page),
-            "key": "10",
+            "key": "164",
             "rpttype": "1",
             "searchCnd": "all",
         }
@@ -248,7 +248,7 @@ def crawl_bai(out_root: Path, max_items: int = 30) -> int:
     out_dir = out_root / "bai"
     sess = _session()
     base = "https://www.bai.go.kr"
-    list_url = f"{base}/proactive/result/branch/list/list.do"
+    list_url = f"{base}/bai/down/publication/decisionAuditList/"  # 처분요구 주요사항 목록 (구 proactive 경로 폐기)
     saved = 0
 
     for page in range(1, 6):
@@ -540,9 +540,9 @@ SOURCES = {
 
 # 각 소스 list URL — --probe 로 응답성 사전 진단
 _PROBE_URLS = {
-    "ftc_press": "https://www.ftc.go.kr/www/selectReportList.do?key=10&rpttype=1",
+    "ftc_press": "https://www.ftc.go.kr/www/ReportUserList.do?key=164&rpttype=1",
     "ftc_decisions": "https://case.ftc.go.kr/ocp/co/ltfr.do",
-    "bai": "https://www.bai.go.kr/proactive/result/branch/list/list.do",
+    "bai": "https://www.bai.go.kr/bai/down/publication/decisionAuditList/",
     "korea": "https://www.korea.kr/search/searchResult.do?query=불공정약관&section=news",
     "casenote": "https://casenote.kr/search?q=공정거래위원회+약관",
     "moleg": "https://www.moleg.go.kr/lawinfo/nwLwAnList.mo?mid=a10106020000",
