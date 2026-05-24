@@ -79,6 +79,21 @@ def _save(out_dir: Path, name: str, content: str, meta: dict) -> Path:
 def _session() -> requests.Session:
     s = requests.Session()
     s.headers.update(HEADERS)
+    # ConnectionReset·5xx·429 에 대한 자동 재시도 (지수 백오프)
+    try:
+        from requests.adapters import HTTPAdapter
+        from urllib3.util.retry import Retry
+        retry = Retry(
+            total=4, connect=4, read=4, backoff_factor=1.5,
+            status_forcelist=(429, 500, 502, 503, 504),
+            allowed_methods=frozenset(["GET"]),
+            raise_on_status=False,
+        )
+        adapter = HTTPAdapter(max_retries=retry)
+        s.mount("https://", adapter)
+        s.mount("http://", adapter)
+    except Exception:
+        pass
     return s
 
 
@@ -523,6 +538,31 @@ SOURCES = {
     "fss": crawl_fss,
 }
 
+# 각 소스 list URL — --probe 로 응답성 사전 진단
+_PROBE_URLS = {
+    "ftc_press": "https://www.ftc.go.kr/www/selectReportList.do?key=10&rpttype=1",
+    "ftc_decisions": "https://case.ftc.go.kr/ocp/co/ltfr.do",
+    "bai": "https://www.bai.go.kr/proactive/result/branch/list/list.do",
+    "korea": "https://www.korea.kr/search/searchResult.do?query=불공정약관&section=news",
+    "casenote": "https://casenote.kr/search?q=공정거래위원회+약관",
+    "moleg": "https://www.moleg.go.kr/lawinfo/nwLwAnList.mo?mid=a10106020000",
+    "fss": "https://www.fss.or.kr/fss/job/openInfo/list.do?menuNo=200476",
+}
+
+
+def _probe() -> None:
+    """각 소스 엔드포인트 응답성 진단 (수집 전 어디가 살아있는지 확인)."""
+    sess = _session()
+    print("=== 소스 응답성 진단 (HTTP 상태) ===")
+    for sid, url in _PROBE_URLS.items():
+        try:
+            r = sess.get(url, timeout=15)
+            ok = "✅ 응답" if r.status_code == 200 else f"⚠️ {r.status_code}"
+            print(f"  {sid:<15} {ok}  ({len(r.content)} bytes)")
+        except Exception as e:
+            print(f"  {sid:<15} ❌ {type(e).__name__}: {str(e)[:60]}")
+    print("\n→ ✅ 응답 소스만 --source 로 수집하세요. ⚠️/❌ 는 URL 변경/차단.")
+
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -531,7 +571,13 @@ def main():
     p.add_argument("--max-items", type=int, default=50, help="소스당 최대 수집 건수")
     p.add_argument("--out", type=Path, default=Path("outputs/rule_mining/sources/crawled"),
                    help="저장 디렉터리")
+    p.add_argument("--probe", action="store_true",
+                   help="수집 전 각 소스 엔드포인트 응답성만 진단")
     args = p.parse_args()
+
+    if args.probe:
+        _probe()
+        return 0
 
     args.out.mkdir(parents=True, exist_ok=True)
 
