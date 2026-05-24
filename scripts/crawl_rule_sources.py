@@ -495,14 +495,19 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
             break
         for link in cand:
             href = link.get("href", "")
-            detail_url = urljoin(r.url, href)
+            # href 의 &currentPage 가 HTML 엔티티(¤)로 깨져 400 발생 →
+            # 필요한 cs_seq 만 추출해 깨끗한 URL 재구성
+            m = re.search(r"cs_seq=(\d+)", href)
+            if not m:
+                continue
+            detail_url = f"{base}/lawinfo/nwLwAnInfo.mo?mid=a10106020000&cs_seq={m.group(1)}"
             if _exists(out_dir, detail_url):
                 continue  # 이미 저장됨 — 스킵
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
             except Exception as e:
-                print(f"  [moleg] 상세 실패: {str(e)[:50]} | {detail_url[:70]}")
+                print(f"  [moleg] 상세 실패: {str(e)[:50]} | {detail_url[:90]}")
                 continue
             dsoup = BeautifulSoup(d.text, "html.parser")
             title = link.get_text(strip=True) or (dsoup.title.string if dsoup.title else "untitled")
