@@ -141,34 +141,28 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
             continue
 
         soup = BeautifulSoup(r.text, "html.parser")
-        rows = soup.select("table.board_list tbody tr") or soup.select("li.board_li")
-        # 범용 fallback: 구조 바뀌어도 상세보기 링크(report_data_no) 직접 수집
-        links = []
-        if rows:
-            links = [row.find("a") for row in rows if row.find("a")]
+        # 실측: 보도자료 상세는 selectBbsNttView.do?key=12 링크 (제목 포함)
+        links = soup.select("a[href*='selectBbsNttView.do']")
+        # 중복 href 제거
+        seen_href = set()
+        uniq = []
+        for a in links:
+            h = a.get("href", "")
+            t = a.get_text(strip=True)
+            if h and t and h not in seen_href:
+                seen_href.add(h)
+                uniq.append(a)
+        links = uniq
         if not links:
-            links = soup.select("a[href*='report_data_no'], a[href*='ReportUserView'], a[href*='selectReportUserView']")
-        if not links:
-            print(f"  [ftc] page {page} 링크 없음 (구조 변경?) — 첫 a 태그 {len(soup.find_all('a'))}개")
+            print(f"  [ftc] page {page} 보도링크 없음 — a태그 {len(soup.find_all('a'))}개")
             break
 
         for link in links:
-            if not link:
-                continue
             title = link.get_text(strip=True)
             if title and not any(kw in title for kw in keywords):
                 continue
-
             href = link.get("href", "")
-            if not href or href.startswith("#") or "javascript" in href.lower():
-                # onclick 에서 report_data_no 추출 시도
-                onclick = link.get("onclick", "")
-                m = re.search(r"report_data_no['\"]?\s*[=,:]\s*['\"]?(\d+)", href + onclick)
-                if not m:
-                    continue
-                detail_url = f"{base}/www/selectReportUserView.do?key=164&rpttype=1&report_data_no={m.group(1)}"
-            else:
-                detail_url = urljoin(base, href)
+            detail_url = urljoin(r.url, href)  # r.url 기준 (./상대경로 정확 처리)
             if _exists(out_dir, detail_url):
                 continue  # 이미 저장됨 — 스킵
             try:
@@ -478,16 +472,24 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
     for page in range(1, 6):
         if saved >= max_items:
             break
+        # debug 로 확인된 작동 URL: ?mid=... (page1), 이후 &pageIndex=N
+        params = {"mid": "a10106020000"}
+        if page > 1:
+            params["pageIndex"] = str(page)
         try:
-            r = sess.get(list_url, params={"mid": "a10106020000", "currentPage": str(page)}, timeout=15)
+            r = sess.get(list_url, params=params, timeout=15)
             r.raise_for_status()
         except Exception as e:
             print(f"  [moleg] page {page} 실패: {e}")
             continue
         soup = BeautifulSoup(r.text, "html.parser")
-        for link in soup.select("a[href*='nwLwAnInfo']"):
+        cand = soup.select("a[href*='nwLwAnInfo.mo']")
+        if not cand:
+            print(f"  [moleg] page {page} 링크 없음 — a태그 {len(soup.find_all('a'))}개")
+            break
+        for link in cand:
             href = link.get("href", "")
-            detail_url = urljoin(base, href)
+            detail_url = urljoin(r.url, href)
             if _exists(out_dir, detail_url):
                 continue  # 이미 저장됨 — 스킵
             try:
@@ -496,7 +498,7 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
             except Exception:
                 continue
             dsoup = BeautifulSoup(d.text, "html.parser")
-            title = (dsoup.title.string if dsoup.title else link.get_text(strip=True)) or "untitled"
+            title = link.get_text(strip=True) or (dsoup.title.string if dsoup.title else "untitled")
             text = dsoup.get_text("\n", strip=True)
             name = f"{_slug(title)}_{_hash(detail_url)}"
             md = f"# {title}\n\n출처: {detail_url}\n\n---\n\n{text}"
