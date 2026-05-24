@@ -601,16 +601,67 @@ def _probe() -> None:
     print("\n→ ✅ 응답 소스만 --source 로 수집하세요. ⚠️/❌ 는 URL 변경/차단.")
 
 
+def _debug(source: str) -> None:
+    """리스트 페이지의 실제 링크 구조 출력 — selector 수정용 진단 (크래시 없음)."""
+    url = _PROBE_URLS.get(source)
+    if not url:
+        print(f"알 수 없는 소스: {source}. 선택: {', '.join(_PROBE_URLS)}")
+        return
+    sess = _session()
+    print(f"=== [{source}] 디버그: {url} ===")
+    try:
+        r = sess.get(url, timeout=20)
+    except Exception as e:
+        print(f"❌ 요청 실패: {type(e).__name__}: {str(e)[:80]}")
+        print("→ 이 소스는 서버가 Python 접속을 차단(TLS reset). 직접 크롤 불가.")
+        return
+    print(f"HTTP {r.status_code} · {len(r.content)} bytes")
+    soup = BeautifulSoup(r.text, "html.parser")
+    anchors = soup.find_all("a")
+    print(f"전체 <a> 태그: {len(anchors)}개\n")
+
+    # 상세보기로 보이는 링크 후보 (href/onclick 에 view·seq·no·id·idx·nttId 등)
+    import re as _re
+    pat = _re.compile(r"(view|seq|[?&]no=|idx|nttId|articleNo|report_data_no|dispNo|nttSn|bbsSn|list_no)", _re.I)
+    cand = []
+    for a in anchors:
+        href = a.get("href") or ""
+        onclick = a.get("onclick") or ""
+        title = a.get_text(strip=True)
+        if pat.search(href) or pat.search(onclick):
+            cand.append((href[:70], onclick[:70], title[:35]))
+    print(f"상세링크 후보(view/seq/no/id 패턴): {len(cand)}개 — 상위 20:")
+    for href, onclick, title in cand[:20]:
+        print(f"  href={href!r}")
+        if onclick:
+            print(f"      onclick={onclick!r}")
+        print(f"      title={title!r}")
+    if not cand:
+        # 후보 없으면 → AJAX 로딩 의심. 테이블/리스트 컨테이너 구조 출력
+        print("⚠️ 상세링크 후보 0 — 목록이 JS(AJAX)로 로딩될 가능성.")
+        print("페이지 내 table/ul/div[class] 상위 컨테이너:")
+        for tag in soup.select("table, ul.board_list, div[class*=list], div[class*=board]")[:8]:
+            cls = tag.get("class")
+            print(f"  <{tag.name} class={cls}> 자식 {len(tag.find_all('a'))}개 링크")
+    print("\n→ 이 출력을 그대로 복사해 보내주세요. selector 정확히 맞춰드립니다.")
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--source", default="all",
                    help=f"수집 대상: all | {' | '.join(SOURCES)} (콤마 구분 가능)")
     p.add_argument("--max-items", type=int, default=50, help="소스당 최대 수집 건수")
+    p.add_argument("--debug", metavar="SOURCE",
+                   help="해당 소스 리스트 페이지의 실제 링크 구조 출력 (selector 수정용)")
     p.add_argument("--out", type=Path, default=Path("outputs/rule_mining/sources/crawled"),
                    help="저장 디렉터리")
     p.add_argument("--probe", action="store_true",
                    help="수집 전 각 소스 엔드포인트 응답성만 진단")
     args = p.parse_args()
+
+    if args.debug:
+        _debug(args.debug)
+        return 0
 
     if args.probe:
         _probe()
