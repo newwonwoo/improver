@@ -153,14 +153,17 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
                 seen_href.add(h)
                 uniq.append(a)
         links = uniq
+        print(f"  [ftc] page {page}: HTTP {r.status_code} · {len(r.content)}b · 보도링크 {len(links)}개")
         if not links:
             print(f"  [ftc] page {page} 보도링크 없음 — a태그 {len(soup.find_all('a'))}개")
             break
 
+        matched = 0
         for link in links:
             title = link.get_text(strip=True)
             if title and not any(kw in title for kw in keywords):
                 continue
+            matched += 1
             href = link.get("href", "")
             detail_url = urljoin(r.url, href)  # r.url 기준 (./상대경로 정확 처리)
             if _exists(out_dir, detail_url):
@@ -168,7 +171,8 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
-            except Exception:
+            except Exception as e:
+                print(f"  [ftc] 상세 실패: {str(e)[:50]}")
                 continue
 
             dsoup = BeautifulSoup(d.text, "html.parser")
@@ -191,6 +195,7 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
             time.sleep(SLEEP)
             if saved >= max_items:
                 break
+        print(f"  [ftc] page {page}: 키워드매칭 {matched}개 (전체 {len(links)}개 중)")
         time.sleep(SLEEP)
     return saved
 
@@ -484,6 +489,7 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
             continue
         soup = BeautifulSoup(r.text, "html.parser")
         cand = soup.select("a[href*='nwLwAnInfo.mo']")
+        print(f"  [moleg] page {page}: HTTP {r.status_code} · {len(r.content)}b · 후보 {len(cand)}개")
         if not cand:
             print(f"  [moleg] page {page} 링크 없음 — a태그 {len(soup.find_all('a'))}개")
             break
@@ -495,7 +501,8 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
-            except Exception:
+            except Exception as e:
+                print(f"  [moleg] 상세 실패: {str(e)[:50]} | {detail_url[:70]}")
                 continue
             dsoup = BeautifulSoup(d.text, "html.parser")
             title = link.get_text(strip=True) or (dsoup.title.string if dsoup.title else "untitled")
