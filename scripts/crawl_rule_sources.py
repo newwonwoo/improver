@@ -65,6 +65,14 @@ def _hash(s: str) -> str:
     return hashlib.md5(s.encode("utf-8")).hexdigest()[:8]
 
 
+def _exists(out_dir: Path, url: str) -> bool:
+    """해당 URL 이 이미 저장됐는지 (파일명 끝 _{hash}.md 로 판별) — 이어받기/중복 스킵."""
+    if not out_dir.exists():
+        return False
+    h = _hash(url)
+    return any(out_dir.glob(f"*_{h}.md"))
+
+
 def _save(out_dir: Path, name: str, content: str, meta: dict) -> Path:
     """수집한 자료를 md + json 메타데이터로 저장."""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -134,20 +142,35 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
 
         soup = BeautifulSoup(r.text, "html.parser")
         rows = soup.select("table.board_list tbody tr") or soup.select("li.board_li")
-        if not rows:
-            print(f"  [ftc] page {page} 행 없음 (구조 변경?)")
+        # 범용 fallback: 구조 바뀌어도 상세보기 링크(report_data_no) 직접 수집
+        links = []
+        if rows:
+            links = [row.find("a") for row in rows if row.find("a")]
+        if not links:
+            links = soup.select("a[href*='report_data_no'], a[href*='ReportUserView'], a[href*='selectReportUserView']")
+        if not links:
+            print(f"  [ftc] page {page} 링크 없음 (구조 변경?) — 첫 a 태그 {len(soup.find_all('a'))}개")
             break
 
-        for row in rows:
-            link = row.find("a")
+        for link in links:
             if not link:
                 continue
             title = link.get_text(strip=True)
-            if not any(kw in title for kw in keywords):
+            if title and not any(kw in title for kw in keywords):
                 continue
 
             href = link.get("href", "")
-            detail_url = urljoin(base, href) if href.startswith("/") else href
+            if not href or href.startswith("#") or "javascript" in href.lower():
+                # onclick 에서 report_data_no 추출 시도
+                onclick = link.get("onclick", "")
+                m = re.search(r"report_data_no['\"]?\s*[=,:]\s*['\"]?(\d+)", href + onclick)
+                if not m:
+                    continue
+                detail_url = f"{base}/www/selectReportUserView.do?key=164&rpttype=1&report_data_no={m.group(1)}"
+            else:
+                detail_url = urljoin(base, href)
+            if _exists(out_dir, detail_url):
+                continue  # 이미 저장됨 — 스킵
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
@@ -215,6 +238,8 @@ def crawl_ftc_decisions(out_root: Path, max_items: int = 50) -> int:
                 detail_url = f"{base}/ocp/co/ltfrViewPopup.do?dispNo={m.group(1)}"
             else:
                 detail_url = urljoin(base, href)
+            if _exists(out_dir, detail_url):
+                continue  # 이미 저장됨 — 스킵
 
             try:
                 d = sess.get(detail_url, timeout=15)
@@ -272,6 +297,8 @@ def crawl_bai(out_root: Path, max_items: int = 30) -> int:
                 continue
             href = link.get("href", "")
             detail_url = urljoin(base, href)
+            if _exists(out_dir, detail_url):
+                continue  # 이미 저장됨 — 스킵
 
             try:
                 d = sess.get(detail_url, timeout=15)
@@ -287,11 +314,13 @@ def crawl_bai(out_root: Path, max_items: int = 30) -> int:
                 if any(a["href"].lower().endswith(ext) for ext in [".pdf", ".hwp"])
             ]
             for pdf_url in pdf_links:
+                ext = pdf_url.rsplit(".", 1)[-1]
+                pdf_name = f"{_slug(title)}_{_hash(pdf_url)}.{ext}"
+                if (out_dir / pdf_name).exists():
+                    continue  # 이미 다운로드됨 — 스킵
                 try:
                     pdf_r = sess.get(pdf_url, timeout=30)
                     if pdf_r.ok:
-                        ext = pdf_url.rsplit(".", 1)[-1]
-                        pdf_name = f"{_slug(title)}_{_hash(pdf_url)}.{ext}"
                         (out_dir / pdf_name).parent.mkdir(parents=True, exist_ok=True)
                         (out_dir / pdf_name).write_bytes(pdf_r.content)
                         print(f"  [bai] pdf saved: {pdf_name}")
@@ -348,6 +377,8 @@ def crawl_korea_kr(out_root: Path, max_items: int = 50) -> int:
         for link in soup.select("a[href*='policyNewsView'], a[href*='policyBriefingView']")[:10]:
             href = link.get("href", "")
             detail_url = urljoin(base, href)
+            if _exists(out_dir, detail_url):
+                continue  # 이미 저장됨 — 스킵
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
@@ -406,6 +437,8 @@ def crawl_casenote(out_root: Path, max_items: int = 50) -> int:
         for link in soup.select("a[href*='/'][href*='판례'], a.title")[:10]:
             href = link.get("href", "")
             detail_url = urljoin(base, href)
+            if _exists(out_dir, detail_url):
+                continue  # 이미 저장됨 — 스킵
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
@@ -455,6 +488,8 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
         for link in soup.select("a[href*='nwLwAnInfo']"):
             href = link.get("href", "")
             detail_url = urljoin(base, href)
+            if _exists(out_dir, detail_url):
+                continue  # 이미 저장됨 — 스킵
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
@@ -502,6 +537,8 @@ def crawl_fss(out_root: Path, max_items: int = 30) -> int:
         for link in soup.select("a[href*='view']")[:10]:
             href = link.get("href", "")
             detail_url = urljoin(base, href)
+            if _exists(out_dir, detail_url):
+                continue  # 이미 저장됨 — 스킵
             try:
                 d = sess.get(detail_url, timeout=15)
                 d.raise_for_status()
