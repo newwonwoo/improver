@@ -114,8 +114,11 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
     base = "https://www.ftc.go.kr"
     list_url = f"{base}/www/ReportUserList.do"  # 구 selectReportList.do 폐기 → 신 엔드포인트
 
-    keywords = ["약관", "시정", "불공정", "표준약관"]
+    keywords = ["약관", "시정", "불공정", "표준약관", "과징금", "담합", "제재",
+                "부당", "위반", "심사", "하도급", "가맹", "대리점", "표시광고",
+                "소비자", "고발", "기만", "공정거래"]
     saved = 0
+    prev_hrefs = ()
 
     consec_fail = 0
     for page in range(1, 21):
@@ -157,6 +160,12 @@ def crawl_ftc_press(out_root: Path, max_items: int = 50) -> int:
         if not links:
             print(f"  [ftc] page {page} 보도링크 없음 — a태그 {len(soup.find_all('a'))}개")
             break
+        # 페이지네이션 미작동 감지: 이전 페이지와 링크 동일하면 조기 종료
+        cur_hrefs = tuple(sorted(a.get("href", "") for a in links))
+        if page > 1 and cur_hrefs == prev_hrefs:
+            print(f"  [ftc] page {page} 이전과 동일(페이지네이션 미작동) — 종료")
+            break
+        prev_hrefs = cur_hrefs
 
         matched = 0
         for link in links:
