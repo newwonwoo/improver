@@ -98,5 +98,31 @@
     "reason": "torch MLP 은닉층이 이미 신호 조합(비선형 추론)을 학습하므로 명시적 곱셈신호는 중복. 소표본(2394)에서 차원증가가 분산만 키움.",
     "kept": "70-dim (PageRank 포함) 유지 — 검증된 최적",
     "lesson": "논리적 추론은 이미 MLP 내부에서 수행됨. 병목은 추론 용량이 아니라 데이터 양. 신규 구조신호(PageRank)는 도움됐으나 기존신호 재조합은 무익."
+  },
+  "phase9_reasoning_layer": {
+    "goal": "논리적 사유에 의한 논리적 흐름 완성 — 신경망 점수에 법적 추론 사슬 부여 (neuro-symbolic)",
+    "architecture": "신경망(지각: 신호 추출) → 추론엔진(논리: 전제→추론→결론→근거) → 설명가능 진단",
+    "knowledge_base": "수집 사례에서 도출한 법적 추론규칙 10개 (감사원·공정위·대법원·권익위·법제처)",
+    "rules": [
+      "R-DELEG-BLANKET(포괄위임·헌법§75)",
+      "R-DISP-ARBITRARY(자의처분)",
+      "R-NO-HEARING(청문부재·행정절차법§22)",
+      "R-DISPROPORTIONATE(비례원칙·행정기본법§10)",
+      "R-DOUBLE-SANCTION(이중제재·헌법§13)",
+      "R-NO-REASON(이유제시·행정절차법§23)",
+      "R-NO-DEADLINE(기속처분기한·BAI-04)",
+      "R-ENUM-OVERLOAD(열거과다)",
+      "R-PROVISO-EXCESS(단서중첩·재량남용)",
+      "R-CITATION-OVERLOAD(인용과다)"
+    ],
+    "coverage": {
+      "corpus_조문": 5178,
+      "논리추론_부여": 1095,
+      "비율": "21.1%",
+      "신경망_추론_동시강화": 200,
+      "borderline_법적근거_보강": 40
+    },
+    "value": "단순 점수가 아니라 전제→추론→결론→근거 사슬로 왜 결함인지 설명. 신경망 borderline 을 법적논거로 구제(40건), 동시발화시 신뢰 강화(200건).",
+    "note": "holdout F1 향상이 아닌 설명가능성·논리완결성 완성 (F1 병목은 데이터). diagnose_with_reasoning() 으로 통합 제공."
   }
 }
