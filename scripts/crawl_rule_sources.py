@@ -482,14 +482,15 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
     base = "https://www.moleg.go.kr"
     list_url = f"{base}/lawinfo/nwLwAnList.mo"
     saved = 0
+    prev_seqs = ()
 
-    for page in range(1, 6):
+    for page in range(1, 11):
         if saved >= max_items:
             break
-        # debug 로 확인된 작동 URL: ?mid=... (page1), 이후 &pageIndex=N
+        # 실측: href 가 currentPage 사용 → 페이지네이션은 currentPage 로
         params = {"mid": "a10106020000"}
         if page > 1:
-            params["pageIndex"] = str(page)
+            params["currentPage"] = str(page)
         try:
             r = sess.get(list_url, params=params, timeout=15)
             r.raise_for_status()
@@ -498,18 +499,25 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
             continue
         soup = BeautifulSoup(r.text, "html.parser")
         cand = soup.select("a[href*='nwLwAnInfo.mo']")
-        print(f"  [moleg] page {page}: HTTP {r.status_code} · {len(r.content)}b · 후보 {len(cand)}개")
-        if not cand:
+        # cs_seq 추출
+        seqs = []
+        for link in cand:
+            m = re.search(r"cs_seq=(\d+)", link.get("href", ""))
+            if m:
+                seqs.append((m.group(1), link.get_text(strip=True)))
+        print(f"  [moleg] page {page}: HTTP {r.status_code} · {len(r.content)}b · 후보 {len(seqs)}개")
+        if not seqs:
             print(f"  [moleg] page {page} 링크 없음 — a태그 {len(soup.find_all('a'))}개")
             break
-        for link in cand:
-            href = link.get("href", "")
-            # href 의 &currentPage 가 HTML 엔티티(¤)로 깨져 400 발생 →
-            # 필요한 cs_seq 만 추출해 깨끗한 URL 재구성
-            m = re.search(r"cs_seq=(\d+)", href)
-            if not m:
-                continue
-            detail_url = f"{base}/lawinfo/nwLwAnInfo.mo?mid=a10106020000&cs_seq={m.group(1)}"
+        # 페이지네이션 미작동 감지 (이전 페이지와 동일한 cs_seq 집합)
+        cur = tuple(sorted(s for s, _ in seqs))
+        if page > 1 and cur == prev_seqs:
+            print(f"  [moleg] page {page} 이전과 동일(페이지네이션 미작동) — 종료")
+            break
+        prev_seqs = cur
+
+        for cs_seq, title in seqs:
+            detail_url = f"{base}/lawinfo/nwLwAnInfo.mo?mid=a10106020000&cs_seq={cs_seq}"
             if _exists(out_dir, detail_url):
                 continue  # 이미 저장됨 — 스킵
             try:
@@ -519,7 +527,7 @@ def crawl_moleg_interp(out_root: Path, max_items: int = 30) -> int:
                 print(f"  [moleg] 상세 실패: {str(e)[:50]} | {detail_url[:90]}")
                 continue
             dsoup = BeautifulSoup(d.text, "html.parser")
-            title = link.get_text(strip=True) or (dsoup.title.string if dsoup.title else "untitled")
+            title = title or (dsoup.title.string if dsoup.title else "untitled")
             text = dsoup.get_text("\n", strip=True)
             name = f"{_slug(title)}_{_hash(detail_url)}"
             md = f"# {title}\n\n출처: {detail_url}\n\n---\n\n{text}"
