@@ -118,6 +118,8 @@ class FeatureVector:
     has_double_sanction: float = 0.0       # 이중제재: 같은 조에 형사벌(징역·벌금) + 과태료 병과 (BAI-02)
     has_auto_max_sanction: float = 0.0     # 1:1 자동 최고제재: "위반한 자는 ...취소한다" 가중·감경 없음 (대법 JUD-01)
     has_no_hearing_disp: float = 0.0       # 침익처분 + 청문 절차 부재 (BAI-03·행정절차법 §22)
+    # NaverSearch 커버리지 매트릭스로 발견한 gap 신호 (Phase 6c)
+    has_no_reason_giving: float = 0.0      # 거부·취소 처분 + 이유제시 의무 부재 (대법 JUD-02·행정절차법 §23)
 
     def to_dict(self) -> dict[str, float]:
         return {k: v for k, v in self.__dict__.items()
@@ -159,6 +161,8 @@ FEATURE_NAMES: list[str] = [
     "has_withdrawal_limit", "has_age_discrimination",
     # Phase 6b 감사원·대법원 법률 텍스트 신호 (추가 — 삭제 금지)
     "has_double_sanction", "has_auto_max_sanction", "has_no_hearing_disp",
+    # Phase 6c NaverSearch 커버리지 gap 신호 (추가 — 삭제 금지)
+    "has_no_reason_giving",
 ]
 
 
@@ -418,5 +422,18 @@ def extract_features(
     if _ADVERSE_DISP_RX.search(text) and not _HEARING_RX.search(text):
         if decomp.type in (ArticleType.DISPOSITION, ArticleType.PROHIBITION):
             fv.has_no_hearing_disp = 1.0
+
+    # Phase 6c — NaverSearch 커버리지 gap 신호
+    # 이유제시 미흡 (대법 JUD-02): 거부·취소·정지 처분 + 이유제시/사유통지 의무 없음
+    _DENY_DISP_RX = _re.compile(
+        r"(거부|반려|취소|철회|정지|거절)(?:할\s*수\s*있|하여야|한다)"
+    )
+    _REASON_RX = _re.compile(
+        r"(이유를?\s*(?:제시|명시|붙여|기재|적어)|사유를?\s*(?:통지|명시|기재|알려)"
+        r"|그\s*사유를|이유와\s*함께)"
+    )
+    if _DENY_DISP_RX.search(text) and not _REASON_RX.search(text):
+        if decomp.type in (ArticleType.DISPOSITION, ArticleType.PROHIBITION, ArticleType.PROCEDURE):
+            fv.has_no_reason_giving = 1.0
 
     return fv
