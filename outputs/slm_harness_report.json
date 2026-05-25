@@ -77,5 +77,26 @@
       "MCP/agent 통합(NN무관)",
       "프레임워크 라우트 탐지(코드전용)"
     ]
+  },
+  "phase8_logical_reasoning_test": {
+    "goal": "수집 사례 결함논리(위임·비례·재량·청문)를 조건결합(AND) 추론 신호 8개로 추가",
+    "signals_added": [
+      "reason_blanket_adverse",
+      "reason_arbitrary_disp",
+      "reason_no_due_process",
+      "reason_complex_enum",
+      "reason_proviso_discretion",
+      "reason_hub_delegation",
+      "reason_disproportionate",
+      "reason_citation_overload"
+    ],
+    "result": {
+      "before_70dim": 0.515,
+      "after_78dim": 0.492
+    },
+    "verdict": "REVERTED — 명시적 조건결합 신호가 holdout F1 하락(0.515→0.492)",
+    "reason": "torch MLP 은닉층이 이미 신호 조합(비선형 추론)을 학습하므로 명시적 곱셈신호는 중복. 소표본(2394)에서 차원증가가 분산만 키움.",
+    "kept": "70-dim (PageRank 포함) 유지 — 검증된 최적",
+    "lesson": "논리적 추론은 이미 MLP 내부에서 수행됨. 병목은 추론 용량이 아니라 데이터 양. 신규 구조신호(PageRank)는 도움됐으나 기존신호 재조합은 무익."
   }
 }
