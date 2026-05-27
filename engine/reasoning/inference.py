@@ -95,6 +95,8 @@ class InferenceRule:
     inference: str
     conclusion: str
     legal_basis: str
+    precision_prior: float = 0.5   # 2,394 verdict 데이터로 검증한 정밀도 (데이터 근거)
+    validated: bool = True          # 정렬된 verdict 로 검증됐는지 (False=데이터 공백)
 
     def evaluate(self, fv: FeatureVector) -> ReasoningStep | None:
         if not all(p.test(fv) for p in self.premises):
@@ -102,6 +104,8 @@ class InferenceRule:
         conf = 1.0
         for p in self.premises:
             conf = min(conf, p.strength(fv))
+        # 전제 충족 강도 × 데이터 검증 정밀도 = 데이터 근거 신뢰도
+        conf = round(conf * self.precision_prior, 3)
         return ReasoningStep(
             rule_id=self.rule_id,
             category=self.category,
@@ -110,7 +114,7 @@ class InferenceRule:
             inference=self.inference,
             conclusion=self.conclusion,
             legal_basis=self.legal_basis,
-            confidence=round(conf, 3),
+            confidence=conf,
         )
 
 
@@ -136,6 +140,7 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         inference="위임의 목적·내용·범위가 한정되지 않아 하위법령이 국민 권리·의무를 자의적으로 정할 수 있다",
         conclusion="포괄위임금지 원칙에 저촉되는 위임 구조",
         legal_basis="헌법 제75조 · 대법원 2016두64975 · 감사원 BAI-01",
+        precision_prior=0.3, validated=False,   # 적법성 verdict가 인용기반뿐이라 포괄위임 검증 데이터 공백
     ),
     # 2. 자의적 처분 (공정성) — 공정위 약관규제법 §11·대법
     InferenceRule(
@@ -158,6 +163,7 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         inference="당사자가 처분 전 의견을 진술할 기회를 보장받지 못해 적법절차에 미달한다",
         conclusion="침익적 처분의 청문 절차 누락",
         legal_basis="행정절차법 제22조 · 감사원 BAI-03",
+        precision_prior=0.56,   # 검증: TP30/FP24
     ),
     # 4. 비례성 결여 자동 최고제재 (공정성) — 대법 JUD-01·행정기본법 §10
     InferenceRule(
@@ -190,6 +196,7 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         inference="처분 이유를 밝히지 않으면 당사자의 불복 가능성과 사법심사 가능성이 제약된다",
         conclusion="처분 이유제시 의무 누락",
         legal_basis="행정절차법 제23조 · 대법원 2019두31839",
+        precision_prior=0.72,   # 검증: TP23/FP9
     ),
     # 7. 기속처분 기한 부재 (적법성) — 감사원 BAI-04·행정절차법 §19
     InferenceRule(
@@ -200,6 +207,7 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         inference="처리 기한이 없으면 행정청이 처분을 무한정 지연해 국민 권익이 방치될 수 있다",
         conclusion="기속처분의 이행기한 부재",
         legal_basis="행정절차법 제19조 · 감사원 BAI-04",
+        precision_prior=0.4, validated=False,   # 정렬 verdict 부족(n=2) — 미검증
     ),
     # 8. 열거 과다 + 캐치올 (구조) — 법제처 입안심사기준
     InferenceRule(
@@ -213,6 +221,7 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         inference="열거가 과다하고 포괄 캐치올까지 더해지면 수범자의 예측가능성과 가독성이 저하된다",
         conclusion="열거 과다 + 포괄 캐치올로 인한 구조 복잡",
         legal_basis="법제처 법령입안심사기준(열거 방식) · S-04",
+        precision_prior=0.5,   # 검증: TP9/FP9
     ),
     # 9. 단서 과다 재량 형해화 (거버넌스) — 권익위 재량남용
     InferenceRule(
@@ -224,18 +233,21 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         inference="단서가 중첩되면 원칙 규정이 형해화되고 행정청 재량이 과도하게 확대된다",
         conclusion="단서 중첩으로 인한 재량 형해화",
         legal_basis="권익위 부패영향평가(재량남용) · G-01",
+        precision_prior=0.57,   # 검증: TP28/FP21
     ),
     # 10. 인용 과다 의존성 (적법성) — 법령정합성
     InferenceRule(
         "R-CITATION-OVERLOAD", "적법성", "개선",
         premises=[
-            Premise(test=lambda fv: _sig(fv, "cited_laws_count") >= 0.25, desc="한 조문이 타 법령을 과다 인용(5건 이상)하고",
+            # 데이터 보정: 임계값 5→11건 (정밀도 0.19→0.44)
+            Premise(test=lambda fv: _sig(fv, "cited_laws_count") >= 0.55, desc="한 조문이 타 법령을 과다 인용(11건 이상)하고",
                     strength=lambda fv: _sig(fv, "cited_laws_count")),
             _not("is_definition", "정의·목적 조문이 아니다"),
         ],
         inference="다수 타법 인용은 조문의 자기완결성을 떨어뜨리고 개정 시 정합성 관리를 어렵게 한다",
         conclusion="타 법령 의존성 과다",
         legal_basis="법령정합성 원칙 · L-01",
+        precision_prior=0.44,   # 검증: 임계값 11건 상향 후 TP31/FP39
     ),
 ]
 

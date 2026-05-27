@@ -140,5 +140,24 @@
     },
     "value": "신경망이 놓쳤을 결함(공정성 0.32·적법성 0.06)을 법리가 근거와 함께 확정. NN단독 발화는 회색지대로 표시해 과신 방지.",
     "rationale": "데이터 부족(2394건) 상황에서 통계근사(신경망)보다 법리규칙(추론)이 더 신뢰가능·설명가능. 신경망은 규칙 없는 미묘한 패턴 보강 역할."
+  },
+  "phase11_reasoning_calibration": {
+    "goal": "2394 verdict 데이터로 추론 규칙 검증·보정 (손으로 단언 → 데이터 근거)",
+    "method": "각 규칙이 발화한 verdict-조문의 TP/FP 집계 → 규칙별 정밀도 측정",
+    "validated_precision": {
+      "R-NO-REASON": 0.72,
+      "R-PROVISO-EXCESS": 0.57,
+      "R-NO-HEARING": 0.56,
+      "R-ENUM-OVERLOAD": 0.5,
+      "R-CITATION-OVERLOAD": 0.44,
+      "R-DELEG-BLANKET": "0.06→미검증(데이터공백)",
+      "R-NO-DEADLINE": "미검증(n=2)"
+    },
+    "corrections": [
+      "R-CITATION-OVERLOAD: 임계값 5→11건 상향 → 정밀도 0.19→0.44",
+      "R-DELEG-BLANKET: 적법성 verdict가 인용기반뿐 → 포괄위임 검증 불가, validated=False 표시",
+      "전 규칙에 precision_prior 부여, 신뢰도=전제강도×데이터정밀도"
+    ],
+    "value": "추론 신뢰도가 데이터 근거를 가짐. 검증된 규칙(이유제시 0.72)은 높은 신뢰, 미검증(포괄위임)은 down-weight + 솔직히 표시. 데이터 공백도 정직하게 노출."
   }
 }
