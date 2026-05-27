@@ -261,14 +261,20 @@ def reason_over(fv: FeatureVector) -> ReasoningResult:
 
 
 def diagnose_with_reasoning(art, law=None, *, backend: str = "linear") -> dict:
-    """조문 → 신경망 진단(점수) + 논리 추론 사슬을 결합한 통합 진단.
+    """조문 → 추론(법리) 우선 + 신경망(통계) 보조의 통합 진단.
 
-    신경망(지각) 점수와 추론엔진(논리)의 근거를 함께 제공해
-    "왜 결함인지"의 논리 흐름을 완성한다.
+    판단 권위 순서: 법리(추론)가 주(主), 신경망이 보조(補).
+      - 추론 발화 → 법적 근거로 결함 확정 (verdict_source='reasoning')
+        · 신경망도 발화 → 'confirmed' (법리+패턴 일치, 최고 신뢰)
+        · 신경망 침묵   → 'reasoning_only' (신경망이 놓친 것, 법리로 포착)
+      - 추론 침묵, 신경망만 발화 → 'nn_only' (근거 약한 회색지대, 재검토 대상)
+      - 둘 다 침묵 → 정상
     """
     from ..slm.brain import analyze_article
     from ..slm.features import extract_features
     from ..structure import decompose
+
+    _SEV_RANK = {"심각": 4, "경고": 3, "주의": 2, "개선": 1, None: 0}
 
     decomp = decompose(art)
     fv = extract_features(art, decomp, law=law)
@@ -283,9 +289,32 @@ def diagnose_with_reasoning(art, law=None, *, backend: str = "linear") -> dict:
     }
     for cat, diag in diagnoses.items():
         steps = reason_by_cat.get(cat, [])
+        nn_fired = diag.severity is not None
+        reason_fired = bool(steps)
+
+        # 추론 우선: 법리가 발화하면 그 심각도를 채택(법적 근거 有)
+        if reason_fired:
+            reason_sev = max((s.severity for s in steps),
+                             key=lambda s: _SEV_RANK.get(s, 0))
+            if nn_fired:
+                source = "confirmed"          # 법리+신경망 일치 → 확정
+                # 둘 중 더 높은 심각도 채택
+                severity = reason_sev if _SEV_RANK[reason_sev] >= _SEV_RANK[diag.severity] else diag.severity
+            else:
+                source = "reasoning_only"      # 법리 단독 → 신경망이 놓침
+                severity = reason_sev
+        elif nn_fired:
+            source = "nn_only"                 # 신경망 단독 → 회색지대(근거 약함)
+            severity = diag.severity
+        else:
+            source = None
+            severity = None
+
         out["categories"][cat] = {
-            "score": round(diag.score, 3),
-            "severity": diag.severity,
+            "verdict_source": source,          # 누가 판단했나 (추론 우선)
+            "severity": severity,              # 통합 심각도
+            "nn_score": round(diag.score, 3),
+            "nn_severity": diag.severity,
             "reasoning": [
                 {
                     "premises": s.premises,
@@ -296,8 +325,6 @@ def diagnose_with_reasoning(art, law=None, *, backend: str = "linear") -> dict:
                 }
                 for s in steps
             ],
-            # 신경망 점수와 논리추론이 모두 가리키면 신뢰도 상승
-            "reinforced": bool(steps) and diag.severity is not None,
         }
     out["reasoning_chain"] = reasoning.render()
     return out
