@@ -120,6 +120,9 @@ class FeatureVector:
     has_no_hearing_disp: float = 0.0       # 침익처분 + 청문 절차 부재 (BAI-03·행정절차법 §22)
     # NaverSearch 커버리지 매트릭스로 발견한 gap 신호 (Phase 6c)
     has_no_reason_giving: float = 0.0      # 거부·취소 처분 + 이유제시 의무 부재 (대법 JUD-02·행정절차법 §23)
+    # 감사원·공정위·금감원 실사례 보강 신호 (Phase 12 — 감찰기관 감사내역 반영)
+    has_subdeleg_admin_rule: float = 0.0   # 고시·훈령·지침 등 행정규칙에 권리·의무 위임 (BAI-06·헌재 위임명령 한계)
+    has_no_disp_standard: float = 0.0      # 재량처분 + 처분기준 사전공표 의무 부재 (BAI-08·행정절차법 §20)
 
     def to_dict(self) -> dict[str, float]:
         return {k: v for k, v in self.__dict__.items()
@@ -163,6 +166,8 @@ FEATURE_NAMES: list[str] = [
     "has_double_sanction", "has_auto_max_sanction", "has_no_hearing_disp",
     # Phase 6c NaverSearch 커버리지 gap 신호 (추가 — 삭제 금지)
     "has_no_reason_giving",
+    # Phase 12 감찰기관 감사내역 보강 신호 (추가 — 삭제 금지)
+    "has_subdeleg_admin_rule", "has_no_disp_standard",
 ]
 
 
@@ -435,5 +440,34 @@ def extract_features(
     if _DENY_DISP_RX.search(text) and not _REASON_RX.search(text):
         if decomp.type in (ArticleType.DISPOSITION, ArticleType.PROHIBITION, ArticleType.PROCEDURE):
             fv.has_no_reason_giving = 1.0
+
+    # Phase 12 — 감찰기관 감사내역 실사례 반영
+    # BAI-06: 행정규칙(고시·훈령·지침) 위임 — 헌재 위임명령 한계 일탈
+    # "...장이 정하는 바에 따른다"/"...장이 고시한다" + 위임근거 (시행령 외)
+    _ADMIN_RULE_RX = _re.compile(
+        r"(고시|훈령|예규|지침|규정)(?:으로|에서|에)?\s*(?:정|규정|공표)"
+        r"|장관이\s*정(?:하|한)|위원회(?:가|에서)?\s*정(?:하|한)"
+        r"|.\s*장이\s*정(?:하는|한다|할)"
+    )
+    _SUBORD_LAW_RX = _re.compile(r"(대통령령|총리령|부령|시행령|시행규칙)")
+    if _ADMIN_RULE_RX.search(text) and not _SUBORD_LAW_RX.search(text):
+        if decomp.type in (ArticleType.DELEGATION, ArticleType.DISPOSITION,
+                           ArticleType.PROCEDURE, ArticleType.GENERAL):
+            fv.has_subdeleg_admin_rule = 1.0
+
+    # BAI-08: 재량처분 + 처분기준 사전공표 의무 부재 (행정절차법 §20)
+    # 재량 표현 + 처분 + 기준/공표/세부 사항 없음
+    _DISCRETION_RX = _re.compile(
+        r"(할\s*수\s*있다|인정(?:하는|되는)\s*경우|판단(?:하는|되는)\s*경우"
+        r"|적당하다고\s*인정|필요하다고\s*인정)"
+    )
+    _STANDARD_DISCL_RX = _re.compile(
+        r"(기준을?\s*(?:공표|공시|정하여\s*공표|마련하여\s*공표)"
+        r"|세부\s*기준|구체적\s*기준|처분기준)"
+    )
+    if (_DISCRETION_RX.search(text)
+        and decomp.type == ArticleType.DISPOSITION
+        and not _STANDARD_DISCL_RX.search(text)):
+        fv.has_no_disp_standard = 1.0
 
     return fv

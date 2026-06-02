@@ -159,5 +159,97 @@
       "전 규칙에 precision_prior 부여, 신뢰도=전제강도×데이터정밀도"
     ],
     "value": "추론 신뢰도가 데이터 근거를 가짐. 검증된 규칙(이유제시 0.72)은 높은 신뢰, 미검증(포괄위임)은 down-weight + 솔직히 표시. 데이터 공백도 정직하게 노출."
+  },
+  "phase12_audit_pattern_reinforcement": {
+    "trigger": "감사원·공정위·금감원 감찰기관 감사내역 보강 (사용자 지시: 적법성·공정성 보강)",
+    "approach": "BAI/FTC/FSS 사례 모음 markdown 파일 분석 → 미커버 패턴 식별 → 신호+규칙 추가",
+    "audit_sources_consulted": [
+      "outputs/rule_mining/sources/crawled/naver/bai/감사원_사례모음.md (180건)",
+      "outputs/rule_mining/sources/crawled/naver/ftc/공정위_사례모음.md (150건)",
+      "outputs/rule_mining/sources/crawled/naver/fss/금감원_사례모음.md (90건)"
+    ],
+    "added_signals": {
+      "has_subdeleg_admin_rule": "고시·훈령·지침 등 행정규칙 위임 (BAI-06·헌재 위임명령 한계)",
+      "has_no_disp_standard": "재량처분 + 처분기준 사전공표 의무 부재 (BAI-08·행정절차법 §20)"
+    },
+    "added_rules": {
+      "R-SUBDELEG-ADMIN-RULE": {
+        "category": "적법성",
+        "precision_prior": 0.4,
+        "validated": false,
+        "rationale": "감사원 BAI-06 빈번 패턴, corpus regex 폭이 넓어 보수적 진입"
+      },
+      "R-NO-DISP-STANDARD": {
+        "category": "공정성",
+        "precision_prior": 0.45,
+        "validated": false,
+        "rationale": "행정절차법 §20 BAI-08, 다수 조문이 시행령 위임 — 중간 신뢰"
+      }
+    },
+    "corpus_firing_rate": {
+      "total_laws": 1720,
+      "total_articles": 86749,
+      "R-SUBDELEG-ADMIN-RULE": {
+        "fires": 640,
+        "rate_pct": 0.74,
+        "samples": [
+          [
+            "10ㆍ29이태원참사피해자권리보장과진상규명및재발방지를위한특별법",
+            "제69조"
+          ],
+          [
+            "119긴급신고의관리및운영에관한법률",
+            "제24조"
+          ],
+          [
+            "12ㆍ29여객기참사피해구제및지원등을위한특별법",
+            "제27조"
+          ],
+          [
+            "2018평창동계올림픽대회및동계패럴림픽대회지원등에관한특별법",
+            "제35조의3"
+          ],
+          [
+            "4ㆍ16세월호참사진상규명및안전사회건설등을위한특별법",
+            "제50조"
+          ]
+        ]
+      },
+      "R-NO-DISP-STANDARD": {
+        "fires": 2381,
+        "rate_pct": 2.74,
+        "samples": [
+          [
+            "1인창조기업육성에관한법률",
+            "제8조"
+          ],
+          [
+            "1인창조기업육성에관한법률",
+            "제10조"
+          ],
+          [
+            "1인창조기업육성에관한법률",
+            "제12조"
+          ],
+          [
+            "1인창조기업육성에관한법률",
+            "제16조"
+          ],
+          [
+            "2018평창동계올림픽대회및동계패럴림픽대회지원등에관한특별법",
+            "제86조"
+          ]
+        ]
+      }
+    },
+    "knowledge_base_size": {
+      "before": 13,
+      "after": 15
+    },
+    "feature_dim": {
+      "before": 71,
+      "after": 73
+    },
+    "note": "두 신규 규칙 모두 validated=False — 후속 verdict 누적 후 precision_prior 재캘리브레이션 필요. linear/auto 백엔드는 즉시 활용, torch 백엔드는 다음 재학습 시 73-dim으로 확장."
   }
 }

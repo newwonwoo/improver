@@ -249,6 +249,81 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         legal_basis="법령정합성 원칙 · L-01",
         precision_prior=0.44,   # 검증: 임계값 11건 상향 후 TP31/FP39
     ),
+    # 11. 광범위 면책 (공정성) — 공정위 약관규제법 §7·은행 시정 사례
+    InferenceRule(
+        "R-BROAD-IMMUNITY", "공정성", "주의",
+        premises=[
+            _has("has_broad_immunity", "사업자 귀책을 포함한 광범위 면책 조항이 있고"),
+            Premise(test=lambda fv: _sig(fv, "is_definition") < 0.5 and _sig(fv, "is_purpose") < 0.5,
+                    desc="정의·목적 조문이 아니다"),
+        ],
+        inference="천재지변 등 정당한 사유 없이 사업자·기관의 책임을 광범위하게 면제하면 상대방 권익을 부당하게 침해한다",
+        conclusion="광범위 면책으로 인한 공정성 결함",
+        legal_basis="공정위 약관규제법 제7조 · 은행권 시정사례(2025.10) · F-02",
+        precision_prior=0.14,   # 검증: TP15/FP89 — corpus의 면책 표현이 광범위해 정밀도 낮음, 출력시 약신뢰 명시
+    ),
+    # 12. 영향력 있는 조문의 위임 (적법성) — PageRank × 위임 (CodeGraph + 법령그래프)
+    InferenceRule(
+        "R-HUB-DELEGATION", "적법성", "주의",
+        premises=[
+            Premise(test=lambda fv: _sig(fv, "graph_pagerank_norm") >= 0.5,
+                    desc="다수 조문이 인용하는 허브 조문이며(PageRank 높음)",
+                    strength=lambda fv: _sig(fv, "graph_pagerank_norm")),
+            Premise(test=lambda fv: _sig(fv, "has_delegate") >= 0.5 or _sig(fv, "is_delegation") >= 0.5,
+                    desc="하위법령으로의 위임을 포함한다"),
+        ],
+        inference="영향 반경이 큰 조문이 하위법령에 위임하면 위임의 파급효가 전체 법체계에 광범위하게 미친다",
+        conclusion="허브 조문의 위임 — 영향 반경 큰 위임",
+        legal_basis="법령정합성 원칙 · 법령그래프 PageRank 분석",
+        precision_prior=0.30,   # 검증불가: aligned verdict 0건, 보수적 약신뢰
+        validated=False,
+    ),
+    # 13. 단기 기한 침익적 처분 (공정성) — 절차 보장 미흡
+    InferenceRule(
+        "R-SHORT-DEADLINE-ADVERSE", "공정성", "주의",
+        premises=[
+            Premise(test=lambda fv: _sig(fv, "has_very_short_deadline") >= 0.5 or _sig(fv, "has_short_deadline") >= 0.5,
+                    desc="7~14일 이내의 단기 기한이 설정되어 있고"),
+            Premise(test=lambda fv: _sig(fv, "subj_citizen") >= 0.5 or _sig(fv, "subj_operator") >= 0.5,
+                    desc="기한 부담의 주체가 시민·사업자이며"),
+            _not("has_hearing", "청문·의견청취 절차가 보장되지 않는다"),
+        ],
+        inference="짧은 기한 + 절차 보장 부재의 결합은 상대방 방어권을 실질적으로 박탈한다",
+        conclusion="단기 기한과 절차 보장 결여",
+        legal_basis="행정절차법 제19조·제22조 · 권익위 고충민원 결정례",
+        precision_prior=0.50,   # 검증불충분: n=2 (TP1/FP1) — 보수적 중립
+        validated=False,
+    ),
+    # 14. 행정규칙 위임 (적법성) — 감사원 BAI-06·헌재 위임명령 한계 일탈
+    InferenceRule(
+        "R-SUBDELEG-ADMIN-RULE", "적법성", "주의",
+        premises=[
+            _has("has_subdeleg_admin_rule",
+                 "고시·훈령·지침 등 행정규칙으로 권리·의무 사항을 정하고 있고"),
+            Premise(test=lambda fv: _sig(fv, "is_definition") < 0.5 and _sig(fv, "is_purpose") < 0.5,
+                    desc="정의·목적 조문이 아니다"),
+        ],
+        inference="법령(시행령·시행규칙)이 아닌 행정규칙으로 국민의 권리·의무를 규율하면 위임명령의 한계를 일탈한다",
+        conclusion="행정규칙 위임 — 위임명령 한계 일탈 의심",
+        legal_basis="감사원 BAI-06 · 헌재 위임명령 법리 · 법령정합성 원칙",
+        precision_prior=0.40,   # 감사원 사례 빈도 높음, 단 corpus regex의 신호 폭이 넓어 보수적 진입
+        validated=False,
+    ),
+    # 15. 재량처분 + 처분기준 미공표 (공정성) — 감사원 BAI-08·행정절차법 §20
+    InferenceRule(
+        "R-NO-DISP-STANDARD", "공정성", "주의",
+        premises=[
+            _has("has_no_disp_standard",
+                 "재량 표현이 포함된 처분 조문에 처분기준 공표 의무가 없다"),
+            Premise(test=lambda fv: _sig(fv, "is_disposition") >= 0.5,
+                    desc="처분 조문이다"),
+        ],
+        inference="재량 처분의 기준이 사전 공표되지 않으면 상대방이 예측가능성을 잃고 자의적 처분의 위험이 발생한다",
+        conclusion="재량처분 기준 사전공표 의무 결여",
+        legal_basis="행정절차법 제20조 · 감사원 BAI-08 처분기준 미공표 패턴",
+        precision_prior=0.45,   # BAI-08 빈도 높지만 corpus 다수 조문이 시행령에 기준 위임 — 중간 신뢰
+        validated=False,
+    ),
 ]
 
 
