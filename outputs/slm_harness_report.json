@@ -251,5 +251,33 @@
       "after": 73
     },
     "note": "두 신규 규칙 모두 validated=False — 후속 verdict 누적 후 precision_prior 재캘리브레이션 필요. linear/auto 백엔드는 즉시 활용, torch 백엔드는 다음 재학습 시 73-dim으로 확장."
+  },
+  "phase13_law_precedence": {
+    "trigger": "사용자 로컬 크롤링 98건 (moleg 90 + ftc_press 8) 처리 → 추론엔진 강화",
+    "approach": "법제처 법령해석례 100건 분석 → 미커버 패턴 R-LAW-PRECEDENCE 추가",
+    "added_signal": "has_undefined_precedence (다른 법률의 특별한 규정 인용)",
+    "added_rule": {
+      "R-LAW-PRECEDENCE": {
+        "category": "적법성",
+        "precision_prior": 0.3,
+        "validated": false,
+        "rationale": "moleg 2/100 직접사례, 0.15% corpus 발화율 (33/22470) — 보수적"
+      }
+    },
+    "knowledge_base_size": {
+      "before": 15,
+      "after": 16
+    },
+    "feature_dim": {
+      "before": 73,
+      "after": 74
+    },
+    "torch_holdout_f1_3run_mean": 0.468,
+    "comparison": {
+      "phase8_baseline (70-dim)": 0.516,
+      "phase12 (73-dim)": 0.479,
+      "phase13 (74-dim)": 0.468
+    },
+    "note": "신규 신호는 추론엔진에서만 활용. NN F1 하락은 라벨 없는 신호 추가의 누적 효과 — 회복하려면 신규 3개 신호(subdeleg/no-disp-standard/undefined-precedence)에 대한 verdict 라벨링 필요."
   }
 }

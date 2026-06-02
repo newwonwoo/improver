@@ -123,6 +123,8 @@ class FeatureVector:
     # 감사원·공정위·금감원 실사례 보강 신호 (Phase 12 — 감찰기관 감사내역 반영)
     has_subdeleg_admin_rule: float = 0.0   # 고시·훈령·지침 등 행정규칙에 권리·의무 위임 (BAI-06·헌재 위임명령 한계)
     has_no_disp_standard: float = 0.0      # 재량처분 + 처분기준 사전공표 의무 부재 (BAI-08·행정절차법 §20)
+    # 법제처 법령해석례 패턴 (Phase 13 — moleg 100건 분석)
+    has_undefined_precedence: float = 0.0  # "다른 법률의 특별한 규정" 인용 + 우선순위 명시 부재 (법령 정합성 모호)
 
     def to_dict(self) -> dict[str, float]:
         return {k: v for k, v in self.__dict__.items()
@@ -168,6 +170,8 @@ FEATURE_NAMES: list[str] = [
     "has_no_reason_giving",
     # Phase 12 감찰기관 감사내역 보강 신호 (추가 — 삭제 금지)
     "has_subdeleg_admin_rule", "has_no_disp_standard",
+    # Phase 13 법제처 법령해석례 패턴 (추가 — 삭제 금지)
+    "has_undefined_precedence",
 ]
 
 
@@ -454,6 +458,18 @@ def extract_features(
         if decomp.type in (ArticleType.DELEGATION, ArticleType.DISPOSITION,
                            ArticleType.PROCEDURE, ArticleType.GENERAL):
             fv.has_subdeleg_admin_rule = 1.0
+
+    # Phase 13 — 법제처 법령해석례 패턴: "다른 법률의 특별한 규정" 인용
+    _PRECEDENCE_RX = _re.compile(
+        r"다른\s*법(?:률|령)(?:에서)?(?:의)?\s*(?:특별한)?\s*(?:규정|정함)"
+        r"|다른\s*법(?:률|령)에\s*(?:따른다|의한다)"
+        r"|이\s*법(?:에서)?\s*정(?:한|하는)\s*경우(?:를)?\s*제외"
+    )
+    if _PRECEDENCE_RX.search(text):
+        # 우선순위 명시 부재 = 어떤 법령이 특별한지 정의 안 됨
+        # 본 조문 자체가 다중 법령을 인용하지 않으면 모호도 ↑
+        if len(decomp.cited_laws) >= 1:
+            fv.has_undefined_precedence = 1.0
 
     # BAI-08: 재량처분 + 처분기준 사전공표 의무 부재 (행정절차법 §20)
     # 재량 표현 + 처분 + 기준/공표/세부 사항 없음

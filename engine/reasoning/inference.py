@@ -324,6 +324,24 @@ KNOWLEDGE_BASE: list[InferenceRule] = [
         precision_prior=0.45,   # BAI-08 빈도 높지만 corpus 다수 조문이 시행령에 기준 위임 — 중간 신뢰
         validated=False,
     ),
+    # 16. 법령 우선순위 모호 (적법성) — 법제처 법령해석 100건 분석 (Phase 13)
+    InferenceRule(
+        "R-LAW-PRECEDENCE", "적법성", "주의",
+        premises=[
+            _has("has_undefined_precedence",
+                 "'다른 법률의 특별한 규정' 등 법령 우선순위 인용이 있고"),
+            Premise(test=lambda fv: _sig(fv, "is_definition") < 0.5 and _sig(fv, "is_purpose") < 0.5,
+                    desc="정의·목적 조문이 아니다"),
+            Premise(test=lambda fv: _sig(fv, "cited_laws_count") > 0,
+                    desc="다른 법령을 인용한다",
+                    strength=lambda fv: min(1.0, _sig(fv, "cited_laws_count") + 0.3)),
+        ],
+        inference="다른 법률의 특별한 규정을 인용하면서 그 규정의 범위·요건이 명확치 않으면 법령 적용에 모호함이 발생한다",
+        conclusion="법령 우선순위 인용 — 특별 규정 범위 모호",
+        legal_basis="법제처 법령해석례 다수 (2022-2026) · 법령 정합성 원칙",
+        precision_prior=0.30,   # 0.28% 발화율, moleg 2/100 직접사례 — 보수적 진입
+        validated=False,
+    ),
 ]
 
 
