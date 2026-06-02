@@ -131,11 +131,14 @@ def _not(name: str, desc: str, thr: float = 0.5) -> Premise:
 
 KNOWLEDGE_BASE: list[InferenceRule] = [
     # 1. 포괄위임 (적법성) — 감사원 BAI-01·헌법 §75
+    # Phase 13 v2: P-META-1 FP 필터 — 시행령에 한정열거 있으면 발화 억제
     InferenceRule(
         "R-DELEG-BLANKET", "적법성", "경고",
         premises=[
             _has("has_blanket_delegation", "‘필요한 사항’ 등 포괄적 위임 문구가 있고"),
             _not("cited_articles", "본문에 구체적 위임 기준(인용 조문)이 없으며", thr=0.2),
+            _not("has_sublaw_concrete_enum",
+                 "시행령에서 위임사항이 한정 열거되어 있지 않다 (백지위임 진성 후보)"),
         ],
         inference="위임의 목적·내용·범위가 한정되지 않아 하위법령이 국민 권리·의무를 자의적으로 정할 수 있다",
         conclusion="포괄위임금지 원칙에 저촉되는 위임 구조",
@@ -376,13 +379,16 @@ def diagnose_with_reasoning(art, law=None, *, backend: str = "linear") -> dict:
       - 둘 다 침묵 → 정상
     """
     from ..slm.brain import analyze_article
-    from ..slm.features import extract_features
+    from ..slm.features import extract_features, enrich_with_sublaw
     from ..structure import decompose
 
     _SEV_RANK = {"심각": 4, "경고": 3, "주의": 2, "개선": 1, None: 0}
 
     decomp = decompose(art)
     fv = extract_features(art, decomp, law=law)
+    # Phase 13 v2: 시행령 한정열거 확인 → R-DELEG-BLANKET FP 필터
+    if law is not None and getattr(law, "name", None):
+        enrich_with_sublaw(fv, law.name, art.number)
     diagnoses = analyze_article(art, decomp, law=law, backend=backend)
     reasoning = reason_over(fv)
     reason_by_cat = reasoning.by_category()

@@ -125,6 +125,8 @@ class FeatureVector:
     has_no_disp_standard: float = 0.0      # 재량처분 + 처분기준 사전공표 의무 부재 (BAI-08·행정절차법 §20)
     # 법제처 법령해석례 패턴 (Phase 13 — moleg 100건 분석)
     has_undefined_precedence: float = 0.0  # "다른 법률의 특별한 규정" 인용 + 우선순위 명시 부재 (법령 정합성 모호)
+    # Phase 13 v2 — QA 피드백: R-DELEG-BLANKET FP 필터 (시행령 한정열거 시 발화 억제)
+    has_sublaw_concrete_enum: float = 0.0  # 시행령에 해당 조문 위임사항이 한정 열거됨 (위임 구체화 완료)
 
     def to_dict(self) -> dict[str, float]:
         return {k: v for k, v in self.__dict__.items()
@@ -172,6 +174,8 @@ FEATURE_NAMES: list[str] = [
     "has_subdeleg_admin_rule", "has_no_disp_standard",
     # Phase 13 법제처 법령해석례 패턴 (추가 — 삭제 금지)
     "has_undefined_precedence",
+    # Phase 13 v2 QA 피드백 — R-DELEG-BLANKET FP 필터
+    "has_sublaw_concrete_enum",
 ]
 
 
@@ -487,3 +491,54 @@ def extract_features(
         fv.has_no_disp_standard = 1.0
 
     return fv
+
+
+# ─── Phase 13 v2 — 시행령 한정열거 enrichment (R-DELEG-BLANKET FP 필터) ───
+
+import re as _re_mod
+from pathlib import Path as _Path
+
+_LAWS_DIR = _Path(__file__).resolve().parents[2] / "data/laws/raw"
+_SUBLAW_CACHE: dict[str, str | None] = {}
+_SUBLAW_CONCRETE_RX = _re_mod.compile(
+    r"(?:다음\s*각\s*호|다음\s*각호)|"
+    r"(?:\b1\.|\b가\.).{0,500}(?:\b3\.|\b다\.)"
+)
+
+
+def _read_sublaw(law_name: str) -> str | None:
+    if law_name in _SUBLAW_CACHE:
+        return _SUBLAW_CACHE[law_name]
+    p = _LAWS_DIR / law_name / "시행령.md"
+    if not p.exists():
+        _SUBLAW_CACHE[law_name] = None
+        return None
+    try:
+        text = p.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        text = None
+    _SUBLAW_CACHE[law_name] = text
+    return text
+
+
+def enrich_with_sublaw(fv: FeatureVector, law_name: str, article_number: str) -> None:
+    """시행령에서 해당 조문 위임사항이 한정 열거되어 있으면 신호 설정.
+
+    R-DELEG-BLANKET FP 필터용. moleg QA 피드백 P-META-1 반영.
+    """
+    if not law_name or not article_number:
+        return
+    sublaw_text = _read_sublaw(law_name)
+    if not sublaw_text:
+        return
+    m = _re_mod.search(r"(\d+)", article_number)
+    if not m:
+        return
+    art_digits = m.group(1)
+    # 시행령에서 "법 제N조" 인용 위치 검색
+    cite_m = _re_mod.search(rf"법\s*제\s*{art_digits}\s*조", sublaw_text)
+    if not cite_m:
+        return
+    chunk = sublaw_text[cite_m.start() : cite_m.start() + 1500]
+    if _SUBLAW_CONCRETE_RX.search(chunk):
+        fv.has_sublaw_concrete_enum = 1.0
