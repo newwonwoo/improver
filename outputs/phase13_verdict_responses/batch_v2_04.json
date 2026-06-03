@@ -1,0 +1,7 @@
+{
+  "_meta": {"batch": "batch_v2_04", "global_ids": "25-32", "note": "발화 2건(id 2=global #26, id 7=global #31) 채점. 나머지 무발화(폐기물관리법 #3~5는 중복·무발화)."},
+  "verdicts": [
+    {"id": 2, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": true, "issue": "DELEG_FILLED_BY_SUBLAW", "reason": "방위사업법 제7조 위임은 시행령 제11조가 주요직위 범위·자격기준을 한정열거로 충전. 쟁점은 임명권 주체(방위사업청장 vs 국방부장관)로 위임공백 아님. 엔진 🚩FP 일치."},
+    {"id": 7, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": true, "issue": "DELEG_FILLED_BY_SUBLAW", "reason": "정보통신공사업법 제37조의4 위임은 시행령(자격=인정교육 20h+별표6 기술자)으로 한정 충전. 실제 쟁점은 새만금특별법 제70조①(특별법) vs 일반법 신고관할 → R-LAW-PRECEDENCE 영역. 엔진 🚩FP 일치."}
+  ]
+}

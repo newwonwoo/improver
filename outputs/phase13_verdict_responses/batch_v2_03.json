@@ -1,0 +1,6 @@
+{
+  "_meta": {"batch": "batch_v2_03", "global_ids": "17-24", "note": "발화 1건(id 4=global #20) 채점. 나머지 무발화."},
+  "verdicts": [
+    {"id": 4, "verdict": "FP", "rule_id": "R-NO-REASON", "relevant_to_moleg": true, "issue": "MATCH_MISS", "reason": "수협법 제33조④는 조합의 사법상 환급정지(행정처분 아님)이고 해석례 쟁점은 '채무'에 정책융자금 포함 여부 용어해석. 처분이유 결여 결함룰이 비처분 행위에 발화 → 처분성 판별 가드 필요."}
+  ]
+}
