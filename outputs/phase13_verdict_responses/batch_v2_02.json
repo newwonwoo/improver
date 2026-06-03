@@ -1,0 +1,8 @@
+{
+  "_meta": {"batch": "batch_v2_02", "global_ids": "9-16", "note": "발화 3건(id 1,6,7) 채점. 나머지 무발화(rule_id 없음→importer skip)."},
+  "verdicts": [
+    {"id": 1, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": true, "issue": "DELEG_FILLED_BY_SUBLAW+DUPLICATE_OF_g8", "reason": "관광진흥법 제15조 — global #8과 동일 해석례·발화. 시행령 제13조 한정열거로 위임 충전. 실제 쟁점 특별법 우선(R-LAW-PRECEDENCE)."},
+    {"id": 6, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": true, "issue": "DELEG_FILLED_BY_SUBLAW", "reason": "병역법 제34조의2① 위임은 시행령 제69조의2⑥('공중보건의사 보수에 준한다')로 충전. 쟁점은 임용종류 특정으로 위임공백 아님. ※엔진 P-META-1 미플래그: enrich_with_sublaw가 '제N조의M' 접미 미처리 추정."},
+    {"id": 7, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": true, "issue": "DELEG_FILLED_BY_SUBLAW", "reason": "산안법 제130조① 단서 위임은 시행규칙 제200조 한정열거로 충전(원자력안전법 건강진단 등). ※엔진 P-META-1 미플래그: enrich_with_sublaw가 시행령.md만 읽어 시행규칙 충전을 못 잡음."}
+  ]
+}

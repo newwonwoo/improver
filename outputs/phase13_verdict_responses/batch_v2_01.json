@@ -1,0 +1,13 @@
+{
+  "_meta": {"batch": "batch_v2_01", "global_ids": "1-8", "schema": "phase13_import_verdict_responses", "note": "발화 8건 전부 채점. id↔batch_v2_01.md #N"},
+  "verdicts": [
+    {"id": 1, "verdict": "FP", "rule_id": "R-NO-DISP-STANDARD", "relevant_to_moleg": false, "issue": "MATCH_MISS", "reason": "해석례 쟁점=사업주 정의에 국가기관·지자체 포함 여부(과징금 부과주체). 제161조②가 고려사항(도급금액·기간·횟수/산재예방 노력/산재 발생)을 법정+⑤ 절차 시행령 위임 → 처분기준 미공표 결함 아님. 룰 축 불일치."},
+    {"id": 2, "verdict": "FP", "rule_id": "R-NO-DISP-STANDARD", "relevant_to_moleg": false, "issue": "MATCH_MISS+DUPLICATE_OF_1", "reason": "#1과 해석례·발화 동일 중복. 판정 동일(FP)."},
+    {"id": 3, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": false, "issue": "WRONG_ARTICLE_LEVEL", "reason": "매핑오류: 해석례는 시행규칙 제12조제4항제2호(토지사용 승낙서)인데 발화는 법률 제12조(실적보고 및 자료공개). 조문 자체 상이. 더해 법 제12조②10호 위임은 시행령 한정열거로 충전(엔진 🚩FP 자가표시 일치)."},
+    {"id": 4, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": false, "issue": "WRONG_ARTICLE_LEVEL+DUPLICATE_OF_3", "reason": "#3 중복. 매핑오류(법률 제12조↔해석례 시행규칙 제12조제4항제2호)."},
+    {"id": 5, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": false, "issue": "WRONG_ARTICLE_LEVEL+DUPLICATE_OF_3", "reason": "#3 중복."},
+    {"id": 6, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": false, "issue": "WRONG_ARTICLE_LEVEL+DUPLICATE_OF_3", "reason": "#3 중복."},
+    {"id": 7, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": true, "issue": "DELEG_FILLED_BY_SUBLAW", "reason": "제23조① '환경안전관리기준 대통령령' 위임은 시행령 제16조①+별표2(중금속·도료·합성고무 바닥재·토양 한정)로 충전. 해석례 실제 쟁점은 시행령 부칙 제2조 적용특례(설치시점 경과규정)로 위임공백 아님. 엔진 🚩FP 일치."},
+    {"id": 8, "verdict": "FP", "rule_id": "R-DELEG-BLANKET", "relevant_to_moleg": true, "issue": "DELEG_FILLED_BY_SUBLAW", "reason": "제15조③ 승인기준 위임은 시행령 제13조 각 호·각 목 상세 한정으로 충전. 해석례 실제 쟁점은 국토계획법 제76조①(일반법) vs 관광진흥법(특별법) 우선적용 → R-LAW-PRECEDENCE 영역(has_undefined_precedence 검토 대상). 엔진 🚩FP 일치."}
+  ]
+}
