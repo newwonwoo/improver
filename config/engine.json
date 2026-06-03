@@ -1,0 +1,40 @@
+{
+  "parser": {
+    "mode": "raw-legal",
+    "min_article_length": 10,
+    "skip_addendum": true
+  },
+  "rule_engine": {
+    "enabled_patterns": [
+      "S-01", "S-02", "S-03", "S-04",
+      "F-01", "F-02", "F-03", "F-04", "F-05",
+      "L-01", "L-02", "L-03",
+      "G-01", "G-02", "G-03", "G-04", "G-05",
+      "E-01", "E-02", "E-03", "E-04", "E-05"
+    ],
+    "fpc_enabled": true
+  },
+  "llm_engine": {
+    "enabled": true,
+    "model_primary": "claude-sonnet-4-6",
+    "model_fallback": "claude-haiku-4-5-20251001",
+    "max_calls_per_law": 80,
+    "timeout_seconds": 30,
+    "token_budget": 150000,
+    "judge_patterns": ["F-04", "F-05", "E-05"],
+    "fallback": "MockClient when ANTHROPIC_API_KEY missing"
+  },
+  "mcp_engine": {
+    "enabled": true,
+    "local_db_path": "data/indexes/law_index.json",
+    "repealed_db_path": "data/indexes/repealed_laws.json",
+    "api_fallback": false,
+    "api_daily_limit": 100
+  },
+  "scoring": {
+    "complexity_bonus_per_pattern": 1.5,
+    "complexity_bonus_cap": 6.0,
+    "law_score_density_weight": 0.7,
+    "law_score_worst_weight": 0.3
+  }
+}

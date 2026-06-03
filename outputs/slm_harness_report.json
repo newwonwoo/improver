@@ -1,0 +1,283 @@
+{
+  "overall": {
+    "tp": 245,
+    "fp": 347,
+    "fn": 166,
+    "tn": 1636
+  },
+  "per_category": {
+    "효율성": {
+      "tp": 66,
+      "fp": 95,
+      "fn": 24,
+      "tn": 130
+    },
+    "적법성": {
+      "tp": 29,
+      "fp": 32,
+      "fn": 35,
+      "tn": 532
+    },
+    "거버넌스": {
+      "tp": 56,
+      "fp": 76,
+      "fn": 43,
+      "tn": 368
+    },
+    "공정성": {
+      "tp": 53,
+      "fp": 52,
+      "fn": 59,
+      "tn": 431
+    },
+    "구조": {
+      "tp": 41,
+      "fp": 92,
+      "fn": 5,
+      "tn": 175
+    }
+  },
+  "phase7_border_resolution": {
+    "border_resolved": 267,
+    "judgment": {
+      "TP": 39,
+      "FP": 228,
+      "note": "정량기준+Phase6신호 자동판정. BORDER는 검토결과 대부분 정상(FP)"
+    },
+    "labels_before": 2127,
+    "labels_after": 2394,
+    "torch_holdout_f1": {
+      "before_border": 0.454,
+      "after_border_no_weight": 0.385,
+      "after_border_classweight": 0.471
+    },
+    "class_weighting": "pos_weight(1~8) 도입으로 불균형 교정 → recall 0.40→0.62, holdout 0.471 회복",
+    "tools": [
+      "scripts/border_resolution_export.py"
+    ],
+    "conclusion": "BORDER 267건 전부 해결(데이터셋 완전 라벨화). 단독으로는 FP증가로 holdout 하락(0.385)했으나 class weighting 결합 시 0.471로 회복(BORDER前 0.454 상회, recall 대폭 개선). 핵심 통찰: 엔진의 진짜 약점은 precision(정상조문 과발화)이며 BORDER 228 FP가 이를 정량 확인."
+  },
+  "phase8_codegraph_pagerank": {
+    "source": "colbymchenry/codegraph 외부 레포 분석 → impact analysis(영향반경) 아이디어 차용",
+    "applied": "PageRank 그래프 신호 추가 (degree 보다 전이적 허브 중요도 포착)",
+    "feature_dim": "69 → 70",
+    "top_hubs": [
+      "형법 제129조(수뢰)",
+      "국가공무원법 제33조(결격사유)",
+      "고등교육법 제2조(정의)"
+    ],
+    "torch_holdout_f1": {
+      "before_pagerank": 0.471,
+      "after_pagerank": 0.516
+    },
+    "note": "PageRank 4.3s/84K노드. precision 0.378→0.440, recall 0.62 유지. 케이스자료 신호(도메인불일치로 무효)와 달리 구조적 신호라 효과 있음.",
+    "not_applied": [
+      "FTS5/SQLite 저장(인프라)",
+      "tree-sitter 19개언어 파싱(R2분해기로 대체)",
+      "MCP/agent 통합(NN무관)",
+      "프레임워크 라우트 탐지(코드전용)"
+    ]
+  },
+  "phase8_logical_reasoning_test": {
+    "goal": "수집 사례 결함논리(위임·비례·재량·청문)를 조건결합(AND) 추론 신호 8개로 추가",
+    "signals_added": [
+      "reason_blanket_adverse",
+      "reason_arbitrary_disp",
+      "reason_no_due_process",
+      "reason_complex_enum",
+      "reason_proviso_discretion",
+      "reason_hub_delegation",
+      "reason_disproportionate",
+      "reason_citation_overload"
+    ],
+    "result": {
+      "before_70dim": 0.515,
+      "after_78dim": 0.492
+    },
+    "verdict": "REVERTED — 명시적 조건결합 신호가 holdout F1 하락(0.515→0.492)",
+    "reason": "torch MLP 은닉층이 이미 신호 조합(비선형 추론)을 학습하므로 명시적 곱셈신호는 중복. 소표본(2394)에서 차원증가가 분산만 키움.",
+    "kept": "70-dim (PageRank 포함) 유지 — 검증된 최적",
+    "lesson": "논리적 추론은 이미 MLP 내부에서 수행됨. 병목은 추론 용량이 아니라 데이터 양. 신규 구조신호(PageRank)는 도움됐으나 기존신호 재조합은 무익."
+  },
+  "phase9_reasoning_layer": {
+    "goal": "논리적 사유에 의한 논리적 흐름 완성 — 신경망 점수에 법적 추론 사슬 부여 (neuro-symbolic)",
+    "architecture": "신경망(지각: 신호 추출) → 추론엔진(논리: 전제→추론→결론→근거) → 설명가능 진단",
+    "knowledge_base": "수집 사례에서 도출한 법적 추론규칙 10개 (감사원·공정위·대법원·권익위·법제처)",
+    "rules": [
+      "R-DELEG-BLANKET(포괄위임·헌법§75)",
+      "R-DISP-ARBITRARY(자의처분)",
+      "R-NO-HEARING(청문부재·행정절차법§22)",
+      "R-DISPROPORTIONATE(비례원칙·행정기본법§10)",
+      "R-DOUBLE-SANCTION(이중제재·헌법§13)",
+      "R-NO-REASON(이유제시·행정절차법§23)",
+      "R-NO-DEADLINE(기속처분기한·BAI-04)",
+      "R-ENUM-OVERLOAD(열거과다)",
+      "R-PROVISO-EXCESS(단서중첩·재량남용)",
+      "R-CITATION-OVERLOAD(인용과다)"
+    ],
+    "coverage": {
+      "corpus_조문": 5178,
+      "논리추론_부여": 1095,
+      "비율": "21.1%",
+      "신경망_추론_동시강화": 200,
+      "borderline_법적근거_보강": 40
+    },
+    "value": "단순 점수가 아니라 전제→추론→결론→근거 사슬로 왜 결함인지 설명. 신경망 borderline 을 법적논거로 구제(40건), 동시발화시 신뢰 강화(200건).",
+    "note": "holdout F1 향상이 아닌 설명가능성·논리완결성 완성 (F1 병목은 데이터). diagnose_with_reasoning() 으로 통합 제공."
+  },
+  "phase10_reasoning_first": {
+    "insight": "사용자 지적: 법적 결함은 법(규칙)이 정의 → 추론(법리)이 주(主), 신경망은 보조(補)여야 함",
+    "change": "diagnose_with_reasoning 을 추론 우선 판정으로 재설계",
+    "verdict_priority": {
+      "confirmed": "법리+신경망 일치 → 확정 (최고 신뢰)",
+      "reasoning_only": "법리 단독 발화 → 신경망이 놓친 결함을 법적 근거로 포착",
+      "nn_only": "신경망 단독 → 법적 근거 없는 회색지대(재검토 대상)"
+    },
+    "distribution_100laws": {
+      "confirmed": "6.3%",
+      "reasoning_only": "27.0%",
+      "nn_only": "66.7%"
+    },
+    "value": "신경망이 놓쳤을 결함(공정성 0.32·적법성 0.06)을 법리가 근거와 함께 확정. NN단독 발화는 회색지대로 표시해 과신 방지.",
+    "rationale": "데이터 부족(2394건) 상황에서 통계근사(신경망)보다 법리규칙(추론)이 더 신뢰가능·설명가능. 신경망은 규칙 없는 미묘한 패턴 보강 역할."
+  },
+  "phase11_reasoning_calibration": {
+    "goal": "2394 verdict 데이터로 추론 규칙 검증·보정 (손으로 단언 → 데이터 근거)",
+    "method": "각 규칙이 발화한 verdict-조문의 TP/FP 집계 → 규칙별 정밀도 측정",
+    "validated_precision": {
+      "R-NO-REASON": 0.72,
+      "R-PROVISO-EXCESS": 0.57,
+      "R-NO-HEARING": 0.56,
+      "R-ENUM-OVERLOAD": 0.5,
+      "R-CITATION-OVERLOAD": 0.44,
+      "R-DELEG-BLANKET": "0.06→미검증(데이터공백)",
+      "R-NO-DEADLINE": "미검증(n=2)"
+    },
+    "corrections": [
+      "R-CITATION-OVERLOAD: 임계값 5→11건 상향 → 정밀도 0.19→0.44",
+      "R-DELEG-BLANKET: 적법성 verdict가 인용기반뿐 → 포괄위임 검증 불가, validated=False 표시",
+      "전 규칙에 precision_prior 부여, 신뢰도=전제강도×데이터정밀도"
+    ],
+    "value": "추론 신뢰도가 데이터 근거를 가짐. 검증된 규칙(이유제시 0.72)은 높은 신뢰, 미검증(포괄위임)은 down-weight + 솔직히 표시. 데이터 공백도 정직하게 노출."
+  },
+  "phase12_audit_pattern_reinforcement": {
+    "trigger": "감사원·공정위·금감원 감찰기관 감사내역 보강 (사용자 지시: 적법성·공정성 보강)",
+    "approach": "BAI/FTC/FSS 사례 모음 markdown 파일 분석 → 미커버 패턴 식별 → 신호+규칙 추가",
+    "audit_sources_consulted": [
+      "outputs/rule_mining/sources/crawled/naver/bai/감사원_사례모음.md (180건)",
+      "outputs/rule_mining/sources/crawled/naver/ftc/공정위_사례모음.md (150건)",
+      "outputs/rule_mining/sources/crawled/naver/fss/금감원_사례모음.md (90건)"
+    ],
+    "added_signals": {
+      "has_subdeleg_admin_rule": "고시·훈령·지침 등 행정규칙 위임 (BAI-06·헌재 위임명령 한계)",
+      "has_no_disp_standard": "재량처분 + 처분기준 사전공표 의무 부재 (BAI-08·행정절차법 §20)"
+    },
+    "added_rules": {
+      "R-SUBDELEG-ADMIN-RULE": {
+        "category": "적법성",
+        "precision_prior": 0.4,
+        "validated": false,
+        "rationale": "감사원 BAI-06 빈번 패턴, corpus regex 폭이 넓어 보수적 진입"
+      },
+      "R-NO-DISP-STANDARD": {
+        "category": "공정성",
+        "precision_prior": 0.45,
+        "validated": false,
+        "rationale": "행정절차법 §20 BAI-08, 다수 조문이 시행령 위임 — 중간 신뢰"
+      }
+    },
+    "corpus_firing_rate": {
+      "total_laws": 1720,
+      "total_articles": 86749,
+      "R-SUBDELEG-ADMIN-RULE": {
+        "fires": 640,
+        "rate_pct": 0.74,
+        "samples": [
+          [
+            "10ㆍ29이태원참사피해자권리보장과진상규명및재발방지를위한특별법",
+            "제69조"
+          ],
+          [
+            "119긴급신고의관리및운영에관한법률",
+            "제24조"
+          ],
+          [
+            "12ㆍ29여객기참사피해구제및지원등을위한특별법",
+            "제27조"
+          ],
+          [
+            "2018평창동계올림픽대회및동계패럴림픽대회지원등에관한특별법",
+            "제35조의3"
+          ],
+          [
+            "4ㆍ16세월호참사진상규명및안전사회건설등을위한특별법",
+            "제50조"
+          ]
+        ]
+      },
+      "R-NO-DISP-STANDARD": {
+        "fires": 2381,
+        "rate_pct": 2.74,
+        "samples": [
+          [
+            "1인창조기업육성에관한법률",
+            "제8조"
+          ],
+          [
+            "1인창조기업육성에관한법률",
+            "제10조"
+          ],
+          [
+            "1인창조기업육성에관한법률",
+            "제12조"
+          ],
+          [
+            "1인창조기업육성에관한법률",
+            "제16조"
+          ],
+          [
+            "2018평창동계올림픽대회및동계패럴림픽대회지원등에관한특별법",
+            "제86조"
+          ]
+        ]
+      }
+    },
+    "knowledge_base_size": {
+      "before": 13,
+      "after": 15
+    },
+    "feature_dim": {
+      "before": 71,
+      "after": 73
+    },
+    "note": "두 신규 규칙 모두 validated=False — 후속 verdict 누적 후 precision_prior 재캘리브레이션 필요. linear/auto 백엔드는 즉시 활용, torch 백엔드는 다음 재학습 시 73-dim으로 확장."
+  },
+  "phase13_law_precedence": {
+    "trigger": "사용자 로컬 크롤링 98건 (moleg 90 + ftc_press 8) 처리 → 추론엔진 강화",
+    "approach": "법제처 법령해석례 100건 분석 → 미커버 패턴 R-LAW-PRECEDENCE 추가",
+    "added_signal": "has_undefined_precedence (다른 법률의 특별한 규정 인용)",
+    "added_rule": {
+      "R-LAW-PRECEDENCE": {
+        "category": "적법성",
+        "precision_prior": 0.3,
+        "validated": false,
+        "rationale": "moleg 2/100 직접사례, 0.15% corpus 발화율 (33/22470) — 보수적"
+      }
+    },
+    "knowledge_base_size": {
+      "before": 15,
+      "after": 16
+    },
+    "feature_dim": {
+      "before": 73,
+      "after": 74
+    },
+    "torch_holdout_f1_3run_mean": 0.468,
+    "comparison": {
+      "phase8_baseline (70-dim)": 0.516,
+      "phase12 (73-dim)": 0.479,
+      "phase13 (74-dim)": 0.468
+    },
+    "note": "신규 신호는 추론엔진에서만 활용. NN F1 하락은 라벨 없는 신호 추가의 누적 효과 — 회복하려면 신규 3개 신호(subdeleg/no-disp-standard/undefined-precedence)에 대한 verdict 라벨링 필요."
+  }
+}

@@ -1,0 +1,1479 @@
+{
+  "overall": {
+    "tp": 319,
+    "fp": 208,
+    "fn": 53,
+    "tn": 1545,
+    "border_fired": 102,
+    "border_skipped": 165,
+    "missing": 0,
+    "precision": 0.6053130929791272,
+    "recall": 0.8575268817204301,
+    "f1": 0.7096774193548387,
+    "lenient_precision": 0.6693163751987281,
+    "lenient_recall": 0.8881856540084389,
+    "lenient_f1": 0.7633726201269265
+  },
+  "per_rule": {
+    "E-01": {
+      "tp": 76,
+      "fp": 56,
+      "fn": 7,
+      "tn": 123,
+      "border_fired": 35,
+      "border_skipped": 18,
+      "missing": 0,
+      "precision": 0.5757575757575758,
+      "recall": 0.9156626506024096,
+      "f1": 0.7069767441860465,
+      "lenient_precision": 0.6646706586826348,
+      "lenient_recall": 0.940677966101695,
+      "lenient_f1": 0.7789473684210526
+    },
+    "F-02": {
+      "tp": 8,
+      "fp": 1,
+      "fn": 7,
+      "tn": 201,
+      "border_fired": 0,
+      "border_skipped": 15,
+      "missing": 0,
+      "precision": 0.8888888888888888,
+      "recall": 0.5333333333333333,
+      "f1": 0.6666666666666667,
+      "lenient_precision": 0.8888888888888888,
+      "lenient_recall": 0.5333333333333333,
+      "lenient_f1": 0.6666666666666667
+    },
+    "F-03": {
+      "tp": 61,
+      "fp": 50,
+      "fn": 8,
+      "tn": 169,
+      "border_fired": 14,
+      "border_skipped": 9,
+      "missing": 0,
+      "precision": 0.5495495495495496,
+      "recall": 0.8840579710144928,
+      "f1": 0.6777777777777778,
+      "lenient_precision": 0.6,
+      "lenient_recall": 0.9036144578313253,
+      "lenient_f1": 0.7211538461538461
+    },
+    "F-04": {
+      "tp": 18,
+      "fp": 9,
+      "fn": 0,
+      "tn": 14,
+      "border_fired": 2,
+      "border_skipped": 0,
+      "missing": 0,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "f1": 0.8,
+      "lenient_precision": 0.6896551724137931,
+      "lenient_recall": 1.0,
+      "lenient_f1": 0.8163265306122449
+    },
+    "F-05": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 7,
+      "border_fired": 0,
+      "border_skipped": 0,
+      "missing": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "lenient_precision": 1.0,
+      "lenient_recall": 1.0,
+      "lenient_f1": 1.0
+    },
+    "G-01": {
+      "tp": 50,
+      "fp": 50,
+      "fn": 19,
+      "tn": 136,
+      "border_fired": 18,
+      "border_skipped": 27,
+      "missing": 0,
+      "precision": 0.5,
+      "recall": 0.7246376811594203,
+      "f1": 0.5917159763313609,
+      "lenient_precision": 0.576271186440678,
+      "lenient_recall": 0.7816091954022989,
+      "lenient_f1": 0.6634146341463415
+    },
+    "G-03": {
+      "tp": 10,
+      "fp": 2,
+      "fn": 0,
+      "tn": 74,
+      "border_fired": 3,
+      "border_skipped": 11,
+      "missing": 0,
+      "precision": 0.8333333333333334,
+      "recall": 1.0,
+      "f1": 0.9090909090909091,
+      "lenient_precision": 0.8666666666666667,
+      "lenient_recall": 1.0,
+      "lenient_f1": 0.9285714285714286
+    },
+    "G-04": {
+      "tp": 11,
+      "fp": 0,
+      "fn": 2,
+      "tn": 127,
+      "border_fired": 1,
+      "border_skipped": 2,
+      "missing": 0,
+      "precision": 1.0,
+      "recall": 0.8461538461538461,
+      "f1": 0.9166666666666666,
+      "lenient_precision": 1.0,
+      "lenient_recall": 0.8571428571428571,
+      "lenient_f1": 0.923076923076923
+    },
+    "L-01": {
+      "tp": 43,
+      "fp": 14,
+      "fn": 3,
+      "tn": 218,
+      "border_fired": 14,
+      "border_skipped": 21,
+      "missing": 0,
+      "precision": 0.7543859649122807,
+      "recall": 0.9347826086956522,
+      "f1": 0.8349514563106796,
+      "lenient_precision": 0.8028169014084507,
+      "lenient_recall": 0.95,
+      "lenient_f1": 0.8702290076335878
+    },
+    "L-02": {
+      "tp": 1,
+      "fp": 7,
+      "fn": 0,
+      "tn": 7,
+      "border_fired": 0,
+      "border_skipped": 0,
+      "missing": 0,
+      "precision": 0.125,
+      "recall": 1.0,
+      "f1": 0.2222222222222222,
+      "lenient_precision": 0.125,
+      "lenient_recall": 1.0,
+      "lenient_f1": 0.2222222222222222
+    },
+    "L-03": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 2,
+      "tn": 290,
+      "border_fired": 0,
+      "border_skipped": 6,
+      "missing": 0,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "lenient_precision": 1.0,
+      "lenient_recall": 0.5,
+      "lenient_f1": 0.6666666666666666
+    },
+    "S-04": {
+      "tp": 37,
+      "fp": 19,
+      "fn": 5,
+      "tn": 179,
+      "border_fired": 15,
+      "border_skipped": 56,
+      "missing": 0,
+      "precision": 0.6607142857142857,
+      "recall": 0.8809523809523809,
+      "f1": 0.7551020408163266,
+      "lenient_precision": 0.7323943661971831,
+      "lenient_recall": 0.9122807017543859,
+      "lenient_f1": 0.8124999999999999
+    }
+  },
+  "per_category": {
+    "거버넌스": {
+      "tp": 71,
+      "fp": 52,
+      "fn": 21,
+      "tn": 337,
+      "border_fired": 22,
+      "border_skipped": 40,
+      "missing": 0,
+      "precision": 0.5772357723577236,
+      "recall": 0.7717391304347826,
+      "f1": 0.6604651162790698,
+      "lenient_precision": 0.6413793103448275,
+      "lenient_recall": 0.8157894736842105,
+      "lenient_f1": 0.7181467181467183
+    },
+    "공정성": {
+      "tp": 89,
+      "fp": 60,
+      "fn": 15,
+      "tn": 391,
+      "border_fired": 16,
+      "border_skipped": 24,
+      "missing": 0,
+      "precision": 0.5973154362416108,
+      "recall": 0.8557692307692307,
+      "f1": 0.7035573122529645,
+      "lenient_precision": 0.6363636363636364,
+      "lenient_recall": 0.875,
+      "lenient_f1": 0.7368421052631579
+    },
+    "구조": {
+      "tp": 37,
+      "fp": 19,
+      "fn": 5,
+      "tn": 179,
+      "border_fired": 15,
+      "border_skipped": 56,
+      "missing": 0,
+      "precision": 0.6607142857142857,
+      "recall": 0.8809523809523809,
+      "f1": 0.7551020408163266,
+      "lenient_precision": 0.7323943661971831,
+      "lenient_recall": 0.9122807017543859,
+      "lenient_f1": 0.8124999999999999
+    },
+    "적법성": {
+      "tp": 46,
+      "fp": 21,
+      "fn": 5,
+      "tn": 515,
+      "border_fired": 14,
+      "border_skipped": 27,
+      "missing": 0,
+      "precision": 0.6865671641791045,
+      "recall": 0.9019607843137255,
+      "f1": 0.7796610169491525,
+      "lenient_precision": 0.7407407407407407,
+      "lenient_recall": 0.9230769230769231,
+      "lenient_f1": 0.8219178082191781
+    },
+    "효율성": {
+      "tp": 76,
+      "fp": 56,
+      "fn": 7,
+      "tn": 123,
+      "border_fired": 35,
+      "border_skipped": 18,
+      "missing": 0,
+      "precision": 0.5757575757575758,
+      "recall": 0.9156626506024096,
+      "f1": 0.7069767441860465,
+      "lenient_precision": 0.6646706586826348,
+      "lenient_recall": 0.940677966101695,
+      "lenient_f1": 0.7789473684210526
+    }
+  },
+  "n_verdicts": 2125,
+  "fp_fn_cases": [
+    {
+      "fid": "F-03-004@건설기술진흥법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "영업정지 요청(인용·재량)"
+    },
+    {
+      "fid": "G-01-004@건설산업기본법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "직접시공 면제 단서 위임"
+    },
+    {
+      "fid": "F-03-006@건설산업기본법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "시정명령 요구·보고 조문"
+    },
+    {
+      "fid": "G-01-011@건축법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "양벌규정 면책 단서"
+    },
+    {
+      "fid": "G-01-003@건축법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "절차기한 연장 단서"
+    },
+    {
+      "fid": "L-02-011@건축법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "지역 정의 인용"
+    },
+    {
+      "fid": "F-03-002@건축법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "안전영향평가 의뢰 절차"
+    },
+    {
+      "fid": "E-01-001@게임산업진흥에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "정의조문 각목 다단"
+    },
+    {
+      "fid": "E-01-042@공동주택관리법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "공제사업 승인 정형"
+    },
+    {
+      "fid": "E-01-044@공동주택관리법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "위임위탁 열거 통상"
+    },
+    {
+      "fid": "E-01-003@공익신고자보호법",
+      "kind": "FN",
+      "category": "효율성",
+      "evidence": "이첩·재조사 다단절차"
+    },
+    {
+      "fid": "E-01-093@공직선거법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "투표용지 절차 열거"
+    },
+    {
+      "fid": "E-01-073@공직선거법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "선거비용 예외 단문"
+    },
+    {
+      "fid": "G-01-017@공직선거법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "기부행위 정의 단서"
+    },
+    {
+      "fid": "E-01-035@관광진흥법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "수용대상 4호 열거"
+    },
+    {
+      "fid": "E-01-001@관광진흥법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "정의조문 용어정의 열거"
+    },
+    {
+      "fid": "G-01-001@국가공무원법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "시험위임 단서"
+    },
+    {
+      "fid": "E-01-006@국가첨단전략산업경쟁력강화및보호에관한특별조치법",
+      "kind": "FN",
+      "category": "효율성",
+      "evidence": "해외M&A 승인 다단재량"
+    },
+    {
+      "fid": "E-01-006@국세기본법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "공시송달 사유·방법 열거"
+    },
+    {
+      "fid": "E-01-008@내수면어업법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "계획수립 항목 열거"
+    },
+    {
+      "fid": "E-01-028@농수산물품질관리법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "취소심판 사유 열거"
+    },
+    {
+      "fid": "E-01-048@농수산물품질관리법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "재검사 절차 정형"
+    },
+    {
+      "fid": "E-01-012@도로교통법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "노면전차 협의사항 열거"
+    },
+    {
+      "fid": "E-01-028@도로교통법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "운행안전 일반의무"
+    },
+    {
+      "fid": "F-03-002@도로교통법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "운전자 주의의무"
+    },
+    {
+      "fid": "F-03-007@도로교통법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "고용주 주의의무"
+    },
+    {
+      "fid": "E-01-087@도시및주거환경정비법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "예정구역 지정절차"
+    },
+    {
+      "fid": "E-01-012@도시및주거환경정비법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "입안제안 사유 7호 열거"
+    },
+    {
+      "fid": "G-01-010@도시및주거환경정비법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "각호 단서 1개+산림 단서"
+    },
+    {
+      "fid": "F-04-002@도시및주거환경정비법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "지방의회 60일 의제(기관간)"
+    },
+    {
+      "fid": "F-04-003@도시및주거환경정비법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "조문본문 부족·조문번호 오인"
+    },
+    {
+      "fid": "F-04-001@도시및주거환경정비법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "지방의회 60일 의제(기관간)"
+    },
+    {
+      "fid": "E-01-004@도심융합특구조성및육성에관한특별법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "지정 고려사항 열거"
+    },
+    {
+      "fid": "S-04-005@도심융합특구조성및육성에관한특별법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "부담금 감면 12개 법률 열거"
+    },
+    {
+      "fid": "L-01-001@도심융합특구조성및육성에관한특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "정의조 — 연계사업 각목 분리"
+    },
+    {
+      "fid": "E-01-046@독점규제및공정거래에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "분할·합병 연대납부 열거"
+    },
+    {
+      "fid": "G-01-012@독점규제및공정거래에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "③⑤항 송달동의 단서"
+    },
+    {
+      "fid": "F-03-006@독점규제및공정거래에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "협조요청(자료확인)"
+    },
+    {
+      "fid": "F-03-007@독점규제및공정거래에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "분쟁조정 절차"
+    },
+    {
+      "fid": "L-01-001@마약류관리에관한법률",
+      "kind": "FN",
+      "category": "적법성",
+      "evidence": "제3항제3호 한 호에 5개법 평문"
+    },
+    {
+      "fid": "E-01-029@민법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "친양자 준용 단일조항"
+    },
+    {
+      "fid": "F-02-012@민법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "수급인이…고지하지 아니한 때"
+    },
+    {
+      "fid": "F-02-016@민법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "심신상실시 단서 고의·과실"
+    },
+    {
+      "fid": "E-01-084@법인세법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "신고기한 호별 분기"
+    },
+    {
+      "fid": "G-01-026@법인세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "구분경리 면제 단서"
+    },
+    {
+      "fid": "G-01-021@법인세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "국내원천소득 정의 단서"
+    },
+    {
+      "fid": "G-01-014@법인세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "세법 산정·준용 단서"
+    },
+    {
+      "fid": "L-01-006@법인세법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "중간예납 예외 각목"
+    },
+    {
+      "fid": "L-02-006@벤처기업육성에관한특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "집적지역 특례"
+    },
+    {
+      "fid": "L-02-009@벤처기업육성에관한특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "창업기업 특례"
+    },
+    {
+      "fid": "F-03-006@벤처기업육성에관한특별법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "간이합병 특례(수익적)"
+    },
+    {
+      "fid": "F-03-003@벤처투자촉진에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "조합 해산사유"
+    },
+    {
+      "fid": "S-04-007@보험업법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "제209조 과태료(벌칙)"
+    },
+    {
+      "fid": "S-04-003@보험업법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "모집행위 금지 10호"
+    },
+    {
+      "fid": "F-04-002@빈집및소규모주택정비에관한특례법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "관리청 매각확인서 제출시"
+    },
+    {
+      "fid": "L-01-007@산업집적활성화및공장설립에관한법률",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "산학융합 — 분산 인용"
+    },
+    {
+      "fid": "G-01-036@소득세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "전자기부금영수증 단서"
+    },
+    {
+      "fid": "G-01-008@소득세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "결손금공제 단서"
+    },
+    {
+      "fid": "G-01-016@소득세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "주택임대 감면 단서"
+    },
+    {
+      "fid": "G-01-002@소득세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "원천징수 납세지 단서"
+    },
+    {
+      "fid": "G-01-037@소득세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "①제2호·③ 각기 별 단서"
+    },
+    {
+      "fid": "G-01-010@소득세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "①·④ 각 항 독립 단서"
+    },
+    {
+      "fid": "G-01-017@소득세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "②·③ 각 항 별개 단서"
+    },
+    {
+      "fid": "F-03-001@소방시설설치및관리에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "관리업 운영(처분 후속)"
+    },
+    {
+      "fid": "E-01-014@소하천정비법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "점용료 감면 3호"
+    },
+    {
+      "fid": "E-01-009@스마트도시조성및산업진흥등에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "지원기관 업무 9호"
+    },
+    {
+      "fid": "F-03-001@식물방역법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "손실보상 수익적 처분"
+    },
+    {
+      "fid": "E-01-001@아동학대범죄의처벌등에관한특례법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "벌칙조문 가중처벌"
+    },
+    {
+      "fid": "E-01-022@여객자동차운수사업법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "다른법률 의제 8호"
+    },
+    {
+      "fid": "G-01-001@여객자동차운수사업법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "①·② 항별 신고단서"
+    },
+    {
+      "fid": "G-01-002@여신전문금융업법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "유지의무 단서로 광범위 면제"
+    },
+    {
+      "fid": "S-04-007@영화및비디오물의진흥에관한법률",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "벌칙 구성요건"
+    },
+    {
+      "fid": "E-01-098@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "의결권권유 정의·예외"
+    },
+    {
+      "fid": "G-01-035@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "특례조문·준용단서"
+    },
+    {
+      "fid": "G-01-004@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "상호규제 단서는 예외허용"
+    },
+    {
+      "fid": "G-01-032@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "①·② 항별 단서"
+    },
+    {
+      "fid": "G-01-038@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "①·② 항별 단서"
+    },
+    {
+      "fid": "S-04-005@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "조사·조치 사유"
+    },
+    {
+      "fid": "S-04-002@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "불건전영업 금지행위"
+    },
+    {
+      "fid": "F-03-001@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "인가요건 의제규정"
+    },
+    {
+      "fid": "F-03-012@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "거짓기재 배상책임·민사"
+    },
+    {
+      "fid": "F-03-025@자본시장과금융투자업에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "실질주주 권리행사·민사"
+    },
+    {
+      "fid": "E-01-036@저작권법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "징계요구 사유 열거"
+    },
+    {
+      "fid": "E-01-049@제주특별자치도설치및국제자유도시조성을위한특별법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "세계평화의섬 단순지정"
+    },
+    {
+      "fid": "E-01-097@조세특례제한법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "감면 단일조항 다항"
+    },
+    {
+      "fid": "G-01-027@조세특례제한법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "준용·인용 단서 다수"
+    },
+    {
+      "fid": "G-01-051@조세특례제한법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "음수→0 한도조항"
+    },
+    {
+      "fid": "L-01-030@조세특례제한법",
+      "kind": "FN",
+      "category": "적법성",
+      "evidence": "제121조의17 감면대상 8개 법률"
+    },
+    {
+      "fid": "E-01-025@주차장법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "특별회계 재원 열거"
+    },
+    {
+      "fid": "F-03-002@주차장법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "민사 손해배상책임"
+    },
+    {
+      "fid": "E-01-012@주택법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "결격사유 7호 단순열거"
+    },
+    {
+      "fid": "S-04-001@주택법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "정의조문 ~말한다"
+    },
+    {
+      "fid": "E-01-069@지방세특례제한법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "감면구분 시한 열거"
+    },
+    {
+      "fid": "G-01-010@지방세특례제한법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "감면대상 정의 단서"
+    },
+    {
+      "fid": "G-01-016@채무자회생및파산에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "변제계획인가후 절차단서"
+    },
+    {
+      "fid": "G-01-003@채무자회생및파산에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "조사보고 절차단서"
+    },
+    {
+      "fid": "G-01-002@철도안전법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "경미사항 위임 중첩"
+    },
+    {
+      "fid": "F-03-001@첨단산업인재혁신특별법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "청문 조문 자체"
+    },
+    {
+      "fid": "S-04-004@측량ㆍ수로조사및지적에관한법률",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "제106조 수수료 항목"
+    },
+    {
+      "fid": "F-03-001@측량ㆍ수로조사및지적에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "승계규정·처분 자체 아님"
+    },
+    {
+      "fid": "G-01-012@특허법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "단순 효력범위 규정"
+    },
+    {
+      "fid": "G-01-001@하도급거래공정화에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "정의조항 단서"
+    },
+    {
+      "fid": "E-01-001@한국국제보건의료재단법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "재단 사업범위 열거"
+    },
+    {
+      "fid": "G-01-011@항공안전법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "벌칙조문 단서"
+    },
+    {
+      "fid": "G-01-001@항공안전법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "정의조항 군용제외"
+    },
+    {
+      "fid": "S-04-010@항공안전법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "부과·징수 절차조항"
+    },
+    {
+      "fid": "E-01-011@해양수산생명자원의확보ㆍ관리및이용등에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "분양승인 절차"
+    },
+    {
+      "fid": "E-01-007@형사소송법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "공판조서 서명 절차"
+    },
+    {
+      "fid": "F-03-002@형의집행및수용자의처우에관한법률",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "강제력 보안장비 시행"
+    },
+    {
+      "fid": "E-01-001@화재의예방및안전관리에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "정의조문 용어열거"
+    },
+    {
+      "fid": "E-01-003@화재의예방및안전관리에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "실태조사 권한 열거"
+    },
+    {
+      "fid": "E-01-153@관세법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "벌칙·몰수 조문"
+    },
+    {
+      "fid": "E-01-018@관세법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "과세가격 산정식 기술조문"
+    },
+    {
+      "fid": "E-01-054@관세법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "면세 대상 열거조문"
+    },
+    {
+      "fid": "G-01-018@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "행정소송 준용 단서"
+    },
+    {
+      "fid": "G-01-002@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "과세가격 단서 7중"
+    },
+    {
+      "fid": "G-01-012@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "감면 단서 외법 인용"
+    },
+    {
+      "fid": "G-01-017@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "준용규정 단서"
+    },
+    {
+      "fid": "G-01-026@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "보관책임 단서 비용"
+    },
+    {
+      "fid": "G-01-027@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "결격사유 단서"
+    },
+    {
+      "fid": "G-01-036@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "과태료 단서 관행"
+    },
+    {
+      "fid": "G-01-037@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "몰수 단서 열거예외"
+    },
+    {
+      "fid": "S-04-003@관세법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "납세의무자 한정열거"
+    },
+    {
+      "fid": "F-03-007@관세법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "보세구역 반입 명할 수 있다"
+    },
+    {
+      "fid": "G-03-001@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "납세자보호위 심의구조 정비"
+    },
+    {
+      "fid": "G-03-004@관세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "검사·시정명령권 호별 신설"
+    },
+    {
+      "fid": "E-01-036@국민건강보험법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "시효규정 권리열거"
+    },
+    {
+      "fid": "G-01-021@국회법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "긴급현안질문 시간 단서"
+    },
+    {
+      "fid": "G-01-007@국회법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "③·⑥항 별개 단서—통상"
+    },
+    {
+      "fid": "F-03-001@다중이용업소의안전관리에관한특별법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "목적조항"
+    },
+    {
+      "fid": "E-01-017@민사집행법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "배당채권자 열거"
+    },
+    {
+      "fid": "G-01-001@민사집행법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "⑥⑦항 절차법 단서"
+    },
+    {
+      "fid": "E-01-030@생명윤리및안전에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "양벌규정 벌칙조문"
+    },
+    {
+      "fid": "E-01-005@석재산업진흥에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "진흥법 정책의무"
+    },
+    {
+      "fid": "E-01-003@식품위생법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "권장규격 협조요청"
+    },
+    {
+      "fid": "L-01-001@신용협동조합법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "제6조 다른 법률과의 관계"
+    },
+    {
+      "fid": "S-04-001@조경진흥법",
+      "kind": "FN",
+      "category": "구조",
+      "evidence": "기본계획 11호+'필요한 사항'"
+    },
+    {
+      "fid": "E-01-005@지방소도읍육성지원법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "공공시설 귀속 재산법"
+    },
+    {
+      "fid": "E-01-010@행정조사기본법",
+      "kind": "FN",
+      "category": "효율성",
+      "evidence": "보충조사 요건+단서 중첩"
+    },
+    {
+      "fid": "E-01-001@6ㆍ25전쟁전후적지역에서활동한비정규군공로자보상에관한법률",
+      "kind": "FN",
+      "category": "효율성",
+      "evidence": "적용제외+단서 복합요건"
+    },
+    {
+      "fid": "E-01-013@계량에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "검정 절차 단서통상"
+    },
+    {
+      "fid": "E-01-049@공공주택특별법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "수익적 정보제공 조문"
+    },
+    {
+      "fid": "L-01-001@공공주택특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "세제감면 근거법 열거"
+    },
+    {
+      "fid": "L-01-002@공공주택특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "사업자 지정 근거법"
+    },
+    {
+      "fid": "L-01-013@공공주택특별법",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "벌칙조항 — 권리제한 아님"
+    },
+    {
+      "fid": "F-03-002@금융실명거래및비밀보장에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "과태료 조문(벌칙)"
+    },
+    {
+      "fid": "E-01-010@대기관리권역의대기환경개선에관한특별법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "협조요청 비침익"
+    },
+    {
+      "fid": "E-01-005@대통령기록물관리에관한법률",
+      "kind": "FN",
+      "category": "효율성",
+      "evidence": "재분류 주기+예외 다층"
+    },
+    {
+      "fid": "E-01-011@디지털포용법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "수익적 지원 대상열거"
+    },
+    {
+      "fid": "E-01-003@무형유산의보전및진흥에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "위원회 심의사항 열거"
+    },
+    {
+      "fid": "F-02-016@상법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "선박소유자 책임제한"
+    },
+    {
+      "fid": "F-02-028@상법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "어떠한 의무·책임 부담X"
+    },
+    {
+      "fid": "F-02-017@상법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "화재면책 단서 고의·과실"
+    },
+    {
+      "fid": "F-04-001@상법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "상거래관계 낙부통지 의무"
+    },
+    {
+      "fid": "F-04-002@상법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "30일 낙부통지(상사 확립)"
+    },
+    {
+      "fid": "E-01-001@성매매방지및피해자보호등에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "국가책임 정책의무"
+    },
+    {
+      "fid": "E-01-008@시체해부및보존에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "업무 열거"
+    },
+    {
+      "fid": "E-01-008@식품안전기본법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "예측센터 사업 열거"
+    },
+    {
+      "fid": "E-01-006@아동복지법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "전담공무원 임의규정"
+    },
+    {
+      "fid": "E-01-018@아동복지법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "보조인 절차"
+    },
+    {
+      "fid": "F-03-002@아동복지법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "폐쇄·취소요구, 기준 위임만"
+    },
+    {
+      "fid": "E-01-015@원자력시설등의방호및방사능방재대책법",
+      "kind": "FN",
+      "category": "효율성",
+      "evidence": "시정명령 다단 조건"
+    },
+    {
+      "fid": "E-01-031@응급의료에관한법률",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "형 감면 수익적"
+    },
+    {
+      "fid": "E-01-011@자율운항선박개발및상용화촉진에관한법률",
+      "kind": "FN",
+      "category": "효율성",
+      "evidence": "안전성평가 기준 7호"
+    },
+    {
+      "fid": "E-01-005@한식진흥법",
+      "kind": "FP",
+      "category": "효율성",
+      "evidence": "진흥원 사업 열거"
+    },
+    {
+      "fid": "G-01-002@공유재산및물품관리법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "사용허가기간 단서 중첩"
+    },
+    {
+      "fid": "F-03-001@공인중개사법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "간판 철거(취소처분 후속)"
+    },
+    {
+      "fid": "G-01-011@공직자윤리법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "신고자보호 단서"
+    },
+    {
+      "fid": "G-01-002@마약류불법거래방지에관한특례법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "형사절차 참가 단서"
+    },
+    {
+      "fid": "F-03-002@물류시설의개발및운영에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "권한위임 조문"
+    },
+    {
+      "fid": "G-01-001@사립학교교직원연금법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "정의조항 제외 단서"
+    },
+    {
+      "fid": "G-01-002@수산물유통의관리및지원에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "위판장 매매방법 단서"
+    },
+    {
+      "fid": "G-01-001@위치정보의보호및이용등에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "긴급구조 단서 다중·동의예외"
+    },
+    {
+      "fid": "G-01-018@지방세법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "환급절차 준용 단서"
+    },
+    {
+      "fid": "F-03-005@지방재정법",
+      "kind": "FN",
+      "category": "공정성",
+      "evidence": "재정건전화 권고 강제"
+    },
+    {
+      "fid": "G-01-001@채용절차의공정화에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "반환의무 단서 3회"
+    },
+    {
+      "fid": "G-01-001@항공사업법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "경미사항 변경신고"
+    },
+    {
+      "fid": "F-03-002@해양조사와해양정보활용에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "승계규정, 본처분 아님"
+    },
+    {
+      "fid": "G-01-005@환경오염시설의통합관리에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "겸직금지 예외위임"
+    },
+    {
+      "fid": "G-01-001@환경오염시설의통합관리에관한법률",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "변경허가·변경신고 구분"
+    },
+    {
+      "fid": "L-02-004@5ㆍ18민주유공자예우및단체설립에관한법률",
+      "kind": "FP",
+      "category": "적법성",
+      "evidence": "채용시험 가점 통합조정"
+    },
+    {
+      "fid": "F-03-002@가축전염병예방법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "제7항 청문 절차 명시"
+    },
+    {
+      "fid": "S-04-001@국가통합교통체계효율화법",
+      "kind": "FP",
+      "category": "구조",
+      "evidence": "정의조문 ~말한다"
+    },
+    {
+      "fid": "F-03-001@국토의계획및이용에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "용도지역 지정 계획"
+    },
+    {
+      "fid": "F-03-004@금융산업의구조개선에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "관리인 선임 특례조문"
+    },
+    {
+      "fid": "G-01-001@도시재정비촉진을위한특별법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①②항 모두 허가단서"
+    },
+    {
+      "fid": "F-04-001@도시재정비촉진을위한특별법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "지방의회 60일 의제(기관간)"
+    },
+    {
+      "fid": "F-04-002@도시재정비촉진을위한특별법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "지방의회 60일 의제(기관간)"
+    },
+    {
+      "fid": "F-04-003@도시재정비촉진을위한특별법",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "지방의회 60일 의제(기관간)"
+    },
+    {
+      "fid": "G-01-001@물품관리법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①②항 동일 위임단서"
+    },
+    {
+      "fid": "G-01-001@발명진흥법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①②항 권리귀속 단서중첩"
+    },
+    {
+      "fid": "G-01-001@법학전문대학원설치ㆍ운영에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①②항 위임+필수취소"
+    },
+    {
+      "fid": "G-01-001@변호사법",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①⑦항 단서 자격제한"
+    },
+    {
+      "fid": "G-01-001@보호관찰등에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①②항 보호장구 고지단서"
+    },
+    {
+      "fid": "F-03-002@보호관찰등에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "조사·협조요청"
+    },
+    {
+      "fid": "F-03-004@보호관찰등에관한법률",
+      "kind": "FP",
+      "category": "공정성",
+      "evidence": "보호장구 사용고지(절차)"
+    },
+    {
+      "fid": "G-01-003@부정경쟁방지및영업비밀보호에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "③④항 취소·인계 단서"
+    },
+    {
+      "fid": "G-01-001@산림문화ㆍ휴양에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "④항 필수취소+5⑥재지정"
+    },
+    {
+      "fid": "G-01-002@산림문화ㆍ휴양에관한법률",
+      "kind": "FN",
+      "category": "거버넌스",
+      "evidence": "①③항 지정·해제 단서"
+    },
+    {
+      "fid": "G-01-012@산지관리법",
+      "kind": "FP",
+      "category": "거버넌스",
+      "evidence": "②항 중간복구(수익적)"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+.env
+web/node_modules/
+web/dist/
+
+# Batch 분석의 임시 JSON (재생성 가능). judgments/ + summary + bundles + feedback 추적.
+outputs/results/
+outputs/chunks/
+
+# Stage A 응답 통합 산출물 — rule_verification_responses/ 에서 재생성
+outputs/verification_dataset.jsonl
+outputs/signal_candidates.json
+outputs/verification_progress.md
+
+# LLM 응답 자체는 사용자 작업물이라 추적하되, _index.json은 자동 갱신용
+# outputs/llm_responses/ 는 추적
+# outputs/feedback/ 는 추적
+
+# 그래프 캐시 — corpus 에서 재생성 가능
+outputs/law_graph.pkl

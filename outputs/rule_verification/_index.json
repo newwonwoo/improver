@@ -1,0 +1,1144 @@
+{
+  "generated_by": "scripts/bundle_rule_verification.py",
+  "per_rule_sample": 300,
+  "per_bundle": 50,
+  "seed": 42,
+  "total_bundles": 111,
+  "total_findings": 5517,
+  "bundles": [
+    {
+      "bundle_id": "S-02_part01",
+      "rule_id": "S-02",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 74.9,
+      "file": "S-02_part01.md"
+    },
+    {
+      "bundle_id": "S-02_part02",
+      "rule_id": "S-02",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 80.6,
+      "file": "S-02_part02.md"
+    },
+    {
+      "bundle_id": "S-02_part03",
+      "rule_id": "S-02",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 83.4,
+      "file": "S-02_part03.md"
+    },
+    {
+      "bundle_id": "S-02_part04",
+      "rule_id": "S-02",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 87.1,
+      "file": "S-02_part04.md"
+    },
+    {
+      "bundle_id": "S-02_part05",
+      "rule_id": "S-02",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 88.0,
+      "file": "S-02_part05.md"
+    },
+    {
+      "bundle_id": "S-02_part06",
+      "rule_id": "S-02",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 77.1,
+      "file": "S-02_part06.md"
+    },
+    {
+      "bundle_id": "G-02_part01",
+      "rule_id": "G-02",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 97.0,
+      "file": "G-02_part01.md"
+    },
+    {
+      "bundle_id": "G-02_part02",
+      "rule_id": "G-02",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 74.6,
+      "file": "G-02_part02.md"
+    },
+    {
+      "bundle_id": "G-02_part03",
+      "rule_id": "G-02",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 72.9,
+      "file": "G-02_part03.md"
+    },
+    {
+      "bundle_id": "G-02_part04",
+      "rule_id": "G-02",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 73.5,
+      "file": "G-02_part04.md"
+    },
+    {
+      "bundle_id": "G-02_part05",
+      "rule_id": "G-02",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 88.1,
+      "file": "G-02_part05.md"
+    },
+    {
+      "bundle_id": "G-02_part06",
+      "rule_id": "G-02",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 83.4,
+      "file": "G-02_part06.md"
+    },
+    {
+      "bundle_id": "S-03_part01",
+      "rule_id": "S-03",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 108.1,
+      "file": "S-03_part01.md"
+    },
+    {
+      "bundle_id": "S-03_part02",
+      "rule_id": "S-03",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 87.6,
+      "file": "S-03_part02.md"
+    },
+    {
+      "bundle_id": "S-03_part03",
+      "rule_id": "S-03",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 63.2,
+      "file": "S-03_part03.md"
+    },
+    {
+      "bundle_id": "S-03_part04",
+      "rule_id": "S-03",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 74.7,
+      "file": "S-03_part04.md"
+    },
+    {
+      "bundle_id": "S-03_part05",
+      "rule_id": "S-03",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 70.2,
+      "file": "S-03_part05.md"
+    },
+    {
+      "bundle_id": "S-03_part06",
+      "rule_id": "S-03",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 65.4,
+      "file": "S-03_part06.md"
+    },
+    {
+      "bundle_id": "E-01_part01",
+      "rule_id": "E-01",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 127.4,
+      "file": "E-01_part01.md"
+    },
+    {
+      "bundle_id": "E-01_part02",
+      "rule_id": "E-01",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 121.9,
+      "file": "E-01_part02.md"
+    },
+    {
+      "bundle_id": "E-01_part03",
+      "rule_id": "E-01",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 127.3,
+      "file": "E-01_part03.md"
+    },
+    {
+      "bundle_id": "E-01_part04",
+      "rule_id": "E-01",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 82.6,
+      "file": "E-01_part04.md"
+    },
+    {
+      "bundle_id": "E-01_part05",
+      "rule_id": "E-01",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 79.6,
+      "file": "E-01_part05.md"
+    },
+    {
+      "bundle_id": "E-01_part06",
+      "rule_id": "E-01",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 72.9,
+      "file": "E-01_part06.md"
+    },
+    {
+      "bundle_id": "E-05_part01",
+      "rule_id": "E-05",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 69.5,
+      "file": "E-05_part01.md"
+    },
+    {
+      "bundle_id": "E-05_part02",
+      "rule_id": "E-05",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 65.4,
+      "file": "E-05_part02.md"
+    },
+    {
+      "bundle_id": "E-05_part03",
+      "rule_id": "E-05",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 59.7,
+      "file": "E-05_part03.md"
+    },
+    {
+      "bundle_id": "E-05_part04",
+      "rule_id": "E-05",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 73.1,
+      "file": "E-05_part04.md"
+    },
+    {
+      "bundle_id": "E-05_part05",
+      "rule_id": "E-05",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 82.2,
+      "file": "E-05_part05.md"
+    },
+    {
+      "bundle_id": "E-05_part06",
+      "rule_id": "E-05",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 54.0,
+      "file": "E-05_part06.md"
+    },
+    {
+      "bundle_id": "F-01_part01",
+      "rule_id": "F-01",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 77.0,
+      "file": "F-01_part01.md"
+    },
+    {
+      "bundle_id": "F-01_part02",
+      "rule_id": "F-01",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 71.5,
+      "file": "F-01_part02.md"
+    },
+    {
+      "bundle_id": "F-01_part03",
+      "rule_id": "F-01",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 59.1,
+      "file": "F-01_part03.md"
+    },
+    {
+      "bundle_id": "F-01_part04",
+      "rule_id": "F-01",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 75.4,
+      "file": "F-01_part04.md"
+    },
+    {
+      "bundle_id": "F-01_part05",
+      "rule_id": "F-01",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 88.5,
+      "file": "F-01_part05.md"
+    },
+    {
+      "bundle_id": "F-01_part06",
+      "rule_id": "F-01",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 103.0,
+      "file": "F-01_part06.md"
+    },
+    {
+      "bundle_id": "G-05_part01",
+      "rule_id": "G-05",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 88.4,
+      "file": "G-05_part01.md"
+    },
+    {
+      "bundle_id": "G-05_part02",
+      "rule_id": "G-05",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 107.2,
+      "file": "G-05_part02.md"
+    },
+    {
+      "bundle_id": "G-05_part03",
+      "rule_id": "G-05",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 95.1,
+      "file": "G-05_part03.md"
+    },
+    {
+      "bundle_id": "G-05_part04",
+      "rule_id": "G-05",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 94.3,
+      "file": "G-05_part04.md"
+    },
+    {
+      "bundle_id": "G-05_part05",
+      "rule_id": "G-05",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 85.5,
+      "file": "G-05_part05.md"
+    },
+    {
+      "bundle_id": "G-05_part06",
+      "rule_id": "G-05",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 98.0,
+      "file": "G-05_part06.md"
+    },
+    {
+      "bundle_id": "G-01_part01",
+      "rule_id": "G-01",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 169.1,
+      "file": "G-01_part01.md"
+    },
+    {
+      "bundle_id": "G-01_part02",
+      "rule_id": "G-01",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 127.9,
+      "file": "G-01_part02.md"
+    },
+    {
+      "bundle_id": "G-01_part03",
+      "rule_id": "G-01",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 134.3,
+      "file": "G-01_part03.md"
+    },
+    {
+      "bundle_id": "G-01_part04",
+      "rule_id": "G-01",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 110.9,
+      "file": "G-01_part04.md"
+    },
+    {
+      "bundle_id": "G-01_part05",
+      "rule_id": "G-01",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 117.4,
+      "file": "G-01_part05.md"
+    },
+    {
+      "bundle_id": "G-01_part06",
+      "rule_id": "G-01",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 114.5,
+      "file": "G-01_part06.md"
+    },
+    {
+      "bundle_id": "E-03_part01",
+      "rule_id": "E-03",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 99.8,
+      "file": "E-03_part01.md"
+    },
+    {
+      "bundle_id": "E-03_part02",
+      "rule_id": "E-03",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 64.8,
+      "file": "E-03_part02.md"
+    },
+    {
+      "bundle_id": "E-03_part03",
+      "rule_id": "E-03",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 83.1,
+      "file": "E-03_part03.md"
+    },
+    {
+      "bundle_id": "E-03_part04",
+      "rule_id": "E-03",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 97.4,
+      "file": "E-03_part04.md"
+    },
+    {
+      "bundle_id": "E-03_part05",
+      "rule_id": "E-03",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 72.3,
+      "file": "E-03_part05.md"
+    },
+    {
+      "bundle_id": "E-03_part06",
+      "rule_id": "E-03",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 86.3,
+      "file": "E-03_part06.md"
+    },
+    {
+      "bundle_id": "L-02_part01",
+      "rule_id": "L-02",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 143.1,
+      "file": "L-02_part01.md"
+    },
+    {
+      "bundle_id": "L-02_part02",
+      "rule_id": "L-02",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 149.7,
+      "file": "L-02_part02.md"
+    },
+    {
+      "bundle_id": "L-02_part03",
+      "rule_id": "L-02",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 129.8,
+      "file": "L-02_part03.md"
+    },
+    {
+      "bundle_id": "L-02_part04",
+      "rule_id": "L-02",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 121.5,
+      "file": "L-02_part04.md"
+    },
+    {
+      "bundle_id": "L-02_part05",
+      "rule_id": "L-02",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 128.0,
+      "file": "L-02_part05.md"
+    },
+    {
+      "bundle_id": "L-02_part06",
+      "rule_id": "L-02",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 129.6,
+      "file": "L-02_part06.md"
+    },
+    {
+      "bundle_id": "S-04_part01",
+      "rule_id": "S-04",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 160.9,
+      "file": "S-04_part01.md"
+    },
+    {
+      "bundle_id": "S-04_part02",
+      "rule_id": "S-04",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 138.4,
+      "file": "S-04_part02.md"
+    },
+    {
+      "bundle_id": "S-04_part03",
+      "rule_id": "S-04",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 108.5,
+      "file": "S-04_part03.md"
+    },
+    {
+      "bundle_id": "S-04_part04",
+      "rule_id": "S-04",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 128.9,
+      "file": "S-04_part04.md"
+    },
+    {
+      "bundle_id": "S-04_part05",
+      "rule_id": "S-04",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 118.4,
+      "file": "S-04_part05.md"
+    },
+    {
+      "bundle_id": "S-04_part06",
+      "rule_id": "S-04",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 119.0,
+      "file": "S-04_part06.md"
+    },
+    {
+      "bundle_id": "F-03_part01",
+      "rule_id": "F-03",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 76.8,
+      "file": "F-03_part01.md"
+    },
+    {
+      "bundle_id": "F-03_part02",
+      "rule_id": "F-03",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 73.7,
+      "file": "F-03_part02.md"
+    },
+    {
+      "bundle_id": "F-03_part03",
+      "rule_id": "F-03",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 83.1,
+      "file": "F-03_part03.md"
+    },
+    {
+      "bundle_id": "F-03_part04",
+      "rule_id": "F-03",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 76.8,
+      "file": "F-03_part04.md"
+    },
+    {
+      "bundle_id": "F-03_part05",
+      "rule_id": "F-03",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 81.4,
+      "file": "F-03_part05.md"
+    },
+    {
+      "bundle_id": "F-03_part06",
+      "rule_id": "F-03",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 89.5,
+      "file": "F-03_part06.md"
+    },
+    {
+      "bundle_id": "L-01_part01",
+      "rule_id": "L-01",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 165.9,
+      "file": "L-01_part01.md"
+    },
+    {
+      "bundle_id": "L-01_part02",
+      "rule_id": "L-01",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 154.7,
+      "file": "L-01_part02.md"
+    },
+    {
+      "bundle_id": "L-01_part03",
+      "rule_id": "L-01",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 125.0,
+      "file": "L-01_part03.md"
+    },
+    {
+      "bundle_id": "L-01_part04",
+      "rule_id": "L-01",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 129.2,
+      "file": "L-01_part04.md"
+    },
+    {
+      "bundle_id": "L-01_part05",
+      "rule_id": "L-01",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 126.2,
+      "file": "L-01_part05.md"
+    },
+    {
+      "bundle_id": "L-01_part06",
+      "rule_id": "L-01",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 134.9,
+      "file": "L-01_part06.md"
+    },
+    {
+      "bundle_id": "F-05_part01",
+      "rule_id": "F-05",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 93.9,
+      "file": "F-05_part01.md"
+    },
+    {
+      "bundle_id": "F-05_part02",
+      "rule_id": "F-05",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 83.2,
+      "file": "F-05_part02.md"
+    },
+    {
+      "bundle_id": "F-05_part03",
+      "rule_id": "F-05",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 85.0,
+      "file": "F-05_part03.md"
+    },
+    {
+      "bundle_id": "F-05_part04",
+      "rule_id": "F-05",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 83.9,
+      "file": "F-05_part04.md"
+    },
+    {
+      "bundle_id": "F-05_part05",
+      "rule_id": "F-05",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 90.6,
+      "file": "F-05_part05.md"
+    },
+    {
+      "bundle_id": "F-05_part06",
+      "rule_id": "F-05",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 69.4,
+      "file": "F-05_part06.md"
+    },
+    {
+      "bundle_id": "S-01_part01",
+      "rule_id": "S-01",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 67.0,
+      "file": "S-01_part01.md"
+    },
+    {
+      "bundle_id": "S-01_part02",
+      "rule_id": "S-01",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 69.8,
+      "file": "S-01_part02.md"
+    },
+    {
+      "bundle_id": "S-01_part03",
+      "rule_id": "S-01",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 68.2,
+      "file": "S-01_part03.md"
+    },
+    {
+      "bundle_id": "S-01_part04",
+      "rule_id": "S-01",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 61.4,
+      "file": "S-01_part04.md"
+    },
+    {
+      "bundle_id": "S-01_part05",
+      "rule_id": "S-01",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 65.4,
+      "file": "S-01_part05.md"
+    },
+    {
+      "bundle_id": "S-01_part06",
+      "rule_id": "S-01",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 61.6,
+      "file": "S-01_part06.md"
+    },
+    {
+      "bundle_id": "G-03_part01",
+      "rule_id": "G-03",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 42.9,
+      "file": "G-03_part01.md"
+    },
+    {
+      "bundle_id": "G-03_part02",
+      "rule_id": "G-03",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 53.8,
+      "file": "G-03_part02.md"
+    },
+    {
+      "bundle_id": "G-03_part03",
+      "rule_id": "G-03",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 70.6,
+      "file": "G-03_part03.md"
+    },
+    {
+      "bundle_id": "G-03_part04",
+      "rule_id": "G-03",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 68.0,
+      "file": "G-03_part04.md"
+    },
+    {
+      "bundle_id": "G-03_part05",
+      "rule_id": "G-03",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 71.2,
+      "file": "G-03_part05.md"
+    },
+    {
+      "bundle_id": "G-03_part06",
+      "rule_id": "G-03",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 49,
+      "entry_count": 49,
+      "size_kb": 58.9,
+      "file": "G-03_part06.md"
+    },
+    {
+      "bundle_id": "L-03_part01",
+      "rule_id": "L-03",
+      "part": 1,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 46,
+      "size_kb": 90.6,
+      "file": "L-03_part01.md"
+    },
+    {
+      "bundle_id": "L-03_part02",
+      "rule_id": "L-03",
+      "part": 2,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 44,
+      "size_kb": 86.6,
+      "file": "L-03_part02.md"
+    },
+    {
+      "bundle_id": "L-03_part03",
+      "rule_id": "L-03",
+      "part": 3,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 47,
+      "size_kb": 98.2,
+      "file": "L-03_part03.md"
+    },
+    {
+      "bundle_id": "L-03_part04",
+      "rule_id": "L-03",
+      "part": 4,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 39,
+      "size_kb": 83.8,
+      "file": "L-03_part04.md"
+    },
+    {
+      "bundle_id": "L-03_part05",
+      "rule_id": "L-03",
+      "part": 5,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 43,
+      "size_kb": 90.2,
+      "file": "L-03_part05.md"
+    },
+    {
+      "bundle_id": "L-03_part06",
+      "rule_id": "L-03",
+      "part": 6,
+      "total_parts": 6,
+      "finding_count": 50,
+      "entry_count": 44,
+      "size_kb": 87.8,
+      "file": "L-03_part06.md"
+    },
+    {
+      "bundle_id": "F-02_part01",
+      "rule_id": "F-02",
+      "part": 1,
+      "total_parts": 5,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 69.5,
+      "file": "F-02_part01.md"
+    },
+    {
+      "bundle_id": "F-02_part02",
+      "rule_id": "F-02",
+      "part": 2,
+      "total_parts": 5,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 41.2,
+      "file": "F-02_part02.md"
+    },
+    {
+      "bundle_id": "F-02_part03",
+      "rule_id": "F-02",
+      "part": 3,
+      "total_parts": 5,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 67.5,
+      "file": "F-02_part03.md"
+    },
+    {
+      "bundle_id": "F-02_part04",
+      "rule_id": "F-02",
+      "part": 4,
+      "total_parts": 5,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 60.4,
+      "file": "F-02_part04.md"
+    },
+    {
+      "bundle_id": "F-02_part05",
+      "rule_id": "F-02",
+      "part": 5,
+      "total_parts": 5,
+      "finding_count": 32,
+      "entry_count": 32,
+      "size_kb": 57.2,
+      "file": "F-02_part05.md"
+    },
+    {
+      "bundle_id": "G-04_part01",
+      "rule_id": "G-04",
+      "part": 1,
+      "total_parts": 3,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 39.3,
+      "file": "G-04_part01.md"
+    },
+    {
+      "bundle_id": "G-04_part02",
+      "rule_id": "G-04",
+      "part": 2,
+      "total_parts": 3,
+      "finding_count": 50,
+      "entry_count": 50,
+      "size_kb": 38.5,
+      "file": "G-04_part02.md"
+    },
+    {
+      "bundle_id": "G-04_part03",
+      "rule_id": "G-04",
+      "part": 3,
+      "total_parts": 3,
+      "finding_count": 43,
+      "entry_count": 43,
+      "size_kb": 45.0,
+      "file": "G-04_part03.md"
+    },
+    {
+      "bundle_id": "F-04_part01",
+      "rule_id": "F-04",
+      "part": 1,
+      "total_parts": 1,
+      "finding_count": 43,
+      "entry_count": 43,
+      "size_kb": 91.9,
+      "file": "F-04_part01.md"
+    },
+    {
+      "bundle_id": "L-01_augment01",
+      "rule_id": "L-01",
+      "file": "L-01_augment01.md",
+      "n_verdicts": 13
+    },
+    {
+      "bundle_id": "S-04_augment01",
+      "rule_id": "S-04",
+      "file": "S-04_augment01.md",
+      "n_verdicts": 13
+    },
+    {
+      "bundle_id": "F-03_augment01",
+      "rule_id": "F-03",
+      "file": "F-03_augment01.md",
+      "n_verdicts": 11
+    },
+    {
+      "bundle_id": "E-01_augment01",
+      "rule_id": "E-01",
+      "file": "E-01_augment01.md",
+      "n_verdicts": 15
+    }
+  ]
+}
