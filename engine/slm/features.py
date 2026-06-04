@@ -493,7 +493,7 @@ def extract_features(
     return fv
 
 
-# ─── Phase 13 v2 — 시행령 한정열거 enrichment (R-DELEG-BLANKET FP 필터) ───
+# ─── Phase 13 v2 — 시행령·시행규칙 한정열거 enrichment (R-DELEG-BLANKET FP 필터) ───
 
 import re as _re_mod
 from pathlib import Path as _Path
@@ -507,24 +507,28 @@ _SUBLAW_CONCRETE_RX = _re_mod.compile(
 
 
 def _read_sublaw(law_name: str) -> str | None:
+    # 시행령 + 시행규칙 모두 위임 충전원. 시행령만 읽으면 시행규칙이 채운 위임
+    # (예: 산안법 제130조 단서 → 시행규칙 제200조 한정열거)을 놓침.
     if law_name in _SUBLAW_CACHE:
         return _SUBLAW_CACHE[law_name]
-    p = _LAWS_DIR / law_name / "시행령.md"
-    if not p.exists():
-        _SUBLAW_CACHE[law_name] = None
-        return None
-    try:
-        text = p.read_text(encoding="utf-8", errors="ignore")
-    except Exception:
-        text = None
+    parts: list[str] = []
+    for fname in ("시행령.md", "시행규칙.md"):
+        p = _LAWS_DIR / law_name / fname
+        if not p.exists():
+            continue
+        try:
+            parts.append(p.read_text(encoding="utf-8", errors="ignore"))
+        except Exception:
+            continue
+    text = "\n".join(parts) if parts else None
     _SUBLAW_CACHE[law_name] = text
     return text
 
 
 def enrich_with_sublaw(fv: FeatureVector, law_name: str, article_number: str) -> None:
-    """시행령에서 해당 조문 위임사항이 한정 열거되어 있으면 신호 설정.
+    """시행령·시행규칙에서 해당 조문 위임사항이 한정 열거되어 있으면 신호 설정.
 
-    R-DELEG-BLANKET FP 필터용. moleg QA 피드백 P-META-1 반영.
+    R-DELEG-BLANKET FP 필터용. moleg QA 피드백 P-META-1 반영(+ 시행규칙 확장).
     """
     if not law_name or not article_number:
         return
@@ -535,10 +539,10 @@ def enrich_with_sublaw(fv: FeatureVector, law_name: str, article_number: str) ->
     if not m:
         return
     art_digits = m.group(1)
-    # 시행령에서 "법 제N조" 인용 위치 검색
-    cite_m = _re_mod.search(rf"법\s*제\s*{art_digits}\s*조", sublaw_text)
-    if not cite_m:
-        return
-    chunk = sublaw_text[cite_m.start() : cite_m.start() + 1500]
-    if _SUBLAW_CONCRETE_RX.search(chunk):
-        fv.has_sublaw_concrete_enum = 1.0
+    # "법 제N조" 인용 위치를 모두 검색 — 첫 인용에 한정열거가 없어도
+    # (예: 시행령엔 단순 인용, 시행규칙엔 한정열거) 뒤 인용에서 잡도록 순회.
+    for cite_m in _re_mod.finditer(rf"법\s*제\s*{art_digits}\s*조", sublaw_text):
+        chunk = sublaw_text[cite_m.start() : cite_m.start() + 1500]
+        if _SUBLAW_CONCRETE_RX.search(chunk):
+            fv.has_sublaw_concrete_enum = 1.0
+            return
