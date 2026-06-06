@@ -1,0 +1,201 @@
+{
+  "selection": {
+    "ranked": [
+      [
+        "sig_enumeration",
+        62
+      ],
+      [
+        "sig_definition",
+        48
+      ],
+      [
+        "sig_penalty",
+        39
+      ],
+      [
+        "sig_procedure",
+        35
+      ],
+      [
+        "sig_mutatis",
+        33
+      ],
+      [
+        "sig_beneficial",
+        26
+      ],
+      [
+        "sig_committee",
+        14
+      ],
+      [
+        "sig_delegation",
+        10
+      ],
+      [
+        "sig_plan",
+        7
+      ],
+      [
+        "sig_internal_report",
+        6
+      ],
+      [
+        "sig_effort_duty",
+        4
+      ]
+    ],
+    "meta": {
+      "n_bundles": 17,
+      "n_total": 381,
+      "effects": {
+        "FP_FILTER": 295,
+        "TP_BOOST": 70,
+        "NEW_RULE": 16
+      },
+      "n_fp_filter": 295
+    },
+    "selected": [
+      "sig_definition",
+      "sig_penalty",
+      "sig_committee",
+      "sig_plan",
+      "sig_beneficial",
+      "sig_effort_duty",
+      "sig_procedure",
+      "sig_mutatis",
+      "sig_delegation",
+      "sig_enumeration",
+      "sig_internal_report"
+    ],
+    "sig_active": {
+      "sig_committee": 42,
+      "sig_beneficial": 558,
+      "sig_delegation": 792,
+      "sig_penalty": 99,
+      "sig_internal_report": 70,
+      "sig_mutatis": 240,
+      "sig_effort_duty": 37,
+      "sig_plan": 41,
+      "sig_definition": 122,
+      "sig_procedure": 10
+    }
+  },
+  "baseline_feats": {
+    "per_cat": {
+      "구조": {
+        "n_pos": 42,
+        "f1": 0.42857142857142855,
+        "ci_lo": 0.28571428571428575,
+        "ci_hi": 0.5600186915887849,
+        "measurable": true
+      },
+      "공정성": {
+        "n_pos": 141,
+        "f1": 0.4690553745928339,
+        "ci_lo": 0.3928396358543417,
+        "ci_hi": 0.5359636537541844,
+        "measurable": true
+      },
+      "적법성": {
+        "n_pos": 51,
+        "f1": 0.423728813559322,
+        "ci_lo": 0.3102785145888594,
+        "ci_hi": 0.5263157894736841,
+        "measurable": true
+      },
+      "거버넌스": {
+        "n_pos": 92,
+        "f1": 0.48000000000000004,
+        "ci_lo": 0.3942076359832636,
+        "ci_hi": 0.5555555555555556,
+        "measurable": true
+      },
+      "효율성": {
+        "n_pos": 185,
+        "f1": 0.5159574468085106,
+        "ci_lo": 0.4499962006079027,
+        "ci_hi": 0.576923076923077,
+        "measurable": true
+      }
+    },
+    "total": {
+      "n_pos": 511,
+      "f1": 0.47927927927927927,
+      "ci_lo": 0.43952760790965495,
+      "ci_hi": 0.5145385028071422
+    },
+    "strat_mode": "StratifiedKFold(양성보유행 503/2588)",
+    "n": 2588
+  },
+  "with_signal_feats": {
+    "per_cat": {
+      "구조": {
+        "n_pos": 42,
+        "f1": 0.39560439560439564,
+        "ci_lo": 0.25639534883720927,
+        "ci_hi": 0.5200434782608695,
+        "measurable": true
+      },
+      "공정성": {
+        "n_pos": 141,
+        "f1": 0.48888888888888893,
+        "ci_lo": 0.4227914531380663,
+        "ci_hi": 0.5569773686229383,
+        "measurable": true
+      },
+      "적법성": {
+        "n_pos": 51,
+        "f1": 0.46846846846846846,
+        "ci_lo": 0.351827485380117,
+        "ci_hi": 0.5785355680852706,
+        "measurable": true
+      },
+      "거버넌스": {
+        "n_pos": 92,
+        "f1": 0.4814814814814815,
+        "ci_lo": 0.39593644247038917,
+        "ci_hi": 0.5628321163830201,
+        "measurable": true
+      },
+      "효율성": {
+        "n_pos": 185,
+        "f1": 0.4986737400530504,
+        "ci_lo": 0.43426867982965545,
+        "ci_hi": 0.5568537821334164,
+        "measurable": true
+      }
+    },
+    "total": {
+      "n_pos": 511,
+      "f1": 0.4810810810810811,
+      "ci_lo": 0.44323148960353836,
+      "ci_hi": 0.5154440606521865
+    },
+    "strat_mode": "StratifiedKFold(양성보유행 503/2588)",
+    "n": 2588
+  },
+  "teamlead_baselines": {
+    "rule_only": "0.495 [0.457,0.530]",
+    "pure_mlp": "0.508",
+    "rule_slm": "0.537 [0.505,0.574]"
+  },
+  "verdict": {
+    "A_total": 0.47927927927927927,
+    "A_ci": [
+      0.43952760790965495,
+      0.5145385028071422
+    ],
+    "B_total": 0.4810810810810811,
+    "B_ci": [
+      0.44323148960353836,
+      0.5154440606521865
+    ],
+    "delta": 0.001801801801801839,
+    "B_vs_A_overlap": true,
+    "B_vs_ens537_overlap": true,
+    "B_significantly_beats_537": false
+  },
+  "leakage_note": "신호 테마 '선택'은 full-data 라벨 기반(soft leakage) → 본 측정은 일반화 상한(optimistic). test-fold 누수는 없음(scaler/모델 fit train-only, 신호는 라벨무관 텍스트 정규식). 개별 신호는 generic 구조 정규식이라 law-specific 누수 아님."
+}
