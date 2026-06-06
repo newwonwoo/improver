@@ -1,0 +1,826 @@
+{
+  "_meta": {
+    "purpose": "v2 V6 TP-조문 개선안 품질 1차 측정 (Layer1 템플릿)",
+    "pipeline": "run_all -> fpc.correct -> scorer.compute -> recommender.apply",
+    "llm": false,
+    "sample_per_rule": 4,
+    "seed": 42,
+    "scoring": {
+      "accuracy": "0/1 — finding pattern_id 템플릿 부착 여부",
+      "specificity": "0/2 — 조문 참조/인용/수치 지목 (generic vs specific)",
+      "actionability": "0/2 — 개정지시(동작동사+개정대상) 형태 여부"
+    },
+    "caveat": "자동 휴리스틱 채점. 검수인이 요구한 '사람 블라인드 채택률'의 대용(proxy)임."
+  },
+  "summary": {
+    "total_tp_rows": 512,
+    "sample_size": 55,
+    "scored": 33,
+    "skipped": {
+      "missing_law": 0,
+      "fn_not_fired": 22,
+      "unmapped": 0
+    },
+    "axes": {
+      "accuracy": {
+        "dist": {
+          "0": 0,
+          "1": 33
+        },
+        "mean": 1.0,
+        "max": 1
+      },
+      "specificity": {
+        "dist": {
+          "0": 26,
+          "1": 4,
+          "2": 3
+        },
+        "mean": 0.303,
+        "pct_specific_ge1": 0.212,
+        "max": 2
+      },
+      "actionability": {
+        "dist": {
+          "0": 11,
+          "1": 8,
+          "2": 14
+        },
+        "mean": 1.091,
+        "max": 2
+      }
+    },
+    "layer_dist": {
+      "1": 33
+    },
+    "per_rule_mean": {
+      "E-03": {
+        "n": 2,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 2.0
+      },
+      "F-01": {
+        "n": 1,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 0.0
+      },
+      "F-03": {
+        "n": 3,
+        "accuracy": 1.0,
+        "specificity": 0.33,
+        "actionability": 2.0
+      },
+      "F-04": {
+        "n": 4,
+        "accuracy": 1.0,
+        "specificity": 0.75,
+        "actionability": 1.25
+      },
+      "F-05": {
+        "n": 2,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 1.0
+      },
+      "G-01": {
+        "n": 3,
+        "accuracy": 1.0,
+        "specificity": 1.33,
+        "actionability": 1.33
+      },
+      "G-03": {
+        "n": 4,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 0.0
+      },
+      "G-04": {
+        "n": 4,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 0.75
+      },
+      "L-01": {
+        "n": 4,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 0.0
+      },
+      "L-02": {
+        "n": 1,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 2.0
+      },
+      "L-03": {
+        "n": 2,
+        "accuracy": 1.0,
+        "specificity": 0.0,
+        "actionability": 2.0
+      },
+      "S-04": {
+        "n": 3,
+        "accuracy": 1.0,
+        "specificity": 0.67,
+        "actionability": 2.0
+      }
+    }
+  },
+  "records": [
+    {
+      "fid": "E-01-063@군사법원법",
+      "rule_id": "E-01",
+      "law_name": "군사법원법",
+      "evidence": "전문진술 증거능력 다중요건",
+      "article": "제369조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-01-012@기업활력제고를위한특별법",
+      "rule_id": "E-01",
+      "law_name": "기업활력제고를위한특별법",
+      "evidence": "특례요건 4개 모두충족",
+      "article": "제23조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-01-034@농수산물품질관리법",
+      "rule_id": "E-01",
+      "law_name": "농수산물품질관리법",
+      "evidence": "지정취소 사유+단서 강행",
+      "article": "제65조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-01-094@조세특례제한법",
+      "rule_id": "E-01",
+      "law_name": "조세특례제한법",
+      "evidence": "공제율 다단 조건",
+      "article": "제76조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-03-004@가맹사업거래의공정화에관한법률",
+      "rule_id": "E-03",
+      "law_name": "가맹사업거래의공정화에관한법률",
+      "evidence": "정보를 제공하는 경우 서면으로",
+      "article": "제9조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "E-03",
+      "rec_layer": 1,
+      "recommendation": "핵심 절차가 서면·날인·대면만 허용되어 비대면 처리 불가. 전자문서·전자서명·비대면 채널 허용 조항 신설.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "E-03-022@관세법",
+      "rule_id": "E-03",
+      "law_name": "관세법",
+      "evidence": "유통실태 조사를 서면으로 실시",
+      "article": "제266조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-03-010@독점규제및공정거래에관한법률",
+      "rule_id": "E-03",
+      "law_name": "독점규제및공정거래에관한법률",
+      "evidence": "제출기한 등 밝혀 서면으로 알려야",
+      "article": "제87조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "G-01-007@독점규제및공정거래에관한법률",
+      "rule_id": "G-01",
+      "law_name": "독점규제및공정거래에관한법률",
+      "evidence": "의결권제한 단서 다중",
+      "article": "제25조",
+      "status": "scored",
+      "severity": "경고",
+      "pattern_id": "G-01",
+      "rec_layer": 1,
+      "recommendation": "단서 조항이 3중 이상 중첩. 별도 조항으로 분리.",
+      "accuracy": 1,
+      "specificity": 2,
+      "actionability": 2
+    },
+    {
+      "fid": "E-03-010@상표법",
+      "rule_id": "E-03",
+      "law_name": "상표법",
+      "evidence": "사용하는 자에게 서면으로 경고",
+      "article": "제58조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "E-03",
+      "rec_layer": 1,
+      "recommendation": "핵심 절차가 서면·날인·대면만 허용되어 비대면 처리 불가. 전자문서·전자서명·비대면 채널 허용 조항 신설.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "E-05-003@골재채취법",
+      "rule_id": "E-05",
+      "law_name": "골재채취법",
+      "evidence": "등록사항 변경신고 의무, 벌칙공백",
+      "article": "제16조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-05-016@국세기본법",
+      "rule_id": "E-05",
+      "law_name": "국세기본법",
+      "evidence": "가산세 추가납부, 납세자 침익의무",
+      "article": "제46조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-05-001@김치산업진흥법",
+      "rule_id": "E-05",
+      "law_name": "김치산업진흥법",
+      "evidence": "한국김치 표시 지리적표시 등록의무",
+      "article": "제24조의2",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "E-05-004@대중문화예술산업발전법",
+      "rule_id": "E-05",
+      "law_name": "대중문화예술산업발전법",
+      "evidence": "청소년보호책임자 지정의무, 사업자제재공백",
+      "article": "제21조의2",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-01-017@공항시설법",
+      "rule_id": "F-01",
+      "law_name": "공항시설법",
+      "evidence": "완성검사 전 사용 못함",
+      "article": "제45조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-01-008@낚시관리및육성법",
+      "rule_id": "F-01",
+      "law_name": "낚시관리및육성법",
+      "evidence": "허가취소·영업정지 처분",
+      "article": "제14조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-01-009@마약류관리에관한법률",
+      "rule_id": "F-01",
+      "law_name": "마약류관리에관한법률",
+      "evidence": "마약류 양수·양도 제한",
+      "article": "제9조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-01-003@항공안전법",
+      "rule_id": "F-01",
+      "law_name": "항공안전법",
+      "evidence": "항공기 등록 제한",
+      "article": "제10조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "F-01",
+      "rec_layer": 1,
+      "recommendation": "기본권 본질적 내용 침해 소지. 비례원칙 관점에서 목적의 정당성·수단의 적합성·피해 최소성·법익 균형성 재검토 필요.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "F-02-016@민법",
+      "rule_id": "F-02",
+      "law_name": "민법",
+      "evidence": "심신상실시 단서 고의·과실",
+      "article": "제754조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-02-012@민법",
+      "rule_id": "F-02",
+      "law_name": "민법",
+      "evidence": "수급인이…고지하지 아니한 때",
+      "article": "제669조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "G-03-002@민법",
+      "rule_id": "G-03",
+      "law_name": "민법",
+      "evidence": "법원의 청산 감독, 기본법",
+      "article": "제95조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "G-03",
+      "rec_layer": 1,
+      "recommendation": "감독 권한이 무제한적이거나 감독 기준 부재. 감독 범위·절차·기준 법정화 및 비례원칙 반영.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "G-03-001@민법",
+      "rule_id": "G-03",
+      "law_name": "민법",
+      "evidence": "법인사무 주무관청 감독, 기본법",
+      "article": "제37조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "G-03",
+      "rec_layer": 1,
+      "recommendation": "감독 권한이 무제한적이거나 감독 기준 부재. 감독 범위·절차·기준 법정화 및 비례원칙 반영.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "F-02-016@상법",
+      "rule_id": "F-02",
+      "law_name": "상법",
+      "evidence": "선박소유자 책임제한",
+      "article": "제774조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-02-001@소프트웨어진흥법",
+      "rule_id": "F-02",
+      "law_name": "소프트웨어진흥법",
+      "evidence": "알고도 알리지 아니한 경우 책임",
+      "article": "제60조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-03-001@문화기본법",
+      "rule_id": "F-03",
+      "law_name": "문화기본법",
+      "evidence": "지정취소 청문 부재",
+      "article": "제9조의4",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "F-03",
+      "rec_layer": 1,
+      "recommendation": "즉시 강제처분이 사전 청문·이의절차 없이 가능. 행정절차법 §21~§22 적합성 검토, 긴급 사유 한정 필요.",
+      "accuracy": 1,
+      "specificity": 1,
+      "actionability": 2
+    },
+    {
+      "fid": "F-03-001@수의사법",
+      "rule_id": "F-03",
+      "law_name": "수의사법",
+      "evidence": "설립허가취소, 청문·기준부재",
+      "article": "제22조의5",
+      "status": "scored",
+      "severity": "주의",
+      "pattern_id": "F-03",
+      "rec_layer": 1,
+      "recommendation": "처분 대상자 방어권(의견 제출, 청문 요청) 절차 보완.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "F-03-002@옥외광고물등관리법",
+      "rule_id": "F-03",
+      "law_name": "옥외광고물등관리법",
+      "evidence": "제거명령 기준·청문 부재",
+      "article": "제10조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "F-03-001@재난및안전관리기본법",
+      "rule_id": "F-03",
+      "law_name": "재난및안전관리기본법",
+      "evidence": "개선명령 기준 부재",
+      "article": "제34조의6",
+      "status": "scored",
+      "severity": "개선",
+      "pattern_id": "F-03",
+      "rec_layer": 1,
+      "recommendation": "처분 결과 공개 범위 및 불복 절차 안내 의무 명시.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "F-04-004@도시및주거환경정비법",
+      "rule_id": "F-04",
+      "law_name": "도시및주거환경정비법",
+      "evidence": "반대의사표시 단서 있으나 부족",
+      "article": "제26조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "F-04",
+      "rec_layer": 1,
+      "recommendation": "침묵을 동의로 간주하여 중대한 권리 변동 발생. 약관규제법 §12 위반 소지. '명시적 동의' 방식으로 전면 전환.",
+      "accuracy": 1,
+      "specificity": 1,
+      "actionability": 1
+    },
+    {
+      "fid": "F-04-008@도시및주거환경정비법",
+      "rule_id": "F-04",
+      "law_name": "도시및주거환경정비법",
+      "evidence": "동의한 것으로 본다(통지부재)",
+      "article": "제101조의10",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "F-04",
+      "rec_layer": 1,
+      "recommendation": "침묵을 동의로 간주하여 중대한 권리 변동 발생. 약관규제법 §12 위반 소지. '명시적 동의' 방식으로 전면 전환.",
+      "accuracy": 1,
+      "specificity": 1,
+      "actionability": 1
+    },
+    {
+      "fid": "F-04-007@도시및주거환경정비법",
+      "rule_id": "F-04",
+      "law_name": "도시및주거환경정비법",
+      "evidence": "동의한 것으로 본다(통지부재)",
+      "article": "제101조의9",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "F-04",
+      "rec_layer": 1,
+      "recommendation": "침묵을 동의로 간주하여 중대한 권리 변동 발생. 약관규제법 §12 위반 소지. '명시적 동의' 방식으로 전면 전환.",
+      "accuracy": 1,
+      "specificity": 1,
+      "actionability": 1
+    },
+    {
+      "fid": "F-04-001@화물자동차운수사업법",
+      "rule_id": "F-04",
+      "law_name": "화물자동차운수사업법",
+      "evidence": "1개월 동의거절없으면 동의",
+      "article": "제40조의4",
+      "status": "scored",
+      "severity": "경고",
+      "pattern_id": "F-04",
+      "rec_layer": 1,
+      "recommendation": "의제 기간이 불합리하게 짧거나 통지 방법이 불충분. 의제 기간 연장 + 유효한 도달 요건 명시.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "F-05-001@가덕도신공항건설을위한특별법",
+      "rule_id": "F-05",
+      "law_name": "가덕도신공항건설을위한특별법",
+      "evidence": "허가 취소 + 모호 + 기준 위임만 + 청문 부재",
+      "article": "제23조",
+      "status": "scored",
+      "severity": "주의",
+      "pattern_id": "F-05",
+      "rec_layer": 1,
+      "recommendation": "재량 행사 시 문서화(이유 부기) 의무 신설 검토.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 1
+    },
+    {
+      "fid": "F-05-001@간선급행버스체계의건설및운영에관한특별법",
+      "rule_id": "F-05",
+      "law_name": "간선급행버스체계의건설및운영에관한특별법",
+      "evidence": "사업자 승인취소·중지명령 + 모호 + 청문 부재",
+      "article": "제34조",
+      "status": "scored",
+      "severity": "주의",
+      "pattern_id": "F-05",
+      "rec_layer": 1,
+      "recommendation": "재량 행사 시 문서화(이유 부기) 의무 신설 검토.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 1
+    },
+    {
+      "fid": "G-01-007@공직자윤리법",
+      "rule_id": "G-01",
+      "law_name": "공직자윤리법",
+      "evidence": "주식백지신탁 단서",
+      "article": "제14조의4",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "G-01",
+      "rec_layer": 1,
+      "recommendation": "원칙보다 예외가 많아 규범의 방향성 상실. 원칙-예외 구조 재설계 필요.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "G-01-001@생활물류서비스산업발전법",
+      "rule_id": "G-01",
+      "law_name": "생활물류서비스산업발전법",
+      "evidence": "필수취소+임원교체 단서",
+      "article": "제15조",
+      "status": "scored",
+      "severity": "경고",
+      "pattern_id": "G-01",
+      "rec_layer": 1,
+      "recommendation": "단서 조항이 3중 이상 중첩. 별도 조항으로 분리.",
+      "accuracy": 1,
+      "specificity": 2,
+      "actionability": 2
+    },
+    {
+      "fid": "G-01-003@장기등이식에관한법률",
+      "rule_id": "G-01",
+      "law_name": "장기등이식에관한법률",
+      "evidence": "동의예외 단서 중첩",
+      "article": "제22조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "G-03-001@생활체육진흥법",
+      "rule_id": "G-03",
+      "law_name": "생활체육진흥법",
+      "evidence": "외부감독 단문, 절차 전무",
+      "article": "제14조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "G-03",
+      "rec_layer": 1,
+      "recommendation": "감독 권한이 무제한적이거나 감독 기준 부재. 감독 범위·절차·기준 법정화 및 비례원칙 반영.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "G-03-001@주택법",
+      "rule_id": "G-03",
+      "law_name": "주택법",
+      "evidence": "단문 외부감독, 절차 전무",
+      "article": "제95조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "G-03",
+      "rec_layer": 1,
+      "recommendation": "감독 권한이 무제한적이거나 감독 기준 부재. 감독 범위·절차·기준 법정화 및 비례원칙 반영.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "G-04-001@금융거래지표의관리에관한법률",
+      "rule_id": "G-04",
+      "law_name": "금융거래지표의관리에관한법률",
+      "evidence": "이해상충관리ㆍ내부통제장치 명시",
+      "article": "제5조",
+      "status": "scored",
+      "severity": "경고",
+      "pattern_id": "G-04",
+      "rec_layer": 1,
+      "recommendation": "내부통제 요소 일부만 규정. 누락 요소 보완.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 1
+    },
+    {
+      "fid": "G-04-001@수산업협동조합법",
+      "rule_id": "G-04",
+      "law_name": "수산업협동조합법",
+      "evidence": "내부통제기준 정하여야",
+      "article": "제127조의4",
+      "status": "scored",
+      "severity": "주의",
+      "pattern_id": "G-04",
+      "rec_layer": 1,
+      "recommendation": "내부통제 기준의 구체성 부족. 세부 기준을 내규 위임 시 최소 요건 법정화.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "G-04-001@온라인투자연계금융업및이용자보호에관한법률",
+      "rule_id": "G-04",
+      "law_name": "온라인투자연계금융업및이용자보호에관한법률",
+      "evidence": "적절한 내부통제장치 등록요건",
+      "article": "제5조",
+      "status": "scored",
+      "severity": "경고",
+      "pattern_id": "G-04",
+      "rec_layer": 1,
+      "recommendation": "내부통제 요소 일부만 규정. 누락 요소 보완.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 1
+    },
+    {
+      "fid": "G-04-001@특정금융거래정보의보고및이용등에관한법률",
+      "rule_id": "G-04",
+      "law_name": "특정금융거래정보의보고및이용등에관한법률",
+      "evidence": "절차 및 업무지침의 작성ㆍ운용",
+      "article": "제5조",
+      "status": "scored",
+      "severity": "경고",
+      "pattern_id": "G-04",
+      "rec_layer": 1,
+      "recommendation": "내부통제 요소 일부만 규정. 누락 요소 보완.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 1
+    },
+    {
+      "fid": "L-01-002@강원특별자치도설치및미래산업글로벌도시조성을위한특별법",
+      "rule_id": "L-01",
+      "law_name": "강원특별자치도설치및미래산업글로벌도시조성을위한특별법",
+      "evidence": "29개 법률 인ㆍ허가의제",
+      "article": "제41조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "L-01",
+      "rec_layer": 1,
+      "recommendation": "폐지된 법령을 인용 중. 현행 법령으로 인용 대상 교체 시급.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "L-01-001@금강수계물관리및주민지원등에관한법률",
+      "rule_id": "L-01",
+      "law_name": "금강수계물관리및주민지원등에관한법률",
+      "evidence": "인ㆍ허가등의 의제 19개",
+      "article": "제26조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "L-01",
+      "rec_layer": 1,
+      "recommendation": "폐지된 법령을 인용 중. 현행 법령으로 인용 대상 교체 시급.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "L-01-002@새만금사업추진및지원에관한특별법",
+      "rule_id": "L-01",
+      "law_name": "새만금사업추진및지원에관한특별법",
+      "evidence": "인ㆍ허가등의 의제 55개",
+      "article": "제17조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "L-01",
+      "rec_layer": 1,
+      "recommendation": "폐지된 법령을 인용 중. 현행 법령으로 인용 대상 교체 시급.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "L-01-001@학교시설사업촉진법",
+      "rule_id": "L-01",
+      "law_name": "학교시설사업촉진법",
+      "evidence": "다른 법률과의 관계 11개",
+      "article": "제5조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "L-01",
+      "rec_layer": 1,
+      "recommendation": "폐지된 법령을 인용 중. 현행 법령으로 인용 대상 교체 시급.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 0
+    },
+    {
+      "fid": "L-02-001@석유및석유대체연료사업법",
+      "rule_id": "L-02",
+      "law_name": "석유및석유대체연료사업법",
+      "evidence": "사업자 행위 금지 + 9개 법률 인용 (침익+의존)",
+      "article": "제39조",
+      "status": "scored",
+      "severity": "경고",
+      "pattern_id": "L-02",
+      "rec_layer": 1,
+      "recommendation": "참조 조문의 내용이 개정되어 현행 취지와 불일치 가능. 정합성 확인 필요.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "L-03-001@농업인등의농외소득활동지원에관한법률",
+      "rule_id": "L-03",
+      "law_name": "농업인등의농외소득활동지원에관한법률",
+      "evidence": "「지방세법」 제197조 전부개정으로 해당 조 없음",
+      "article": "제2조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "L-03-001@대한민국과아메리카합중국간의상호방위조약제4조에의한시설과구역및대한민국에서의합중국군대의지위에관한협정의실시에따른관세법등의임시특례에관한법률",
+      "rule_id": "L-03",
+      "law_name": "대한민국과아메리카합중국간의상호방위조약제4조에의한시설과구역및대한민국에서의합중국군대의지위에관한협정의실시에따른관세법등의임시특례에관한법률",
+      "evidence": "「교통ㆍ에너지ㆍ환경세법」 폐지 예정·과도기",
+      "article": "제9조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "L-03-001@법인세법",
+      "rule_id": "L-03",
+      "law_name": "법인세법",
+      "evidence": "자산재평가법 일몰 폐지",
+      "article": "제18조의2",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "L-03",
+      "rec_layer": 1,
+      "recommendation": "인용 대상 법령·조문이 현행법에 존재하지 않음. 규범 공백 상태. 즉시 정비 또는 경과규정 신설.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "L-03-001@소득세법",
+      "rule_id": "L-03",
+      "law_name": "소득세법",
+      "evidence": "자산재평가법 일몰 폐지",
+      "article": "제17조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "L-03",
+      "rec_layer": 1,
+      "recommendation": "인용 대상 법령·조문이 현행법에 존재하지 않음. 규범 공백 상태. 즉시 정비 또는 경과규정 신설.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "S-04-002@기부금품의모집ㆍ사용및기부문화활성화에관한법률",
+      "rule_id": "S-04",
+      "law_name": "기부금품의모집ㆍ사용및기부문화활성화에관한법률",
+      "evidence": "등록말소 재량처분 10개",
+      "article": "제10조",
+      "status": "fn_not_fired",
+      "recommendation": null
+    },
+    {
+      "fid": "S-04-019@자본시장과금융투자업에관한법률",
+      "rule_id": "S-04",
+      "law_name": "자본시장과금융투자업에관한법률",
+      "evidence": "벌칙 호 64개 과다",
+      "article": "제446조",
+      "status": "scored",
+      "severity": "심각",
+      "pattern_id": "S-04",
+      "rec_layer": 1,
+      "recommendation": "호 30개 이상 나열. 유형 분류 후 별표로 이관하거나 조문 분리 입법.",
+      "accuracy": 1,
+      "specificity": 2,
+      "actionability": 2
+    },
+    {
+      "fid": "S-04-002@총포ㆍ도검ㆍ화약류등의안전관리에관한법률",
+      "rule_id": "S-04",
+      "law_name": "총포ㆍ도검ㆍ화약류등의안전관리에관한법률",
+      "evidence": "협회 사업 10호+포괄",
+      "article": "제52조",
+      "status": "scored",
+      "severity": "개선",
+      "pattern_id": "S-04",
+      "rec_layer": 1,
+      "recommendation": "열거 항목의 체계적 정렬(가나다순 또는 중요도순) 정비.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    },
+    {
+      "fid": "S-04-002@치매관리법",
+      "rule_id": "S-04",
+      "law_name": "치매관리법",
+      "evidence": "센터 업무 10호+포괄위임",
+      "article": "제16조의2",
+      "status": "scored",
+      "severity": "개선",
+      "pattern_id": "S-04",
+      "rec_layer": 1,
+      "recommendation": "열거 항목의 체계적 정렬(가나다순 또는 중요도순) 정비.",
+      "accuracy": 1,
+      "specificity": 0,
+      "actionability": 2
+    }
+  ]
+}
