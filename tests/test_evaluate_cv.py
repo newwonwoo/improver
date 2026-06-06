@@ -74,3 +74,49 @@ def test_evaluate_cv_does_not_touch_production_model(monkeypatch, tmp_path):
     assert t["f1"] <= t["ci_hi"] + 1e-6
     # 측정불가 플래그: 결측 카테고리는 n_pos=0 < 15
     assert res["per_cat"][CATEGORIES[2]]["measurable"] is False
+
+
+def test_evaluate_cv_linear_contract(monkeypatch):
+    """V3 대조군 evaluate_cv_linear: torch 불필요(sklearn만), 동일 잣대 계약 검증.
+
+    - MLP evaluate_cv 와 동일한 fold 분할 + bootstrap CI 구조를 반환.
+    - 선형은 저장 안 함 → torch.save 호출 없음(존재 시).
+    - CI 단조성(lo<=point<=hi), 측정불가 플래그 동작.
+    """
+    from engine.slm.brain import CATEGORIES
+    ncat = len(CATEGORIES)
+    n = 160
+    rng = np.random.default_rng(0)
+    dense = rng.standard_normal((n, 4)).astype(np.float32)
+    # 선형 분리 가능한 시그널 주입 (cat0): dense[:,0] 부호로 양성 결정
+    ti = np.zeros(n, dtype=np.int64)
+    si = np.zeros(n, dtype=np.int64)
+    mi = np.zeros(n, dtype=np.int64)
+    y = np.full((n, ncat), -1.0, dtype=np.float32)
+    y[:, 0] = (dense[:, 0] > 0).astype(np.float32)
+    y[:, 1] = (rng.random(n) < 0.4).astype(np.float32)
+
+    monkeypatch.setattr(mod, "collect_torch_data", lambda: (dense, ti, si, mi, y))
+
+    # torch 가용 시 save 가 절대 호출되지 않음을 보장
+    if mod._TORCH_OK:
+        saved = {"called": False}
+        monkeypatch.setattr(mod.torch, "save",
+                            lambda *a, **k: saved.__setitem__("called", True))
+
+    res = mod.evaluate_cv_linear(k=3, seed=1, n_boot=50)
+
+    if mod._TORCH_OK:
+        assert saved["called"] is False
+    # 구조 검증
+    assert set(res["per_cat"]) == set(CATEGORIES)
+    assert "ci_lo" in res["total"] and "ci_hi" in res["total"]
+    assert res["model"].startswith("LogReg")
+    # CI 단조성
+    t = res["total"]
+    assert t["ci_lo"] <= t["f1"] + 1e-6
+    assert t["f1"] <= t["ci_hi"] + 1e-6
+    # 선형 분리 가능 시그널 카테고리는 학습이 동작해 F1>0
+    assert res["per_cat"][CATEGORIES[0]]["f1"] > 0.5
+    # 결측 카테고리는 n_pos=0 < 15 → 측정불가
+    assert res["per_cat"][CATEGORIES[2]]["measurable"] is False

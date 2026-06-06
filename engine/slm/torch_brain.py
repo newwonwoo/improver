@@ -489,6 +489,208 @@ def evaluate_cv(
                 k=k, seed=seed, n_boot=n_boot, n=n)
 
 
+# ────────── V3 대조군: 선형(LogisticRegression) ──────────
+
+def _onehot(idx_arr, n_levels):
+    """정수 인덱스 배열 → one-hot float32 (n, n_levels)."""
+    oh = np.zeros((len(idx_arr), n_levels), dtype=np.float32)
+    oh[np.arange(len(idx_arr)), idx_arr] = 1.0
+    return oh
+
+
+def _fit_eval_once_linear(
+    dense, ti, si, mi, y, train_idx, test_idx,
+    *,
+    use_onehot: bool = True,
+    calibrate: str | None = None,  # None | "isotonic" | "sigmoid"
+    C: float = 1.0,
+    max_iter: int = 2000,
+):
+    """단일 split 의 scaler→per-cat LogisticRegression fit→eval 코어.
+
+    MLP 의 _fit_eval_once 와 동일한 입출력 계약:
+      - dense 표준화는 train 으로만 fit (leakage 방지)
+      - 반환 pred_te: (n_test, n_cat) per-cat 확률, 미학습/불가 카테고리는 0.0
+      - 반환 y_te_np: (n_test, n_cat) 라벨 (-1=결측 마스크)
+    카테고리별로 -1 마스크 행은 해당 카테고리 학습/평가에서 제외.
+    one-hot(type/subj/modal) 피처는 train 분할 차원으로 고정해 누수 없음.
+    """
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.calibration import CalibratedClassifierCV
+
+    # dense 표준화 — train 으로만 fit
+    scaler = StandardScaler().fit(dense[train_idx])
+    dense_n = scaler.transform(dense).astype(np.float32)
+
+    # type/subj/modal one-hot (전 도메인 차원 고정 → split 간 정합)
+    if use_onehot:
+        oh_t = _onehot(ti, len(_AT_LIST))
+        oh_s = _onehot(si, len(_SUBJ_LIST))
+        oh_m = _onehot(mi, len(_MODAL_LIST))
+        X = np.concatenate([dense_n, oh_t, oh_s, oh_m], axis=1)
+    else:
+        X = dense_n
+
+    pred_te = np.zeros((len(test_idx), len(CATEGORIES)), dtype=np.float32)
+    y_te_np = y[test_idx].astype(np.float32)
+
+    for ci in range(len(CATEGORIES)):
+        col = y[:, ci]
+        # train: 마스크(-1) 제외
+        tr_mask = (col[train_idx] >= 0)
+        tr_rows = train_idx[tr_mask]
+        y_tr = col[tr_rows].astype(int)
+        # 두 클래스 모두 있어야 학습 가능
+        if len(np.unique(y_tr)) < 2:
+            continue  # 학습 불가 → 확률 0.0 유지 (예측=음성)
+        base = LogisticRegression(
+            C=C, max_iter=max_iter,
+            class_weight="balanced", random_state=42,
+        )
+        if calibrate in ("isotonic", "sigmoid"):
+            # 양성 표본이 매우 적으면 CV 캘리브레이션 폴드가 깨질 수 있어 가드
+            n_pos = int((y_tr == 1).sum())
+            cv = min(3, n_pos) if n_pos >= 2 else 2
+            try:
+                clf = CalibratedClassifierCV(base, method=calibrate, cv=cv)
+                clf.fit(X[tr_rows], y_tr)
+            except Exception:
+                clf = base.fit(X[tr_rows], y_tr)
+        else:
+            clf = base.fit(X[tr_rows], y_tr)
+        proba = clf.predict_proba(X[test_idx])[:, 1]
+        pred_te[:, ci] = proba.astype(np.float32)
+
+    return None, scaler, pred_te, y_te_np
+
+
+def evaluate_cv_linear(
+    k: int = 5,
+    seed: int = 42,
+    n_boot: int = 1000,
+    n_pos_min: int = 15,
+    *,
+    use_onehot: bool = True,
+    calibrate: str | None = None,
+    C: float = 1.0,
+    max_iter: int = 2000,
+):
+    """V3 대조군 — MLP(evaluate_cv)와 동일 잣대로 선형(LogReg) 평가.
+
+    evaluate_cv 와 **동일한 fold 분할(StratifiedKFold, 동일 strat 키/seed)**과
+    **동일한 bootstrap CI 로직**을 그대로 재사용하고, 모델만 카테고리별
+    sklearn LogisticRegression(class_weight='balanced')으로 교체한다.
+
+    - dense (+ 옵션 type/subj/modal one-hot) 피처
+    - train 으로만 StandardScaler fit (leakage 방지), 임계 0.5
+    - -1 마스크 행은 해당 카테고리 학습/평가에서 제외
+    - calibrate="isotonic"|"sigmoid" 지정 시 CalibratedClassifierCV 변형 측정(옵션)
+
+    프로덕션 모델(outputs/slm_torch_model.pt)은 건드리지 않는다(선형은 저장 안 함).
+    """
+    from sklearn.model_selection import StratifiedKFold, KFold
+
+    dense, ti, si, mi, y = collect_torch_data()
+    n = dense.shape[0]
+
+    # evaluate_cv 와 동일한 근사 stratify 키 + 동일 splitter/seed
+    strat = ((y == 1).any(axis=1)).astype(int)
+    n_pos_rows = int(strat.sum())
+    if n_pos_rows >= k and n_pos_rows <= n - k:
+        splitter = StratifiedKFold(n_splits=k, shuffle=True, random_state=seed)
+        split_iter = splitter.split(np.zeros(n), strat)
+        strat_mode = f"StratifiedKFold(양성보유행 {n_pos_rows}/{n} 기준 근사)"
+    else:
+        splitter = KFold(n_splits=k, shuffle=True, random_state=seed)
+        split_iter = splitter.split(np.zeros(n))
+        strat_mode = f"KFold(양성보유행 {n_pos_rows} 부족 → 단순 분할 폴백)"
+
+    oof_pred = np.full((n, len(CATEGORIES)), np.nan, dtype=np.float32)
+    oof_y = np.full((n, len(CATEGORIES)), -1.0, dtype=np.float32)
+
+    model_tag = "LogReg" + ("+onehot" if use_onehot else "") + \
+        (f"+{calibrate}" if calibrate else "")
+    print(f"[CV-LINEAR/{model_tag}] {strat_mode}, k={k}, seed={seed}, "
+          f"n_boot={n_boot}, N={n}")
+    for fold_i, (train_idx, test_idx) in enumerate(split_iter):
+        _, _, pred_te, y_te_np = _fit_eval_once_linear(
+            dense, ti, si, mi, y, train_idx, test_idx,
+            use_onehot=use_onehot, calibrate=calibrate, C=C, max_iter=max_iter,
+        )
+        oof_pred[test_idx] = pred_te
+        oof_y[test_idx] = y_te_np
+        c = _counts_from_preds(pred_te, y_te_np)
+        tot = {kk: sum(d[kk] for d in c.values()) for kk in ("tp", "fp", "fn", "tn")}
+        _, _, f1 = _prf(tot["tp"], tot["fp"], tot["fn"])
+        print(f"  fold {fold_i}: test n={len(test_idx)}  TOTAL F1={f1:.3f}")
+
+    # ── 점추정(전체 OOF) + bootstrap CI (evaluate_cv 와 동일 로직) ──
+    rng = np.random.default_rng(seed)
+
+    def f1_from_indices(idx, col):
+        yt = oof_y[idx, col]
+        m = yt >= 0
+        yt = yt[m]
+        yp = (oof_pred[idx, col][m] >= 0.5).astype(float)
+        tp = float(((yp == 1) & (yt == 1)).sum())
+        fp = float(((yp == 1) & (yt == 0)).sum())
+        fn = float(((yp == 0) & (yt == 1)).sum())
+        _, _, f1 = _prf(tp, fp, fn)
+        return f1
+
+    def f1_total_from_indices(idx):
+        tp = fp = fn = 0.0
+        for col in range(len(CATEGORIES)):
+            yt = oof_y[idx, col]
+            m = yt >= 0
+            yt = yt[m]
+            yp = (oof_pred[idx, col][m] >= 0.5).astype(float)
+            tp += float(((yp == 1) & (yt == 1)).sum())
+            fp += float(((yp == 1) & (yt == 0)).sum())
+            fn += float(((yp == 0) & (yt == 1)).sum())
+        _, _, f1 = _prf(tp, fp, fn)
+        return f1
+
+    all_idx = np.arange(n)
+
+    def boot_ci(point_fn):
+        stats = np.empty(n_boot, dtype=np.float64)
+        for b in range(n_boot):
+            samp = rng.integers(0, n, size=n)
+            stats[b] = point_fn(samp)
+        lo, hi = np.percentile(stats, [2.5, 97.5])
+        return float(lo), float(hi)
+
+    print(f"\n{'카테고리':<10} {'n_pos':>6} {'F1':>7} {'95%CI_lo':>9} {'95%CI_hi':>9}  플래그")
+    print("-" * 60)
+    per_cat = {}
+    for ci, cat in enumerate(CATEGORIES):
+        n_pos = int((oof_y[:, ci] == 1).sum())
+        f1_point = f1_from_indices(all_idx, ci)
+        if n_pos < n_pos_min:
+            flag = "측정불가"
+            lo = hi = float("nan")
+        else:
+            flag = ""
+            lo, hi = boot_ci(lambda idx, _c=ci: f1_from_indices(idx, _c))
+        per_cat[cat] = dict(n_pos=n_pos, f1=f1_point, ci_lo=lo, ci_hi=hi,
+                            measurable=(n_pos >= n_pos_min))
+        ci_lo_s = f"{lo:>9.3f}" if n_pos >= n_pos_min else f"{'-':>9}"
+        ci_hi_s = f"{hi:>9.3f}" if n_pos >= n_pos_min else f"{'-':>9}"
+        print(f"{cat:<10} {n_pos:>6} {f1_point:>7.3f} {ci_lo_s} {ci_hi_s}  {flag}")
+
+    total_n_pos = int((oof_y == 1).sum())
+    total_f1 = f1_total_from_indices(all_idx)
+    total_lo, total_hi = boot_ci(f1_total_from_indices)
+    total = dict(n_pos=total_n_pos, f1=total_f1, ci_lo=total_lo, ci_hi=total_hi)
+    print("-" * 60)
+    print(f"{'TOTAL':<10} {total_n_pos:>6} {total_f1:>7.3f} {total_lo:>9.3f} {total_hi:>9.3f}")
+
+    return dict(per_cat=per_cat, total=total, strat_mode=strat_mode,
+                k=k, seed=seed, n_boot=n_boot, n=n, model=model_tag)
+
+
 # ────────── 추론 API ──────────
 
 _MODEL_CACHE: dict = {}
