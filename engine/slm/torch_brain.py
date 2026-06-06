@@ -22,6 +22,13 @@ try:
     _TORCH_OK = True
 except ImportError:
     _TORCH_OK = False
+    torch = None  # type: ignore
+
+    class _NNStub:  # torch 미설치 시 클래스 정의만 통과시키는 스텁
+        Module = object
+
+    nn = _NNStub()  # type: ignore
+    TensorDataset = DataLoader = None  # type: ignore
 
 from ..parser import parse_law
 from ..structure import decompose, ArticleType, Subject, Modal
@@ -100,9 +107,10 @@ def _extract_dense_and_cat(art, *, law=None, feature_names=None):
 
 
 def collect_torch_data():
-    """verdict 데이터 → torch tensors (dense + cat indices + multi-task labels)."""
-    if not _TORCH_OK:
-        raise RuntimeError("torch not installed")
+    """verdict 데이터 → numpy arrays (dense + cat indices + multi-task labels).
+
+    numpy만 사용 → torch 미설치 환경에서도 적재 검증 가능(학습은 train_torch에서 torch 필요).
+    """
     with open("outputs/verification_dataset.jsonl") as f:
         rows = [json.loads(l) for l in f]
     fid_map = json.loads(Path("outputs/fid_article_map.json").read_text(encoding="utf-8"))
