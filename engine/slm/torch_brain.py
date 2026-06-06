@@ -196,27 +196,27 @@ def collect_torch_data():
     return dense_arr, type_arr, subj_arr, modal_arr, y_arr
 
 
-def train_torch(
+def _fit_eval_once(
+    dense, ti, si, mi, y, train_idx, test_idx,
+    *,
     hidden: tuple[int, ...] = (32, 16),
     dropout: float = 0.2,
     epochs: int = 100,
     lr: float = 1e-3,
     batch_size: int = 32,
-    test_size: float = 0.2,
 ):
-    """PyTorch multi-task NN 학습."""
+    """단일 split 의 scaler→fit→eval 코어 (train_torch / evaluate_cv 공용).
+
+    반환:
+        model   : 학습된 TorchBrain (임시; 저장은 호출자 책임)
+        scaler  : fit 된 StandardScaler
+        pred_te : (n_test, n_cat) 테스트 sigmoid 점수 (확률)
+        y_te_np : (n_test, n_cat) 테스트 라벨 (-1=결측 마스크)
+    """
     if not _TORCH_OK:
         raise RuntimeError("torch not installed")
-    dense, ti, si, mi, y = collect_torch_data()
-    n = dense.shape[0]
-    # train/test split
-    rng = np.random.default_rng(42)
-    perm = rng.permutation(n)
-    n_test = int(n * test_size)
-    test_idx = perm[:n_test]
-    train_idx = perm[n_test:]
 
-    # 표준화 (dense)
+    # 표준화 (dense) — train 으로만 fit (leakage 방지)
     from sklearn.preprocessing import StandardScaler
     scaler = StandardScaler().fit(dense[train_idx])
     dense_n = scaler.transform(dense)
@@ -260,7 +260,6 @@ def train_torch(
 
     model.train()
     for epoch in range(epochs):
-        total_loss = 0.0
         for batch in dl:
             d, t, s, m, yb = batch
             opt.zero_grad()
@@ -272,18 +271,17 @@ def train_torch(
             loss = (bce(pred, yb_masked) * w * mask).sum() / max(mask.sum().item(), 1)
             loss.backward()
             opt.step()
-            total_loss += loss.item()
-        if epoch % 20 == 0 or epoch == epochs - 1:
-            print(f"  epoch {epoch}: loss={total_loss/len(dl):.4f}")
 
     # 평가
     model.eval()
     with torch.no_grad():
         pred_te = model(X_dense_te, X_ti_te, X_si_te, X_mi_te).numpy()
     y_te_np = y_te.numpy()
+    return model, scaler, pred_te, y_te_np
 
-    print(f"\n{'카테고리':<10} {'TP':>4} {'FP':>4} {'FN':>4} {'TN':>4} {'P':>6} {'R':>6} {'F1':>6}")
-    print("-" * 60)
+
+def _counts_from_preds(pred_te, y_te_np):
+    """(pred 확률, 라벨) → per-cat TP/FP/FN/TN dict (임계값 0.5)."""
     per_cat = {}
     for i, cat in enumerate(CATEGORIES):
         y_true = y_te_np[:, i]
@@ -294,16 +292,55 @@ def train_torch(
         fp = int(((yp == 1) & (yt == 0)).sum())
         fn = int(((yp == 0) & (yt == 1)).sum())
         tn = int(((yp == 0) & (yt == 0)).sum())
-        p = tp / max(tp + fp, 1)
-        r = tp / max(tp + fn, 1)
-        f1 = 2 * p * r / max(p + r, 1e-9)
-        per_cat[cat] = dict(tp=tp, fp=fp, fn=fn, tn=tn, p=p, r=r, f1=f1)
-        print(f"{cat:<10} {tp:>4} {fp:>4} {fn:>4} {tn:>4} {p:>6.3f} {r:>6.3f} {f1:>6.3f}")
+        per_cat[cat] = dict(tp=tp, fp=fp, fn=fn, tn=tn)
+    return per_cat
+
+
+def _prf(tp, fp, fn):
+    p = tp / max(tp + fp, 1)
+    r = tp / max(tp + fn, 1)
+    f1 = 2 * p * r / max(p + r, 1e-9)
+    return p, r, f1
+
+
+def train_torch(
+    hidden: tuple[int, ...] = (32, 16),
+    dropout: float = 0.2,
+    epochs: int = 100,
+    lr: float = 1e-3,
+    batch_size: int = 32,
+    test_size: float = 0.2,
+):
+    """PyTorch multi-task NN 학습 (단일 split — 프로덕션 모델 저장)."""
+    if not _TORCH_OK:
+        raise RuntimeError("torch not installed")
+    dense, ti, si, mi, y = collect_torch_data()
+    n = dense.shape[0]
+    # train/test split
+    rng = np.random.default_rng(42)
+    perm = rng.permutation(n)
+    n_test = int(n * test_size)
+    test_idx = perm[:n_test]
+    train_idx = perm[n_test:]
+
+    model, scaler, pred_te, y_te_np = _fit_eval_once(
+        dense, ti, si, mi, y, train_idx, test_idx,
+        hidden=hidden, dropout=dropout, epochs=epochs, lr=lr, batch_size=batch_size,
+    )
+    dense_n_dim = dense.shape[1]
+
+    print(f"\n{'카테고리':<10} {'TP':>4} {'FP':>4} {'FN':>4} {'TN':>4} {'P':>6} {'R':>6} {'F1':>6}")
+    print("-" * 60)
+    counts = _counts_from_preds(pred_te, y_te_np)
+    per_cat = {}
+    for cat in CATEGORIES:
+        c = counts[cat]
+        p, r, f1 = _prf(c["tp"], c["fp"], c["fn"])
+        per_cat[cat] = dict(**c, p=p, r=r, f1=f1)
+        print(f"{cat:<10} {c['tp']:>4} {c['fp']:>4} {c['fn']:>4} {c['tn']:>4} {p:>6.3f} {r:>6.3f} {f1:>6.3f}")
 
     total = {k: sum(d[k] for d in per_cat.values()) for k in ("tp", "fp", "fn", "tn")}
-    p = total["tp"] / max(total["tp"] + total["fp"], 1)
-    r = total["tp"] / max(total["tp"] + total["fn"], 1)
-    f1 = 2 * p * r / max(p + r, 1e-9)
+    p, r, f1 = _prf(total["tp"], total["fp"], total["fn"])
     print("-" * 60)
     print(f"{'TOTAL':<10} {total['tp']:>4} {total['fp']:>4} {total['fn']:>4} {total['tn']:>4} "
           f"{p:>6.3f} {r:>6.3f} {f1:>6.3f}")
@@ -311,7 +348,7 @@ def train_torch(
     # 모델 저장 (feature_names 포함 — 추론 시 차원 정합성 보장)
     torch.save({
         "model_state": model.state_dict(),
-        "n_dense": dense_n.shape[1],
+        "n_dense": dense_n_dim,
         "hidden": list(hidden),
         "dropout": dropout,
         "scaler_mean": scaler.mean_.tolist(),
@@ -319,6 +356,137 @@ def train_torch(
         "feature_names": list(FEATURE_NAMES),
     }, "outputs/slm_torch_model.pt")
     return per_cat, total
+
+
+def evaluate_cv(
+    k: int = 5,
+    seed: int = 42,
+    n_boot: int = 1000,
+    n_pos_min: int = 15,
+    *,
+    hidden: tuple[int, ...] = (32, 16),
+    dropout: float = 0.2,
+    epochs: int = 100,
+    lr: float = 1e-3,
+    batch_size: int = 32,
+):
+    """Stratified K-fold + bootstrap 95% CI 로 F1 신뢰도 평가.
+
+    단일 20% split 1회 대신 K-fold 로 전 표본을 test 에 한 번씩 노출하고,
+    fold 별 test 예측을 합쳐(out-of-fold) bootstrap 으로 F1 95% CI 를 추정한다.
+
+    Stratify: 5 카테고리 multi-label 이라 진짜 stratify 가 어려워,
+    '행이 TP(양성=1) 라벨을 하나라도 보유하는지'를 단일 이진 기준으로
+    근사 stratify 한다(StratifiedKFold). → 희소한 양성 행이 각 fold test 에
+    고르게 분포하도록 보장. 양성 보유 행 < k 이면 단순 KFold 로 폴백.
+
+    프로덕션 모델(outputs/slm_torch_model.pt)은 저장하지 않는다(임시 모델만 사용).
+    """
+    if not _TORCH_OK:
+        raise RuntimeError("torch not installed")
+    from sklearn.model_selection import StratifiedKFold, KFold
+
+    dense, ti, si, mi, y = collect_torch_data()
+    n = dense.shape[0]
+
+    # 근사 stratify 키: 행에 양성(==1) 라벨이 하나라도 있으면 1
+    strat = ((y == 1).any(axis=1)).astype(int)
+    n_pos_rows = int(strat.sum())
+    if n_pos_rows >= k and n_pos_rows <= n - k:
+        splitter = StratifiedKFold(n_splits=k, shuffle=True, random_state=seed)
+        split_iter = splitter.split(np.zeros(n), strat)
+        strat_mode = f"StratifiedKFold(양성보유행 {n_pos_rows}/{n} 기준 근사)"
+    else:
+        splitter = KFold(n_splits=k, shuffle=True, random_state=seed)
+        split_iter = splitter.split(np.zeros(n))
+        strat_mode = f"KFold(양성보유행 {n_pos_rows} 부족 → 단순 분할 폴백)"
+
+    # out-of-fold: 각 행이 test 였을 때의 (예측확률, 라벨) 누적
+    oof_pred = np.full((n, len(CATEGORIES)), np.nan, dtype=np.float32)
+    oof_y = np.full((n, len(CATEGORIES)), -1.0, dtype=np.float32)
+    fold_counts = []  # fold 별 per-cat counts (참고용)
+
+    print(f"[CV] {strat_mode}, k={k}, seed={seed}, n_boot={n_boot}, N={n}")
+    for fold_i, (train_idx, test_idx) in enumerate(split_iter):
+        _, _, pred_te, y_te_np = _fit_eval_once(
+            dense, ti, si, mi, y, train_idx, test_idx,
+            hidden=hidden, dropout=dropout, epochs=epochs, lr=lr, batch_size=batch_size,
+        )
+        oof_pred[test_idx] = pred_te
+        oof_y[test_idx] = y_te_np
+        fold_counts.append(_counts_from_preds(pred_te, y_te_np))
+        c = _counts_from_preds(pred_te, y_te_np)
+        tot = {kk: sum(d[kk] for d in c.values()) for kk in ("tp", "fp", "fn", "tn")}
+        _, _, f1 = _prf(tot["tp"], tot["fp"], tot["fn"])
+        print(f"  fold {fold_i}: test n={len(test_idx)}  TOTAL F1={f1:.3f}")
+
+    # ── 점추정(전체 OOF) + bootstrap CI ──
+    rng = np.random.default_rng(seed)
+
+    def f1_from_indices(idx, col):
+        """주어진 행 idx, 카테고리 col 에 대한 F1 (마스크 결측 제외)."""
+        yt = oof_y[idx, col]
+        m = yt >= 0
+        yt = yt[m]
+        yp = (oof_pred[idx, col][m] >= 0.5).astype(float)
+        tp = float(((yp == 1) & (yt == 1)).sum())
+        fp = float(((yp == 1) & (yt == 0)).sum())
+        fn = float(((yp == 0) & (yt == 1)).sum())
+        _, _, f1 = _prf(tp, fp, fn)
+        return f1
+
+    def f1_total_from_indices(idx):
+        tp = fp = fn = 0.0
+        for col in range(len(CATEGORIES)):
+            yt = oof_y[idx, col]
+            m = yt >= 0
+            yt = yt[m]
+            yp = (oof_pred[idx, col][m] >= 0.5).astype(float)
+            tp += float(((yp == 1) & (yt == 1)).sum())
+            fp += float(((yp == 1) & (yt == 0)).sum())
+            fn += float(((yp == 0) & (yt == 1)).sum())
+        _, _, f1 = _prf(tp, fp, fn)
+        return f1
+
+    all_idx = np.arange(n)
+
+    def boot_ci(point_fn):
+        """bootstrap (행 단위 resample) 95% CI."""
+        stats = np.empty(n_boot, dtype=np.float64)
+        for b in range(n_boot):
+            samp = rng.integers(0, n, size=n)
+            stats[b] = point_fn(samp)
+        lo, hi = np.percentile(stats, [2.5, 97.5])
+        return float(lo), float(hi)
+
+    print(f"\n{'카테고리':<10} {'n_pos':>6} {'F1':>7} {'95%CI_lo':>9} {'95%CI_hi':>9}  플래그")
+    print("-" * 60)
+    per_cat = {}
+    for ci, cat in enumerate(CATEGORIES):
+        # test 양성 표본 수 (OOF 전체에서 라벨==1)
+        n_pos = int((oof_y[:, ci] == 1).sum())
+        f1_point = f1_from_indices(all_idx, ci)
+        if n_pos < n_pos_min:
+            flag = "측정불가"
+            lo = hi = float("nan")
+        else:
+            flag = ""
+            lo, hi = boot_ci(lambda idx, _c=ci: f1_from_indices(idx, _c))
+        per_cat[cat] = dict(n_pos=n_pos, f1=f1_point, ci_lo=lo, ci_hi=hi,
+                            measurable=(n_pos >= n_pos_min))
+        ci_lo_s = f"{lo:>9.3f}" if n_pos >= n_pos_min else f"{'-':>9}"
+        ci_hi_s = f"{hi:>9.3f}" if n_pos >= n_pos_min else f"{'-':>9}"
+        print(f"{cat:<10} {n_pos:>6} {f1_point:>7.3f} {ci_lo_s} {ci_hi_s}  {flag}")
+
+    total_n_pos = int((oof_y == 1).sum())
+    total_f1 = f1_total_from_indices(all_idx)
+    total_lo, total_hi = boot_ci(f1_total_from_indices)
+    total = dict(n_pos=total_n_pos, f1=total_f1, ci_lo=total_lo, ci_hi=total_hi)
+    print("-" * 60)
+    print(f"{'TOTAL':<10} {total_n_pos:>6} {total_f1:>7.3f} {total_lo:>9.3f} {total_hi:>9.3f}")
+
+    return dict(per_cat=per_cat, total=total, strat_mode=strat_mode,
+                k=k, seed=seed, n_boot=n_boot, n=n)
 
 
 # ────────── 추론 API ──────────
