@@ -36,6 +36,27 @@ RULE_CAT = {
     "E-01": "효율성", "E-02": "효율성", "E-03": "효율성", "E-04": "효율성", "E-05": "효율성",
 }
 
+# 추론룰(R-*) → 카테고리. 출처: engine/reasoning/inference.py 룰 정의(단일 진실).
+# phase13 verdict 라벨은 추론룰 네임스페이스라 RULE_CAT(패턴코드)와 별개 → 학습 적재용 보조맵.
+REASONING_RULE_CAT = {
+    "R-DELEG-BLANKET": "적법성",
+    "R-DISP-ARBITRARY": "공정성",
+    "R-NO-HEARING": "공정성",
+    "R-DISPROPORTIONATE": "공정성",
+    "R-DOUBLE-SANCTION": "적법성",
+    "R-NO-REASON": "공정성",
+    "R-NO-DEADLINE": "적법성",
+    "R-ENUM-OVERLOAD": "구조",
+    "R-PROVISO-EXCESS": "거버넌스",
+    "R-CITATION-OVERLOAD": "적법성",
+    "R-BROAD-IMMUNITY": "공정성",
+    "R-HUB-DELEGATION": "적법성",
+    "R-SHORT-DEADLINE-ADVERSE": "공정성",
+    "R-SUBDELEG-ADMIN-RULE": "적법성",
+    "R-NO-DISP-STANDARD": "공정성",
+    "R-LAW-PRECEDENCE": "적법성",
+}
+
 
 def collect_training_data(test_size: float = 0.2, random_state: int = 42):
     """verdict 데이터에서 카테고리별 (X, y) 추출.

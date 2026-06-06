@@ -27,7 +27,7 @@ from ..parser import parse_law
 from ..structure import decompose, ArticleType, Subject, Modal
 from .brain import CATEGORIES
 from .features import extract_features, FEATURE_NAMES
-from .learn import RULE_CAT
+from .learn import RULE_CAT, REASONING_RULE_CAT
 
 
 # 범주 인덱싱
@@ -137,7 +137,8 @@ def collect_torch_data():
         if r["verdict"] not in ("TP", "FP"):
             continue
         rule_id = r["rule_id"]
-        cat = RULE_CAT.get(rule_id)
+        # 패턴코드(S-*) 우선, 없으면 추론룰(R-*) 보조맵 — phase13 verdict 라벨 적재용.
+        cat = RULE_CAT.get(rule_id) or REASONING_RULE_CAT.get(rule_id)
         if not cat:
             continue
         fid = r["fid"]
