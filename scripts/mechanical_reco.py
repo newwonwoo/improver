@@ -67,6 +67,9 @@ _EXTRACT_GRADE = {
 
 # 인용 결함 — matched_text 가 '바로 그 인용'을 가리키므로 앵커로 사용한다.
 _CITATION_PATTERNS = {"L-01", "L-02", "L-03"}
+# 키워드 등급이지만 맥락(포함 문장)이 필요한 패턴 (gold: 단어 단독은 맥락 약함).
+# E-03 은 자문위원 채택 형태('서면으로')라 짧게 유지 → 제외.
+_KEYWORD_CONTEXT = {"F-05", "S-03"}
 
 _MD_BOLD = re.compile(r"\*+")
 _ARTICLE_HEADER = re.compile(r"^제\s*\d+조(?:의\d+)*\s*[\(（][^)）]*[\)）]\s*$")
@@ -153,6 +156,13 @@ def extract_verbatim(article, pattern_id: str, matched_text: str | None = None) 
         grade = _EXTRACT_GRADE.get(pattern_id, "keyword")
 
         if grade == "keyword":
+            # 맥락 보강(gold: 단어 하나만으론 '어느 처분의 어느 요건'인지 약함) —
+            # 키워드 포함 '문장(절)'을 추출해 맥락을 준다. 단, E-03 는 자문위원이
+            # 채택한 짧은 형태('서면으로')를 유지(정형 명령형 보존).
+            if pattern_id in _KEYWORD_CONTEXT:
+                clause = _slice_clause(text, m.start(), m.end(), m.group(0))
+                if clause and len(_normalize_for_match(clause)) >= 12:
+                    return clause, "keyword_clause"
             kw = _clean_ws(m.group(0))
             return kw, "keyword"
 
