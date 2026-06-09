@@ -85,8 +85,8 @@
     },
     "predicted_adoption_on_new_text": {
       "old_mean": 0.5724,
-      "new_mean": 0.6285,
-      "delta": 0.0561,
+      "new_mean": 0.6521,
+      "delta": 0.0797,
       "caveat": "score_adoption(gold AUC 0.94)의 '예측'. 실제 채택률은 자문위원 재검 게이트 전까지 단정 금지."
     }
   },
@@ -272,8 +272,8 @@
         "not_generic": 1
       },
       "old_has_unfounded_number": false,
-      "new_text": "제9조의4 본문 「제1항에 따른 평가 전담기관의 지정 및 제3항에 따른 지정취소ㆍ업무정지의 기준 및 절차, 운영 등에 필요한 사항은 대통령령으로 정한다.」 — '제1항에 따른 평가 전담기관의 지정 및 제3항에 따른 지정취소ㆍ업무정지의 기준 및 절차, 운영 등에 필요한 사항은 대통령령으로 정한다.' 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
-      "new_verbatim": "제1항에 따른 평가 전담기관의 지정 및 제3항에 따른 지정취소ㆍ업무정지의 기준 및 절차, 운영 등에 필요한 사항은 대통령령으로 정한다.",
+      "new_text": "제9조의4 본문 「문화체육관광부장관은 제1항에 따라 지정받은 평가 전담기관이 다음 각 호의 어느 하나에 해당하는 경우에는 그 지정을 취소하거나 6개월 이내의 범위에서 기간을 정하여 업무의 전부 또는 일부를 정지할 수 있다.」 — '문화체육관광부장관은 제1항에 따라 지정받은 평가 전담기관이 다음 각 호의 어느 하나에 해당하는 경우에는 그 지정을 취소하거나 6개월 이내의 범위에서 기간을 정하여 업무의 전부 또는 일부를 정지할 수 있다.' 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
+      "new_verbatim": "문화체육관광부장관은 제1항에 따라 지정받은 평가 전담기관이 다음 각 호의 어느 하나에 해당하는 경우에는 그 지정을 취소하거나 6개월 이내의 범위에서 기간을 정하여 업무의 전부 또는 일부를 정지할 수 있다.",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
       "new_adoption_score": 0.65,
@@ -299,11 +299,11 @@
         "not_generic": 0
       },
       "old_has_unfounded_number": false,
-      "new_text": "제22조의5 — 해당 부분 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
-      "new_verbatim": null,
-      "new_method": "none",
+      "new_text": "제22조의5 본문 「농림축산식품부장관 또는 시ㆍ도지사는 동물진료법인이 다음 각 호의 어느 하나에 해당하면 그 설립 허가를 취소할 수 있다.」 — '농림축산식품부장관 또는 시ㆍ도지사는 동물진료법인이 다음 각 호의 어느 하나에 해당하면 그 설립 허가를 취소할 수 있다.' 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
+      "new_verbatim": "농림축산식품부장관 또는 시ㆍ도지사는 동물진료법인이 다음 각 호의 어느 하나에 해당하면 그 설립 허가를 취소할 수 있다.",
+      "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.34,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },
@@ -326,11 +326,11 @@
         "not_generic": 0
       },
       "old_has_unfounded_number": false,
-      "new_text": "제34조의6 — 해당 부분 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
-      "new_verbatim": null,
-      "new_method": "none",
+      "new_text": "제34조의6 본문 「획 등을 포함한다)의 작성ㆍ관리 및 훈련실태를 점검하고 필요한 경우에는 개선명령을 할 수 있다. <개정 2017.7.26>」 — '획 등을 포함한다)의 작성ㆍ관리 및 훈련실태를 점검하고 필요한 경우에는 개선명령을 할 수 있다. <개정 2017.7.26>' 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
+      "new_verbatim": "획 등을 포함한다)의 작성ㆍ관리 및 훈련실태를 점검하고 필요한 경우에는 개선명령을 할 수 있다. <개정 2017.7.26>",
+      "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.34,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },
@@ -627,7 +627,7 @@
       "new_verbatim": "중요지표의 신뢰성 확보를 위하여 산출업무 수행 과정에서 이해상충관리, 산출절차 준수 및 이를 관리ㆍ감독할 수 있는 내부통제장치를 갖추고 있을 것",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.57,
+      "new_adoption_score": 0.65,
       "g04_absent_named": true,
       "s04_branch": null
     },
@@ -708,7 +708,7 @@
       "new_verbatim": "자금세탁행위와 공중협박자금조달행위의 방지를 위하여 해당 금융회사등의 임직원이 직무를 수행할 때 따라야 할 절차 및 업무지침의 작성ㆍ운용",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.57,
+      "new_adoption_score": 0.65,
       "g04_absent_named": true,
       "s04_branch": null
     },

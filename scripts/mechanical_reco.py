@@ -37,7 +37,12 @@ _DEFECT_TRIGGERS: dict[str, list[re.Pattern]] = {
     "S-04": [re.compile(r"다음\s*각\s*호")],
     "E-03": [re.compile(r"(서면으로|날인|인감|대면하여|직접\s*출석|등기우편|내용증명|우편으로)")],
     "F-04": [re.compile(r"[^.。\n]{0,40}(동의|승낙|이의가\s*없|갱신)[^.。\n]{0,10}것으로\s*본다")],
-    "F-03": [re.compile(r"(영업정지|인가\s*취소|허가\s*취소|등록\s*취소|면허\s*취소|지정\s*취소|"
+    # 1차: 처분을 '행사'하는 절(취소/정지/명령 + 한다/할 수 있다) 우선 — 위임절 회피.
+    "F-03": [re.compile(r"(영업정지|인가취소|허가취소|등록취소|면허취소|지정취소|설립허가[^.。\n]{0,4}취소|"
+                        r"폐쇄명령|과징금|업무정지|시정명령|개선명령)[^.。\n]{0,25}"
+                        r"(할\s*수\s*있다|하여야\s*한다|한다|명할\s*수\s*있다|명한다|처분)"),
+             re.compile(r"(허가|인가|등록|면허|지정)(?:을|를|의)?\s*취소(하거나|하고|할\s*수\s*있다|한다|하여야)"),
+             re.compile(r"(영업정지|인가\s*취소|허가\s*취소|등록\s*취소|면허\s*취소|지정\s*취소|"
                         r"폐쇄\s*명령|과징금|업무\s*정지|시정\s*명령)")],
     "F-05": [re.compile(r"(필요하다고\s*인정(?:되는|하는|하면)?|필요한\s*경우|상당한|적절한)")],
     "F-01": [re.compile(r"(제한할\s*수\s*있다|제한한다|거부할\s*수\s*있다|배제|적용하지\s*아니한다|"
@@ -70,6 +75,10 @@ _CITATION_PATTERNS = {"L-01", "L-02", "L-03"}
 # 키워드 등급이지만 맥락(포함 문장)이 필요한 패턴 (gold: 단어 단독은 맥락 약함).
 # E-03 은 자문위원 채택 형태('서면으로')라 짧게 유지 → 제외.
 _KEYWORD_CONTEXT = {"F-05", "S-03"}
+# 위임절 — 'X의 기준·절차/필요한 사항은 대통령령으로 정한다' (처분 행사절 아님, F-03 오지목 원인).
+_DELEGATION_CLAUSE = re.compile(
+    r"(기준|절차|방법|사항|범위|운영)[^.。\n]{0,30}"
+    r"(대통령령|총리령|부령|시행령|시행규칙)으?로\s*정(?:한다|하는)")
 
 _MD_BOLD = re.compile(r"\*+")
 _ARTICLE_HEADER = re.compile(r"^제\s*\d+조(?:의\d+)*\s*[\(（][^)）]*[\)）]\s*$")
@@ -150,8 +159,16 @@ def extract_verbatim(article, pattern_id: str, matched_text: str | None = None) 
 
     triggers = _DEFECT_TRIGGERS.get(pattern_id, [])
     for trig in triggers:
-        m = trig.search(text)
-        if not m:
+        m = None
+        # 처분 결함(F-03): 위임절('…기준·절차는 대통령령으로 정한다')이 아니라
+        # 처분을 실제 행사하는 절을 고른다 — 매치를 순회하며 위임절은 건너뛴다.
+        for cand in trig.finditer(text):
+            clause_preview = text[max(0, cand.start() - 60):cand.end() + 60]
+            if pattern_id == "F-03" and _DELEGATION_CLAUSE.search(clause_preview):
+                continue
+            m = cand
+            break
+        if m is None:
             continue
         grade = _EXTRACT_GRADE.get(pattern_id, "keyword")
 
@@ -359,7 +376,9 @@ _CONTEXT_DEPENDENT = {"G-01", "G-03", "F-03", "F-01"}
 _BRANCH_MARKERS = ("진정한 예외", "적용제외", "조문 성격", "처분 강도", "처분 성격",
                    "비례성", "여부를 고려", "인지 대조", "필요성을 검토")
 # generic 한계 패턴 (gold: G-04 5요소 일반론 등).
-_GENERIC_MARKERS = ("5요소", "통제환경·위험평가", "해당 부분", "해당 조문의 결함")
+# 주의: 누락요소 '지목'("…확인되지 않음")은 구체 처방이므로 generic 아님 —
+#       옛 마커 '통제환경·위험평가'는 그 지목 출력과 오매칭하므로 제거('5요소' 전체나열만 generic).
+_GENERIC_MARKERS = ("5요소", "통제환경·위험평가·통제활동·정보소통·모니터링", "해당 부분", "해당 조문의 결함")
 
 
 def _has_unfounded_number(rec_text: str, article) -> bool:
