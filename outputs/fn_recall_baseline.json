@@ -6,8 +6,8 @@
   },
   "summary": {
     "fn_total": 22,
-    "still_fn": 22,
-    "recall_now": 0.0,
+    "still_fn": 20,
+    "recall_now": 0.091,
     "gate_frequency": {
       "no_common_gate (룰별 세부 게이트/트리거 미스 가능)": 21,
       "is_definition": 1
@@ -73,7 +73,7 @@
       "fid": "E-03-022@관세법",
       "rule_id": "E-03",
       "article": "제266조",
-      "now_fires": false,
+      "now_fires": true,
       "gate_diagnosis": [
         "no_common_gate (룰별 세부 게이트/트리거 미스 가능)"
       ],
@@ -84,7 +84,7 @@
       "fid": "E-03-010@독점규제및공정거래에관한법률",
       "rule_id": "E-03",
       "article": "제87조",
-      "now_fires": false,
+      "now_fires": true,
       "gate_diagnosis": [
         "no_common_gate (룰별 세부 게이트/트리거 미스 가능)"
       ],

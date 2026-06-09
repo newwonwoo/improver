@@ -63,6 +63,19 @@ _E03_CONTRACT_WRITTEN_CONSENT = re.compile(
 _CITIZEN_FACING = re.compile(r"(신청하여야|신고하여야|제출하여야|청구하여야|요청하여야|등록하여야)")
 
 
+# 국장(전 정비국장) 기준 TP-override — gold fn(관세법§266·공정거래§87) + 라벨링 62건 근거.
+# '서면 조사·보고'를 일률 억제하던 _INTERNAL_WRITTEN 이 '대외 의무(실태조사·처분통보·이의신청·
+# 교부)'까지 억제해 fn 발생. 아래 고정밀 대외신호가 있으면 _INTERNAL_WRITTEN 억제를 해제한다.
+# (라벨 측정: 이 신호는 TP-class 21건에만 발화, 내부 FP 0건 → 게이트① 비악화. outputs/fn_gate_e03.json)
+_E03_OUTBOUND_DUTY = re.compile(
+    r"(실태\s*조사|유통실태"
+    r"|(취소|정지|처분|거부|면허|업무정지)[^.。\n]{0,15}(통보|통지)하여야"
+    r"|이의신청"
+    r"|납세의무자[^.。\n]{0,20}서면|서면으로\s*요청하면"
+    r"|교부하여야|발급하여야)"
+)
+
+
 def _is_fp(text: str, art=None) -> bool:
     """E-03 공통 FP 필터."""
     if _LEGAL_PROC.search(text):
@@ -71,10 +84,15 @@ def _is_fp(text: str, art=None) -> bool:
         return True
     if _CORP_DOC.search(text):
         return True
+    outbound = bool(_E03_OUTBOUND_DUTY.search(text))
     if _INTERNAL_WRITTEN.search(text):
-        return True
+        # 국장 기준: 대외 의무(고정밀)면 억제 해제 → fn 회수. 그 외 내부 보고·심의는 계속 억제.
+        if not outbound:
+            return True
     if _COMMITTEE_PROCEDURE.search(text):
-        return True
+        # 위원회 맥락이라도 '대외 실태조사·처분통보'면 내부 의결이 아니므로 억제 해제.
+        if not outbound:
+            return True
     if _REGISTRY_DOC.search(text):
         return True
     # Method B: 특별법 보상 신청 절차 / 사법형 / 도급계약 = FP

@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "purpose": "E-03 fn 게이트① 측정 — 국장기준 라벨 기반. 라벨은 AI 적용(실국장 확인 대상).",
+    "llm_calls": 0,
+    "rule_refinement_R": "내부 FP(보고·심의·의결·진술·주주총회)는 계속 억제, 대외 TP(실태조사·처분통보·신청·교부)만 발화. BORDER는 보수적으로 미발화 유지."
+  },
+  "label_distribution": {
+    "TP": 21,
+    "BORDER": 24,
+    "FP": 17
+  },
+  "seeds_now_fire_under_R": true,
+  "recall_seeds": 1.0,
+  "R_fired_count": 21,
+  "R_precision_labelbasis": 1.0,
+  "border_to_confirm": 24,
+  "border_ratio": 0.387,
+  "current_e03_precision": 0.5,
+  "gate1_verdict": "PASS(라벨기준) — 시드 발화 + 내부FP 억제유지로 precision 비악화. 단 라벨 AI적용분(BORDER 포함) 실국장 확인 후 룰 반영."
+}
