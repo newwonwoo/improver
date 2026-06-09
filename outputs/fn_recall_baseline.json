@@ -6,8 +6,8 @@
   },
   "summary": {
     "fn_total": 22,
-    "still_fn": 20,
-    "recall_now": 0.091,
+    "still_fn": 19,
+    "recall_now": 0.136,
     "gate_frequency": {
       "no_common_gate (룰별 세부 게이트/트리거 미스 가능)": 21,
       "is_definition": 1
@@ -238,7 +238,7 @@
       "fid": "L-03-001@농업인등의농외소득활동지원에관한법률",
       "rule_id": "L-03",
       "article": "제2조",
-      "now_fires": false,
+      "now_fires": true,
       "gate_diagnosis": [
         "is_definition"
       ],

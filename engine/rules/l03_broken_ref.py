@@ -99,7 +99,11 @@ class L03BrokenRef:
         idx = 0
         seen: set[tuple[str, str, str]] = set()
         for art in law.articles:
-            if art.is_definition() or art.is_purpose():
+            # 목적조문은 인용 검증 생략. 정의조문은 처리한다(폐지·소멸 인용 회수 — gold fn
+            # 농외소득법 §2→지방세법 §197). 정밀도는 per-인용 status 검사(exists→무보고) +
+            # min_art_count(≥40 완전 인덱스만 not_found 보고) + 화이트리스트가 보장하므로,
+            # 정의문맥 일괄 스킵은 불필요(진성 끊김 인용까지 묻혀 fn 유발).
+            if art.is_purpose():
                 continue
             # R2 구조 신호: PENALTY 타입 — 벌칙 인용은 법체계상 정상
             d = decompose(art)
