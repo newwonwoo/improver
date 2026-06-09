@@ -24,13 +24,17 @@
   L-03 2/2, G-04 4/4)이 `outputs/gold_correlation_measure.json` 수치로 1:1 재현됨. 불일치 0.
 - 서명: 설계자 역할, 2026-06-07. (changelog v3 ☑ 반영)
 
-### [코더] 판정: **완료 (DONE) + fn E-03 실제 회수**
+### [코더] 판정: **완료 (DONE) + fn 클린 회수 3/22**
 - 기준: "처방/추출/채점 정형화가 재현 가능하고 LLM 0인가."
 - 확인: 산출물 A~F 전부 커밋·재현.
-- **fn 보강 실측 진척(국장 라벨 기반)**: E-03 fn recall **0/22 → 2/22**(시드 2건 발화).
-  `engine/rules/e03_analog.py`에 고정밀 대외신호 TP-override 추가 → 코퍼스 **+26 발화(전부 대외 의무 class:
-  이의신청 13·실태조사 6·교부/처분통보 등)**. 게이트①: 시드 발화 + 내부 FP 0건 추가 + 회귀 0(207 passed) →
-  **recall↑ AND precision 비악화**. `outputs/fn_gate_e03.json`.
+- **fn 클린 회수 3/22(측정·게이트①)**:
+  - E-03 ×2: `e03_analog.py` 대외 의무 TP-override → 코퍼스 +26(전부 대외 class), 내부 FP 0건 추가.
+  - L-03 §2: `l03_broken_ref.py` 정의조문 인용검증(정의문맥 일괄스킵 폐기) → 코퍼스 2→3건(+1=gold TP
+    '지방세법 §197 삭제'). 벤인 인용은 per-item status=exists로 자동 필터. 회귀 0(207 passed).
+  - 공통 패턴: '과필터가 gold TP 억제 + per-item 정밀도 기제 존재' → 정밀 un-filter로 recall↑·precision 비악화.
+- **남은 19건 = 클린 패턴 아님(측정 진단)**: F-02 gold fn(민법§754·§669)=F-02의 **민·상사법 의도적 스코프
+  제외**(행정면책≠민사 책임배분; 제거 시 민사 FP 폭증). L-03 §9=인용법 **인덱스 부재(unknown)**로 검증 불가.
+  G-01=코퍼스 382건(과필터 아님)→추가 위험. 나머지=신규트리거(신호 부재)·taxonomy 중복. 무검증 완화=게이밍 금지.
 - **남은 fn 측정 triage**(`outputs/fn_triage.json`, scripts/triage_fn.py): 22건 분류 —
   fixed 2(E-03) / **taxonomy 중복 6**(타 룰이 이미 발화: E-05→G-02·G-05, F-01→F-03, S-04→E-01 → 진성 미스 아님) /
   정밀도우선 6(L-03 0.01·F-02 0.07 — recall보다 FP정리 선행) / 신규트리거 6 + SME판정 2.
