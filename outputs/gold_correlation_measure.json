@@ -85,8 +85,8 @@
     },
     "predicted_adoption_on_new_text": {
       "old_mean": 0.5724,
-      "new_mean": 0.6748,
-      "delta": 0.1024,
+      "new_mean": 0.6764,
+      "delta": 0.1039,
       "caveat": "score_adoption(gold AUC 0.94)의 '예측'. 실제 채택률은 자문위원 재검 게이트 전까지 단정 금지."
     }
   },
@@ -650,11 +650,11 @@
         "not_generic": 0
       },
       "old_has_unfounded_number": false,
-      "new_text": "제127조의4 — 내부통제 요소 중 위험평가·통제활동·정보소통이(가) 본문에서 확인되지 않음 — 해당 요소의 보완 필요성을 검토할 것.",
-      "new_verbatim": null,
-      "new_method": "none",
+      "new_text": "제127조의4 본문 「중앙회는 법령과 정관을 준수하고 중앙회의 이용자를 보호하기 위하여 중앙회의 임직원이 그 직무를 수행할 때 따라야 할 기본적인 절차와 기준(이하 \"내부통제기준\"이라 한다)을 정하여야 한다.」 — 내부통제 요소 중 위험평가·통제활동·정보소통이(가) 본문에서 확인되지 않음 — 해당 요소의 보완 필요성을 검토할 것.",
+      "new_verbatim": "중앙회는 법령과 정관을 준수하고 중앙회의 이용자를 보호하기 위하여 중앙회의 임직원이 그 직무를 수행할 때 따라야 할 기본적인 절차와 기준(이하 \"내부통제기준\"이라 한다)을 정하여야 한다.",
+      "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.6,
+      "new_adoption_score": 0.65,
       "g04_absent_named": true,
       "s04_branch": null
     },

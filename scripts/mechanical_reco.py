@@ -170,35 +170,28 @@ def extract_verbatim(article, pattern_id: str, matched_text: str | None = None) 
             return None, "none"
 
     triggers = _DEFECT_TRIGGERS.get(pattern_id, [])
+    grade = _EXTRACT_GRADE.get(pattern_id, "keyword")
     for trig in triggers:
-        m = None
-        # 처분 결함(F-03): 위임절('…기준·절차는 대통령령으로 정한다')이 아니라
-        # 처분을 실제 행사하는 절을 고른다 — 매치를 순회하며 위임절은 건너뛴다.
+        # 매치를 순회하며 부적격(F-03 위임절, 제목/헤더만 잡힌 절)은 건너뛰고 첫 유효 절 채택.
+        # (제목의 키워드가 첫 매치라 헤더만 잡히던 회귀 방지 — 예: G-04 '내부통제기준 등' 제목.)
         for cand in trig.finditer(text):
-            clause_preview = text[max(0, cand.start() - 60):cand.end() + 60]
-            if pattern_id == "F-03" and _DELEGATION_CLAUSE.search(clause_preview):
-                continue
-            m = cand
-            break
-        if m is None:
-            continue
-        grade = _EXTRACT_GRADE.get(pattern_id, "keyword")
+            if pattern_id == "F-03":
+                preview = text[max(0, cand.start() - 60):cand.end() + 60]
+                if _DELEGATION_CLAUSE.search(preview):
+                    continue
 
-        if grade == "keyword":
-            # 맥락 보강(gold: 단어 하나만으론 '어느 처분의 어느 요건'인지 약함) —
-            # 키워드 포함 '문장(절)'을 추출해 맥락을 준다. 단, E-03 는 자문위원이
-            # 채택한 짧은 형태('서면으로')를 유지(정형 명령형 보존).
-            if pattern_id in _KEYWORD_CONTEXT:
-                clause = _slice_clause(text, m.start(), m.end(), m.group(0))
-                if clause and len(_normalize_for_match(clause)) >= 12:
-                    return clause, "keyword_clause"
-            kw = _clean_ws(m.group(0))
-            return kw, "keyword"
+            if grade == "keyword":
+                # 맥락 보강(gold: 단어 단독은 약함) — 키워드 포함 절 추출(E-03 은 짧게 유지).
+                if pattern_id in _KEYWORD_CONTEXT:
+                    clause = _slice_clause(text, cand.start(), cand.end(), cand.group(0))
+                    if clause and len(_normalize_for_match(clause)) >= 12:
+                        return clause, "keyword_clause"
+                return _clean_ws(cand.group(0)), "keyword"
 
-        clause = _slice_clause(text, m.start(), m.end(), m.group(0))
-        if clause is None:
-            continue
-        return clause, "sentence"
+            clause = _slice_clause(text, cand.start(), cand.end(), cand.group(0))
+            if clause is None:
+                continue  # 다음 매치 시도 (제목/헤더만 잡힌 경우)
+            return clause, "sentence"
 
     return None, "none"
 
