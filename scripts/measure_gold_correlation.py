@@ -118,6 +118,9 @@ def _bootstrap_auc(scores, labels, n=BOOT_N, seed=SEED):
 
 def main() -> int:
     gold = {json.loads(l)["fid"]: json.loads(l) for l in GOLD_PATH.read_text(encoding="utf-8").splitlines() if l.strip()}
+    # ⚠️ reco_mechanical_measure.json 은 '자문위원이 검토한 그 권고문' = 고정 스냅샷이어야 한다.
+    #    measure_reco_mechanical.py 를 재실행하면 신 처방으로 덮어써져 '검토된 텍스트' 검증이
+    #    깨진다(채점기를 신 텍스트로 채점). 덮어썼다면 `git checkout` 로 복원할 것.
     reviewed = {r["fid"]: r for r in json.loads(REVIEWED_PATH.read_text(encoding="utf-8"))["records"]}
 
     # 검토 대상: 권고가 실재한(scored) 행만 — 자문위원이 채택/수정 판정한 표본.
