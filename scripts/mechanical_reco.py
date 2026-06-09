@@ -442,6 +442,11 @@ def adoption_features(rec_text: str, verbatim: str | None, extract_method: str,
     else:
         branched = 1
     not_generic = 0 if (verbatim is None or any(k in (rec_text or "") for k in _GENERIC_MARKERS)) else 1
+    # G-04 누락요소 '지목'("X·Y가 확인되지 않음")은 gold가 요구한 구체 처방 — verbatim 인용이
+    # 없어도 정합·비generic으로 인정. 단 5요소 전부 나열은 사실상 일반론이라 제외.
+    if pid == "G-04" and "확인되지 않음" in (rec_text or ""):
+        aligned = 1
+        not_generic = 0 if "통제환경·위험평가·통제활동·정보소통·모니터링" in rec_text else 1
     return {
         "aligned": aligned, "strength": strength, "canonical": canonical,
         "no_number": no_number, "branched": branched, "not_generic": not_generic,

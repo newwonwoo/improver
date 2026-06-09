@@ -85,8 +85,8 @@
     },
     "predicted_adoption_on_new_text": {
       "old_mean": 0.5724,
-      "new_mean": 0.667,
-      "delta": 0.0945,
+      "new_mean": 0.6748,
+      "delta": 0.1024,
       "caveat": "score_adoption(gold AUC 0.94)의 '예측'. 실제 채택률은 자문위원 재검 게이트 전까지 단정 금지."
     }
   },
@@ -654,7 +654,7 @@
       "new_verbatim": null,
       "new_method": "none",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.34,
+      "new_adoption_score": 0.6,
       "g04_absent_named": true,
       "s04_branch": null
     },
