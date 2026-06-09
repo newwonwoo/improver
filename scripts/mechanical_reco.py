@@ -102,8 +102,7 @@ def _slice_clause(text: str, start: int, end: int, anchor: str) -> str | None:
     right_candidates = [r for r in right_candidates if r != -1]
     right = min(right_candidates) + 1 if right_candidates else len(text)
     clause = _clean_ws(text[left + 1:right])
-    clause = re.sub(r"^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳]\s*", "", clause)
-    if _ARTICLE_HEADER.match(clause):
+    if _ARTICLE_HEADER.match(_strip_clause_head(clause)):
         return None
     # 윈도우 축약: 130자 초과면 앵커 중심 ±50자 (verbatim 연속 유지)
     if len(clause) > 130 and anchor:
@@ -114,7 +113,17 @@ def _slice_clause(text: str, start: int, end: int, anchor: str) -> str | None:
             a = max(0, pos - 40)
             b = min(len(full_clean), pos + len(ac) + 50)
             clause = full_clean[a:b]
+    # 윈도우/슬라이스가 끌고 온 앞머리 조각 제거 (제목 꼬리 '…독)', 항번호 ①) — 윈도우 후 적용.
+    clause = _strip_clause_head(clause)
     return clause or None
+
+
+# 절 앞머리의 비온전 조각 — 제목 꼬리('감독)'→'독)'), 원문자 항번호.
+_CLAUSE_HEAD_JUNK = re.compile(r"^(?:[가-힣]{0,4}[)\）]\s*|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳]\s*)+")
+
+
+def _strip_clause_head(clause: str) -> str:
+    return _CLAUSE_HEAD_JUNK.sub("", clause)
 
 
 def _citation_anchor_regex(matched_text: str) -> re.Pattern | None:
