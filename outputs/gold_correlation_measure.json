@@ -85,8 +85,8 @@
     },
     "predicted_adoption_on_new_text": {
       "old_mean": 0.5724,
-      "new_mean": 0.6521,
-      "delta": 0.0797,
+      "new_mean": 0.6615,
+      "delta": 0.0891,
       "caveat": "score_adoption(gold AUC 0.94)의 '예측'. 실제 채택률은 자문위원 재검 게이트 전까지 단정 금지."
     }
   },
@@ -191,11 +191,11 @@
         "not_generic": 0
       },
       "old_has_unfounded_number": false,
-      "new_text": "제10조 — 권리 제한 해당 부분 의 비례성을 검토하여 제한 사유와 이의신청·구제절차 명시를 검토할 것.",
-      "new_verbatim": null,
-      "new_method": "none",
+      "new_text": "제10조 본문 「다음 각 호의 어느 하나에 해당하는 자가 소유하거나 임차한 항공기는 등록할 수 없다.」 — 권리 제한 '다음 각 호의 어느 하나에 해당하는 자가 소유하거나 임차한 항공기는 등록할 수 없다.' 의 비례성을 검토하여 제한 사유와 이의신청·구제절차 명시를 검토할 것.",
+      "new_verbatim": "다음 각 호의 어느 하나에 해당하는 자가 소유하거나 임차한 항공기는 등록할 수 없다.",
+      "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.34,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },
