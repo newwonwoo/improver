@@ -1,0 +1,254 @@
+{
+  "fn_total": 22,
+  "class_distribution": {
+    "신규트리거 필요": 6,
+    "SME 판정 필요": 2,
+    "fixed": 2,
+    "taxonomy 중복": 6,
+    "정밀도 우선": 6
+  },
+  "records": [
+    {
+      "fid": "E-01-063@군사법원법",
+      "rule": "E-01",
+      "article": "제369조",
+      "precision": 0.32,
+      "trigger_hit": false,
+      "other_fired": [],
+      "class": "신규트리거 필요(defect signal 부재)",
+      "fix_hint": "탐지기가 제369조 전문진술 증거능력 요건을 포착하도록 룰을 재점검하고, 발화 시 verbatim 추출을 선행할 것."
+    },
+    {
+      "fid": "E-01-012@기업활력제고를위한특별법",
+      "rule": "E-01",
+      "article": "제23조",
+      "precision": 0.32,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "SME 판정 필요(임계/주체 경계)",
+      "fix_hint": "특례요건 4개 충족 패턴이 발화하도록 탐지조건을 재검토할 것."
+    },
+    {
+      "fid": "E-01-034@농수산물품질관리법",
+      "rule": "E-01",
+      "article": "제65조",
+      "precision": 0.32,
+      "trigger_hit": false,
+      "other_fired": [],
+      "class": "신규트리거 필요(defect signal 부재)",
+      "fix_hint": "제65조 단서의 강행규정 성격을 본문 원칙과 대조해 탐지 발화 여부를 재점검할 것."
+    },
+    {
+      "fid": "E-01-094@조세특례제한법",
+      "rule": "E-01",
+      "article": "제76조",
+      "precision": 0.32,
+      "trigger_hit": false,
+      "other_fired": [],
+      "class": "신규트리거 필요(defect signal 부재)",
+      "fix_hint": "공제율 다단조건의 가독성 문제를 포착하도록 탐지룰을 보완할 것."
+    },
+    {
+      "fid": "E-03-022@관세법",
+      "rule": "E-03",
+      "article": "제266조",
+      "precision": 0.5,
+      "trigger_hit": true,
+      "other_fired": [
+        "E-03",
+        "L-04",
+        "S-03"
+      ],
+      "class": "fixed(이번세션 회수)",
+      "fix_hint": "제266조 '서면으로' 키워드 탐지가 발화하도록 점검할 것."
+    },
+    {
+      "fid": "E-03-010@독점규제및공정거래에관한법률",
+      "rule": "E-03",
+      "article": "제87조",
+      "precision": 0.5,
+      "trigger_hit": true,
+      "other_fired": [
+        "E-03"
+      ],
+      "class": "fixed(이번세션 회수)",
+      "fix_hint": "제87조 서면통지 규정에 대해 탐지 발화 여부를 재점검할 것."
+    },
+    {
+      "fid": "E-05-003@골재채취법",
+      "rule": "E-05",
+      "article": "제16조",
+      "precision": 0.05,
+      "trigger_hit": true,
+      "other_fired": [
+        "G-05"
+      ],
+      "class": "taxonomy 중복(G-05 발화)",
+      "fix_hint": "제16조 신고의무-벌칙 정합성 탐지가 발화하도록 점검할 것."
+    },
+    {
+      "fid": "E-05-016@국세기본법",
+      "rule": "E-05",
+      "article": "제46조",
+      "precision": 0.05,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "정밀도 우선(과발화 룰 — recall보다 FP정리)",
+      "fix_hint": "가산세 추가납부 침익의무 패턴 발화 여부를 재점검할 것."
+    },
+    {
+      "fid": "E-05-001@김치산업진흥법",
+      "rule": "E-05",
+      "article": "제24조의2",
+      "precision": 0.05,
+      "trigger_hit": true,
+      "other_fired": [
+        "G-02"
+      ],
+      "class": "taxonomy 중복(G-02 발화)",
+      "fix_hint": "지리적표시 등록의무 규정의 제재공백 탐지를 점검할 것."
+    },
+    {
+      "fid": "E-05-004@대중문화예술산업발전법",
+      "rule": "E-05",
+      "article": "제21조의2",
+      "precision": 0.05,
+      "trigger_hit": true,
+      "other_fired": [
+        "G-02",
+        "L-04"
+      ],
+      "class": "taxonomy 중복(G-02/L-04 발화)",
+      "fix_hint": "청소년보호책임자 지정의무의 사업자 제재공백 탐지를 점검할 것."
+    },
+    {
+      "fid": "F-01-017@공항시설법",
+      "rule": "F-01",
+      "article": "제45조",
+      "precision": 0.38,
+      "trigger_hit": false,
+      "other_fired": [],
+      "class": "신규트리거 필요(defect signal 부재)",
+      "fix_hint": "완성검사 전 사용제한 규정의 탐지 발화를 점검할 것."
+    },
+    {
+      "fid": "F-01-008@낚시관리및육성법",
+      "rule": "F-01",
+      "article": "제14조",
+      "precision": 0.38,
+      "trigger_hit": true,
+      "other_fired": [
+        "F-03",
+        "L-04"
+      ],
+      "class": "taxonomy 중복(F-03/L-04 발화)",
+      "fix_hint": "허가취소·영업정지 처분 절차 탐지를 점검할 것."
+    },
+    {
+      "fid": "F-01-009@마약류관리에관한법률",
+      "rule": "F-01",
+      "article": "제9조",
+      "precision": 0.38,
+      "trigger_hit": true,
+      "other_fired": [
+        "G-02"
+      ],
+      "class": "taxonomy 중복(G-02 발화)",
+      "fix_hint": "양수·양도 제한 규정의 탐지 발화를 점검할 것."
+    },
+    {
+      "fid": "F-02-016@민법",
+      "rule": "F-02",
+      "article": "제754조",
+      "precision": 0.07,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "정밀도 우선(과발화 룰 — recall보다 FP정리)",
+      "fix_hint": "제754조 심신상실 단서의 고의·과실 요건 탐지를 점검할 것."
+    },
+    {
+      "fid": "F-02-012@민법",
+      "rule": "F-02",
+      "article": "제669조",
+      "precision": 0.07,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "정밀도 우선(과발화 룰 — recall보다 FP정리)",
+      "fix_hint": "제669조 수급인 고지의무 위반효과 탐지를 점검할 것."
+    },
+    {
+      "fid": "F-02-016@상법",
+      "rule": "F-02",
+      "article": "제774조",
+      "precision": 0.07,
+      "trigger_hit": false,
+      "other_fired": [],
+      "class": "신규트리거 필요(defect signal 부재)",
+      "fix_hint": "선박소유자 책임제한 규정 탐지를 점검할 것."
+    },
+    {
+      "fid": "F-02-001@소프트웨어진흥법",
+      "rule": "F-02",
+      "article": "제60조",
+      "precision": 0.07,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "정밀도 우선(과발화 룰 — recall보다 FP정리)",
+      "fix_hint": "고지의무 위반책임 규정의 탐지 발화를 점검할 것."
+    },
+    {
+      "fid": "F-03-002@옥외광고물등관리법",
+      "rule": "F-03",
+      "article": "제10조",
+      "precision": 0.24,
+      "trigger_hit": false,
+      "other_fired": [
+        "G-05"
+      ],
+      "class": "신규트리거 필요(defect signal 부재)",
+      "fix_hint": "제거명령 기준·청문 부재 탐지를 점검할 것."
+    },
+    {
+      "fid": "G-01-003@장기등이식에관한법률",
+      "rule": "G-01",
+      "article": "제22조",
+      "precision": 0.27,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "SME 판정 필요(임계/주체 경계)",
+      "fix_hint": "제22조 동의예외 단서 중첩 탐지가 발화하도록 점검할 것."
+    },
+    {
+      "fid": "L-03-001@농업인등의농외소득활동지원에관한법률",
+      "rule": "L-03",
+      "article": "제2조",
+      "precision": 0.01,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "정밀도 우선(과발화 룰 — recall보다 FP정리)",
+      "fix_hint": "제2조의 사라진 인용조문(지방세법 제197조) 탐지가 발화하도록 점검할 것."
+    },
+    {
+      "fid": "L-03-001@대한민국과아메리카합중국간의상호방위조약제4조에의한시설과구역및대한민국에서의합중국군대의지위에관한협정의실시에따른관세법등의임시특례에관한법률",
+      "rule": "L-03",
+      "article": "제9조",
+      "precision": 0.01,
+      "trigger_hit": true,
+      "other_fired": [],
+      "class": "정밀도 우선(과발화 룰 — recall보다 FP정리)",
+      "fix_hint": "제9조의 폐지예정 법령 인용 탐지를 점검할 것."
+    },
+    {
+      "fid": "S-04-002@기부금품의모집ㆍ사용및기부문화활성화에관한법률",
+      "rule": "S-04",
+      "article": "제10조",
+      "precision": 0.17,
+      "trigger_hit": true,
+      "other_fired": [
+        "E-01"
+      ],
+      "class": "taxonomy 중복(E-01 발화)",
+      "fix_hint": "제10조 재량처분 다수 탐지가 발화하도록 점검할 것."
+    }
+  ]
+}
