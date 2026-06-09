@@ -75,6 +75,21 @@
       "양호": "조치 불요."
     }
   },
+  "round2_coder": {
+    "g04_n": 4,
+    "g04_absent_named": 4,
+    "s04_branch_by_ho": {
+      "S-04-019@자본시장과금": "별표",
+      "S-04-002@총포ㆍ도검ㆍ": "정렬",
+      "S-04-002@치매관리법": "정렬"
+    },
+    "predicted_adoption_on_new_text": {
+      "old_mean": 0.5452,
+      "new_mean": 0.6036,
+      "delta": 0.0585,
+      "caveat": "score_adoption(gold AUC 0.94)의 '예측'. 실제 채택률은 자문위원 재검 게이트 전까지 단정 금지."
+    }
+  },
   "rows": [
     {
       "fid": "E-03-004@가맹사업거래의공정화에관한법률",
@@ -98,7 +113,10 @@
       "new_text": "제9조 본문 「서면으로」 — '서면으로' 의 서면·대면 강제에 「전자문서 및 전자거래 기본법」에 따른 전자문서를 포함하도록 병기할 것.",
       "new_verbatim": "서면으로",
       "new_method": "keyword",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.95,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-01-007@독점규제및공정거래에관한법률",
@@ -122,7 +140,10 @@
       "new_text": "제25조 본문 「다만, 다음 각 호의 어느 하나에 해당하는 경우에는 그러하지 아니하다.」 — 단서 '다만, 다음 각 호의 어느 하나에 해당하는 경우에는 그러하지 아니하다.' 가 본문 원칙의 진정한 예외인지 단순 적용제외인지 대조하여 — 진성 예외면 별도 항 분리, 적용제외면 본문 통합·호 정리 — 정비 방향을 검토할 것.",
       "new_verbatim": "다만, 다음 각 호의 어느 하나에 해당하는 경우에는 그러하지 아니하다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "E-03-010@상표법",
@@ -146,7 +167,10 @@
       "new_text": "제58조 본문 「서면으로」 — '서면으로' 의 서면·대면 강제에 「전자문서 및 전자거래 기본법」에 따른 전자문서를 포함하도록 병기할 것.",
       "new_verbatim": "서면으로",
       "new_method": "keyword",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.95,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-01-003@항공안전법",
@@ -170,7 +194,10 @@
       "new_text": "제10조 — 권리 제한 해당 부분 의 비례성을 검토하여 제한 사유와 이의신청·구제절차 명시를 검토할 것.",
       "new_verbatim": null,
       "new_method": "none",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.34,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-03-002@민법",
@@ -194,7 +221,10 @@
       "new_text": "제95조 본문 「법인의 해산 및 청산은 법원이 검사, 감독한다.」 — '법인의 해산 및 청산은 법원이 검사, 감독한다.' 감독 권한의 조문 성격(기본법 원칙규정 여부)을 고려하여, 감독 범위·방법 또는 결과 공시 등 절차 보강 필요성을 검토할 것.",
       "new_verbatim": "법인의 해산 및 청산은 법원이 검사, 감독한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-03-001@민법",
@@ -218,7 +248,10 @@
       "new_text": "제37조 본문 「법인의 사무는 주무관청이 검사, 감독한다.」 — '법인의 사무는 주무관청이 검사, 감독한다.' 감독 권한의 조문 성격(기본법 원칙규정 여부)을 고려하여, 감독 범위·방법 또는 결과 공시 등 절차 보강 필요성을 검토할 것.",
       "new_verbatim": "법인의 사무는 주무관청이 검사, 감독한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-03-001@문화기본법",
@@ -242,7 +275,10 @@
       "new_text": "제9조의4 본문 「제1항에 따른 평가 전담기관의 지정 및 제3항에 따른 지정취소ㆍ업무정지의 기준 및 절차, 운영 등에 필요한 사항은 대통령령으로 정한다.」 — '제1항에 따른 평가 전담기관의 지정 및 제3항에 따른 지정취소ㆍ업무정지의 기준 및 절차, 운영 등에 필요한 사항은 대통령령으로 정한다.' 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
       "new_verbatim": "제1항에 따른 평가 전담기관의 지정 및 제3항에 따른 지정취소ㆍ업무정지의 기준 및 절차, 운영 등에 필요한 사항은 대통령령으로 정한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-03-001@수의사법",
@@ -266,7 +302,10 @@
       "new_text": "제22조의5 — 해당 부분 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
       "new_verbatim": null,
       "new_method": "none",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.34,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-03-001@재난및안전관리기본법",
@@ -290,7 +329,10 @@
       "new_text": "제34조의6 — 해당 부분 처분에 사전 통지·의견제출(처분 강도에 따라 청문) 절차와 처분기준의 별표화를 처분 성격에 맞추어 검토할 것.",
       "new_verbatim": null,
       "new_method": "none",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.34,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-04-004@도시및주거환경정비법",
@@ -314,7 +356,10 @@
       "new_text": "제26조 본문 「이 경우 제14조제1항제2호에 따라 토지등소유자가 정비계획의 입안을 제안한 경우 입안제안에 동의한 토지등소유자는 토지주택공사등의 사업시행자 지정에 동의한 것으로 본다.」 — '이 경우 제14조제1항제2호에 따라 토지등소유자가 정비계획의 입안을 제안한 경우 입안제안에 동의한 토지등소유자는 토지주택공사등의 사업시행자 지정에 동의한 것으로 본다.' 의 의제 조항에 대해 사전 통지·철회권 보강 또는 명시적 동의 방식으로의 전환을 검토할 것(숙려기간을 둘 경우 본문 기간·유사 입법례와 정합되게 설정).",
       "new_verbatim": "이 경우 제14조제1항제2호에 따라 토지등소유자가 정비계획의 입안을 제안한 경우 입안제안에 동의한 토지등소유자는 토지주택공사등의 사업시행자 지정에 동의한 것으로 본다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-04-008@도시및주거환경정비법",
@@ -338,7 +383,10 @@
       "new_text": "제101조의10 본문 「이 경우 제101조의9에 따라 사업시행자 지정에 동의한 토지등소유자는 동의한 것으로 본다.」 — '이 경우 제101조의9에 따라 사업시행자 지정에 동의한 토지등소유자는 동의한 것으로 본다.' 의 의제 조항에 대해 사전 통지·철회권 보강 또는 명시적 동의 방식으로의 전환을 검토할 것(숙려기간을 둘 경우 본문 기간·유사 입법례와 정합되게 설정).",
       "new_verbatim": "이 경우 제101조의9에 따라 사업시행자 지정에 동의한 토지등소유자는 동의한 것으로 본다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-04-007@도시및주거환경정비법",
@@ -362,7 +410,10 @@
       "new_text": "제101조의9 본문 「이 경우 제101조의8제1항에 따라 정비구역 지정제안에 동의한 토지등소유자는 토지주택공사등 또는 지정개발자의 사업시행자 지정에 동의한 것으로 본다.」 — '이 경우 제101조의8제1항에 따라 정비구역 지정제안에 동의한 토지등소유자는 토지주택공사등 또는 지정개발자의 사업시행자 지정에 동의한 것으로 본다.' 의 의제 조항에 대해 사전 통지·철회권 보강 또는 명시적 동의 방식으로의 전환을 검토할 것(숙려기간을 둘 경우 본문 기간·유사 입법례와 정합되게 설정).",
       "new_verbatim": "이 경우 제101조의8제1항에 따라 정비구역 지정제안에 동의한 토지등소유자는 토지주택공사등 또는 지정개발자의 사업시행자 지정에 동의한 것으로 본다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-04-001@화물자동차운수사업법",
@@ -386,7 +437,10 @@
       "new_text": "제40조의4 본문 「제3항의 통지가 있은 날부터 1개월 이내에 운송사업자가 양도에 대한 동의를 거절하지 아니하는 경우에는 운송사업자가 양도에 동의한 것으로 본다.」 — '제3항의 통지가 있은 날부터 1개월 이내에 운송사업자가 양도에 대한 동의를 거절하지 아니하는 경우에는 운송사업자가 양도에 동의한 것으로 본다.' 의 의제 조항에 대해 사전 통지·철회권 보강 또는 명시적 동의 방식으로의 전환을 검토할 것(숙려기간을 둘 경우 본문 기간·유사 입법례와 정합되게 설정).",
       "new_verbatim": "제3항의 통지가 있은 날부터 1개월 이내에 운송사업자가 양도에 대한 동의를 거절하지 아니하는 경우에는 운송사업자가 양도에 동의한 것으로 본다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-05-001@가덕도신공항건설을위한특별법",
@@ -410,7 +464,10 @@
       "new_text": "제23조 본문 「상당한」 — 재량 표현 '상당한' 에 발동 요건·고려 요소 열거와 이유 부기 의무 신설을 검토할 것.",
       "new_verbatim": "상당한",
       "new_method": "keyword",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.6,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "F-05-001@간선급행버스체계의건설및운영에관한특별법",
@@ -434,7 +491,10 @@
       "new_text": "제34조 본문 「필요한 경우」 — 재량 표현 '필요한 경우' 에 발동 요건·고려 요소 열거와 이유 부기 의무 신설을 검토할 것.",
       "new_verbatim": "필요한 경우",
       "new_method": "keyword",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.6,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-01-007@공직자윤리법",
@@ -458,7 +518,10 @@
       "new_text": "제14조의4 본문 「다만, 제14조의5제7항 또는 제14조의12에 따라 주식백지신탁 심사위원회로부터 직무관련성이 없다는 결정을 통지받은 경우에는 그러하지 아니하다.」 — 단서 '다만, 제14조의5제7항 또는 제14조의12에 따라 주식백지신탁 심사위원회로부터 직무관련성이 없다는 결정을 통지받은 경우에는 그러하지 아니하다.' 가 본문 원칙의 진정한 예외인지 단순 적용제외인지 대조하여 — 진성 예외면 별도 항 분리, 적용제외면 본문 통합·호 정리 — 정비 방향을 검토할 것.",
       "new_verbatim": "다만, 제14조의5제7항 또는 제14조의12에 따라 주식백지신탁 심사위원회로부터 직무관련성이 없다는 결정을 통지받은 경우에는 그러하지 아니하다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-01-001@생활물류서비스산업발전법",
@@ -482,7 +545,10 @@
       "new_text": "제15조 본문 「다만, 제1호, 제2호, 제4호, 제6호 또는 제7호의 경우에는 그 등록을 취소하여야 한다.」 — 단서 '다만, 제1호, 제2호, 제4호, 제6호 또는 제7호의 경우에는 그 등록을 취소하여야 한다.' 가 본문 원칙의 진정한 예외인지 단순 적용제외인지 대조하여 — 진성 예외면 별도 항 분리, 적용제외면 본문 통합·호 정리 — 정비 방향을 검토할 것.",
       "new_verbatim": "다만, 제1호, 제2호, 제4호, 제6호 또는 제7호의 경우에는 그 등록을 취소하여야 한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-03-001@생활체육진흥법",
@@ -506,7 +572,10 @@
       "new_text": "제14조 본문 「생활체육회는 문화체육관광부장관이 감독한다.」 — '생활체육회는 문화체육관광부장관이 감독한다.' 감독 권한의 조문 성격(기본법 원칙규정 여부)을 고려하여, 감독 범위·방법 또는 결과 공시 등 절차 보강 필요성을 검토할 것.",
       "new_verbatim": "생활체육회는 문화체육관광부장관이 감독한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-03-001@주택법",
@@ -530,7 +599,10 @@
       "new_text": "제95조 본문 「국토교통부장관은 협회를 지도ㆍ감독한다.」 — '국토교통부장관은 협회를 지도ㆍ감독한다.' 감독 권한의 조문 성격(기본법 원칙규정 여부)을 고려하여, 감독 범위·방법 또는 결과 공시 등 절차 보강 필요성을 검토할 것.",
       "new_verbatim": "국토교통부장관은 협회를 지도ㆍ감독한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "G-04-001@금융거래지표의관리에관한법률",
@@ -551,10 +623,13 @@
         "not_generic": 1
       },
       "old_has_unfounded_number": false,
-      "new_text": "제5조 본문 「중요지표의 신뢰성 확보를 위하여 산출업무 수행 과정에서 이해상충관리, 산출절차 준수 및 이를 관리ㆍ감독할 수 있는 내부통제장치를 갖추고 있을 것」 — 내부통제 요소('중요지표의 신뢰성 확보를 위하여 산출업무 수행 과정에서 이해상충관리, 산출절차 준수 및 이를 관리ㆍ감독할 수 있는 내부통제장치를 갖추고 있을 것' 등) 중 누락·미흡한 통제활동·모니터링 요소의 보완 필요성을 검토할 것.",
+      "new_text": "제5조 본문 「중요지표의 신뢰성 확보를 위하여 산출업무 수행 과정에서 이해상충관리, 산출절차 준수 및 이를 관리ㆍ감독할 수 있는 내부통제장치를 갖추고 있을 것」 — 내부통제 요소 중 통제환경·위험평가·통제활동·정보소통이(가) 본문에서 확인되지 않음 — 해당 요소의 보완 필요성을 검토할 것.",
       "new_verbatim": "중요지표의 신뢰성 확보를 위하여 산출업무 수행 과정에서 이해상충관리, 산출절차 준수 및 이를 관리ㆍ감독할 수 있는 내부통제장치를 갖추고 있을 것",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.57,
+      "g04_absent_named": true,
+      "s04_branch": null
     },
     {
       "fid": "G-04-001@수산업협동조합법",
@@ -575,10 +650,13 @@
         "not_generic": 0
       },
       "old_has_unfounded_number": false,
-      "new_text": "제127조의4 — 내부통제 5요소(통제환경·위험평가·통제활동·정보소통·모니터링) 중 누락 요소의 보완을 검토할 것.",
+      "new_text": "제127조의4 — 내부통제 요소 중 위험평가·통제활동·정보소통이(가) 본문에서 확인되지 않음 — 해당 요소의 보완 필요성을 검토할 것.",
       "new_verbatim": null,
       "new_method": "none",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.34,
+      "g04_absent_named": true,
+      "s04_branch": null
     },
     {
       "fid": "G-04-001@온라인투자연계금융업및이용자보호에관한법률",
@@ -599,10 +677,13 @@
         "not_generic": 1
       },
       "old_has_unfounded_number": false,
-      "new_text": "제5조 본문 「특정 이용자와 다른 이용자 간, 온라인투자연계금융업자와 이용자 간의 이해상충을 방지하기 위한 체계(제18조의 이해상충방지 체계를 말한다)를 포함하여 적절한 내부통제장치가 마련되어 있을 것」 — 내부통제 요소('특정 이용자와 다른 이용자 간, 온라인투자연계금융업자와 이용자 간의 이해상충을 방지하기 위한 체계(제18조의 이해상충방지 체계를 말한다)를 포함하여 적절한 내부통제장치가 마련되어 있을 것' 등) 중 누락·미흡한 통제활동·모니터링 요소의 보완 필요성을 검토할 것.",
+      "new_text": "제5조 본문 「특정 이용자와 다른 이용자 간, 온라인투자연계금융업자와 이용자 간의 이해상충을 방지하기 위한 체계(제18조의 이해상충방지 체계를 말한다)를 포함하여 적절한 내부통제장치가 마련되어 있을 것」 — 내부통제 요소 중 통제환경·위험평가·통제활동·정보소통·모니터링이(가) 본문에서 확인되지 않음 — 해당 요소의 보완 필요성을 검토할 것.",
       "new_verbatim": "특정 이용자와 다른 이용자 간, 온라인투자연계금융업자와 이용자 간의 이해상충을 방지하기 위한 체계(제18조의 이해상충방지 체계를 말한다)를 포함하여 적절한 내부통제장치가 마련되어 있을 것",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.57,
+      "g04_absent_named": true,
+      "s04_branch": null
     },
     {
       "fid": "G-04-001@특정금융거래정보의보고및이용등에관한법률",
@@ -623,10 +704,13 @@
         "not_generic": 0
       },
       "old_has_unfounded_number": false,
-      "new_text": "제5조 — 내부통제 5요소(통제환경·위험평가·통제활동·정보소통·모니터링) 중 누락 요소의 보완을 검토할 것.",
-      "new_verbatim": null,
-      "new_method": "none",
-      "new_has_unfounded_number": false
+      "new_text": "제5조 본문 「자금세탁행위와 공중협박자금조달행위의 방지를 위하여 해당 금융회사등의 임직원이 직무를 수행할 때 따라야 할 절차 및 업무지침의 작성ㆍ운용」 — 내부통제 요소 중 통제환경·위험평가·모니터링이(가) 본문에서 확인되지 않음 — 해당 요소의 보완 필요성을 검토할 것.",
+      "new_verbatim": "자금세탁행위와 공중협박자금조달행위의 방지를 위하여 해당 금융회사등의 임직원이 직무를 수행할 때 따라야 할 절차 및 업무지침의 작성ㆍ운용",
+      "new_method": "sentence",
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.57,
+      "g04_absent_named": true,
+      "s04_branch": null
     },
     {
       "fid": "L-01-002@강원특별자치도설치및미래산업글로벌도시조성을위한특별법",
@@ -650,7 +734,10 @@
       "new_text": "제41조 본문 「「건축법」 제11조에 따른 건축허가, 같은 법 제14조에 따른 건축신고, 같은 법 제16조에 따른 허가ㆍ신고사항의 변경, 같은 법 제20조에 따른 가설건축물의 허가ㆍ신고 및 같은 법 제29조에 따른 건축 협의」 — 다수 타법 인용('「건축법」 제11조에 따른 건축허가, 같은 법 제14조에 따른 건축신고, 같은 법 제16조에 따른 허가ㆍ신고사항의 변경, 같은 법 제20조에 따른 가설건축물의 허가ㆍ신고 및 같은 법 제29조에 따른 건축 협의' 등)의 별표 분리 또는 의제 대상 정비를 가독성·관리부담 관점에서 검토할 것.",
       "new_verbatim": "「건축법」 제11조에 따른 건축허가, 같은 법 제14조에 따른 건축신고, 같은 법 제16조에 따른 허가ㆍ신고사항의 변경, 같은 법 제20조에 따른 가설건축물의 허가ㆍ신고 및 같은 법 제29조에 따른 건축 협의",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.47,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "L-01-001@금강수계물관리및주민지원등에관한법률",
@@ -674,7 +761,10 @@
       "new_text": "제26조 본문 「「국토의 계획 및 이용에 관한 법률」 제56조제1항에 따른 개발행위의 허가」 — 다수 타법 인용('「국토의 계획 및 이용에 관한 법률」 제56조제1항에 따른 개발행위의 허가' 등)의 별표 분리 또는 의제 대상 정비를 가독성·관리부담 관점에서 검토할 것.",
       "new_verbatim": "「국토의 계획 및 이용에 관한 법률」 제56조제1항에 따른 개발행위의 허가",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.47,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "L-01-002@새만금사업추진및지원에관한특별법",
@@ -698,7 +788,10 @@
       "new_text": "제17조 본문 「「가축분뇨의 관리 및 이용에 관한 법률」 제11조에 따른 배출시설에 대한 설치허가 및 변경 허가ㆍ신고」 — 다수 타법 인용('「가축분뇨의 관리 및 이용에 관한 법률」 제11조에 따른 배출시설에 대한 설치허가 및 변경 허가ㆍ신고' 등)의 별표 분리 또는 의제 대상 정비를 가독성·관리부담 관점에서 검토할 것.",
       "new_verbatim": "「가축분뇨의 관리 및 이용에 관한 법률」 제11조에 따른 배출시설에 대한 설치허가 및 변경 허가ㆍ신고",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.47,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "L-01-001@학교시설사업촉진법",
@@ -722,7 +815,10 @@
       "new_text": "제5조 본문 「「국토의 계획 및 이용에 관한 법률」 제30조에 따른 도시ㆍ군관리계획의 결정」 — 다수 타법 인용('「국토의 계획 및 이용에 관한 법률」 제30조에 따른 도시ㆍ군관리계획의 결정' 등)의 별표 분리 또는 의제 대상 정비를 가독성·관리부담 관점에서 검토할 것.",
       "new_verbatim": "「국토의 계획 및 이용에 관한 법률」 제30조에 따른 도시ㆍ군관리계획의 결정",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.47,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "L-02-001@석유및석유대체연료사업법",
@@ -746,7 +842,10 @@
       "new_text": "제39조 본문 「등유, 부생연료유, 바이오디젤, 바이오에탄올, 용제, 윤활유, 윤활기유, 선박용 경유 및 석유중간제품을 「자동차관리법」 제2조제1호에 따른 자동차 및 대통령령으로 정하는 차량ㆍ기계의 연료로 판매하는 행위」 — '등유, 부생연료유, 바이오디젤, 바이오에탄올, 용제, 윤활유, 윤활기유, 선박용 경유 및 석유중간제품을 「자동차관리법」 제2조제1호에 따른 자동차 및 대통령령으로 정하는 차량ㆍ기계의 연료로 판매하는 행위' 참조의 정합성을 확인하고 인용 방식 통일 정비를 검토할 것.",
       "new_verbatim": "등유, 부생연료유, 바이오디젤, 바이오에탄올, 용제, 윤활유, 윤활기유, 선박용 경유 및 석유중간제품을 「자동차관리법」 제2조제1호에 따른 자동차 및 대통령령으로 정하는 차량ㆍ기계의 연료로 판매하는 행위",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.47,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "L-03-001@법인세법",
@@ -770,7 +869,10 @@
       "new_text": "제18조의2 본문 「「자산재평가법」 제28조제2항을 위반하여 이 법 제16조제1항제2호나목에 따른 재평가적립금을 감액하여 지급받은 수입배당금액」 — 인용 '「자산재평가법」 제28조제2항을 위반하여 이 법 제16조제1항제2호나목에 따른 재평가적립금을 감액하여 지급받은 수입배당금액' 의 현행 존재 여부를 확인하고, 폐지·이동 시 경과규정 신설 또는 삭제 정비를 검토할 것.",
       "new_verbatim": "「자산재평가법」 제28조제2항을 위반하여 이 법 제16조제1항제2호나목에 따른 재평가적립금을 감액하여 지급받은 수입배당금액",
       "new_method": "anchored",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "L-03-001@소득세법",
@@ -794,7 +896,10 @@
       "new_text": "제17조 본문 「「자산재평가법」 제28조제2항을 위반하여 이 조 제2항제2호나목에 따른 재평가적립금을 감액하여 받은 배당」 — 인용 '「자산재평가법」 제28조제2항을 위반하여 이 조 제2항제2호나목에 따른 재평가적립금을 감액하여 받은 배당' 의 현행 존재 여부를 확인하고, 폐지·이동 시 경과규정 신설 또는 삭제 정비를 검토할 것.",
       "new_verbatim": "「자산재평가법」 제28조제2항을 위반하여 이 조 제2항제2호나목에 따른 재평가적립금을 감액하여 받은 배당",
       "new_method": "anchored",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": null
     },
     {
       "fid": "S-04-019@자본시장과금융투자업에관한법률",
@@ -818,7 +923,10 @@
       "new_text": "제446조 본문 「다음 각 호의 어느 하나에 해당하는 자는 1년 이하의 징역 또는 3천만원 이하의 벌금에 처한다.」 — 각 호 나열(대표 도입절 '다음 각 호의 어느 하나에 해당하는 자는 1년 이하의 징역 또는 3천만원 이하의 벌금에 처한다.')을 유형 분류 후 별표 이관 또는 조문 분리하는 정비를 검토할 것.",
       "new_verbatim": "다음 각 호의 어느 하나에 해당하는 자는 1년 이하의 징역 또는 3천만원 이하의 벌금에 처한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 1.0,
+      "g04_absent_named": false,
+      "s04_branch": "별표"
     },
     {
       "fid": "S-04-002@총포ㆍ도검ㆍ화약류등의안전관리에관한법률",
@@ -839,10 +947,13 @@
         "not_generic": 1
       },
       "old_has_unfounded_number": false,
-      "new_text": "제52조 본문 「협회는 다음 각 호의 사업을 한다.」 — 각 호 나열(대표 도입절 '협회는 다음 각 호의 사업을 한다.')을 유형 분류 후 별표 이관 또는 조문 분리하는 정비를 검토할 것.",
+      "new_text": "제52조 본문 「협회는 다음 각 호의 사업을 한다.」 — 각 호 나열(대표 도입절 '협회는 다음 각 호의 사업을 한다.', 약 10개 호)을 체계적 정렬(가나다순·유형순)과 문구 정비로 가독성을 높이는 정비를 검토할 것.",
       "new_verbatim": "협회는 다음 각 호의 사업을 한다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": "정렬"
     },
     {
       "fid": "S-04-002@치매관리법",
@@ -863,10 +974,13 @@
         "not_generic": 1
       },
       "old_has_unfounded_number": false,
-      "new_text": "제16조의2 본문 「시ㆍ도지사는 치매관리에 관한 다음 각 호의 업무를 수행하게 하기 위하여 보건복지부장관과 협의하여 광역치매센터를 설치ㆍ운영할 수 있다.」 — 각 호 나열(대표 도입절 '시ㆍ도지사는 치매관리에 관한 다음 각 호의 업무를 수행하게 하기 위하여 보건복지부장관과 협의하여 광역치매센터를 설치ㆍ운영할 수 있다.')을 유형 분류 후 별표 이관 또는 조문 분리하는 정비를 검토할 것.",
+      "new_text": "제16조의2 본문 「시ㆍ도지사는 치매관리에 관한 다음 각 호의 업무를 수행하게 하기 위하여 보건복지부장관과 협의하여 광역치매센터를 설치ㆍ운영할 수 있다.」 — 각 호 나열(대표 도입절 '시ㆍ도지사는 치매관리에 관한 다음 각 호의 업무를 수행하게 하기 위하여 보건복지부장관과 협의하여 광역치매센터를 설치ㆍ운영할 수 있다.', 약 10개 호)을 체계적 정렬(가나다순·유형순)과 문구 정비로 가독성을 높이는 정비를 검토할 것.",
       "new_verbatim": "시ㆍ도지사는 치매관리에 관한 다음 각 호의 업무를 수행하게 하기 위하여 보건복지부장관과 협의하여 광역치매센터를 설치ㆍ운영할 수 있다.",
       "new_method": "sentence",
-      "new_has_unfounded_number": false
+      "new_has_unfounded_number": false,
+      "new_adoption_score": 0.65,
+      "g04_absent_named": false,
+      "s04_branch": "정렬"
     }
   ]
 }

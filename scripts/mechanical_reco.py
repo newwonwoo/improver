@@ -46,7 +46,8 @@ _DEFECT_TRIGGERS: dict[str, list[re.Pattern]] = {
     "G-01": [re.compile(r"다만[,，][^.。\n]{0,120}")],
     "G-02": [re.compile(r"(허가|인가|승인|등록|지정)[^.。\n]{0,10}(받아야|을\s*받아|를\s*받아)")],
     "G-03": [re.compile(r"[^.。\n]{0,30}(감독|감시|단속)(?:한다|할\s*수\s*있다|하게\s*할)")],
-    "G-04": [re.compile(r"(내부통제|자체점검|자체평가|내부감사|준법감시|위험관리)")],
+    "G-04": [re.compile(r"(내부통제|자체점검|자체평가|내부감사|준법감시|위험관리|"
+                        r"승인절차|직무분리|업무분장|업무지침|이해상충|보고체계)")],
     "G-05": [re.compile(r"[^.。\n]{0,30}(보고하여야\s*한다|보고하게\s*할|제출하여야\s*한다)")],
     "E-01": [re.compile(r"(다음\s*각\s*호(?:의\s*요건)?을?\s*모두|모든\s*요건을\s*갖춘)")],
     "L-01": [re.compile(r"「[^」]+」")],
@@ -222,16 +223,68 @@ def make_mechanical(article, finding) -> tuple[str, str | None, str]:
     art_no = article.number or ""
 
     if verbatim:
-        body = _PRESCRIPTION.get(pid, "해당 조문의 결함 부분 정비를 검토할 것.")
-        body = body.format(q=verbatim)
+        body = _prescription_body(pid, verbatim, article)
         rec = f"{art_no} 본문 「{verbatim}」 — {body}"
         return rec, verbatim, method
+
+    # verbatim 추출 실패 — G-04 누락요소 지목은 본문 전체를 스캔하므로 인용 없이도 가능.
+    if pid == "G-04":
+        absent = _g04_absent_elements(article)
+        if absent:
+            body = (f"내부통제 요소 중 {'·'.join(absent)}이(가) 본문에서 확인되지 않음 "
+                    f"— 해당 요소의 보완 필요성을 검토할 것.")
+            return f"{art_no} — {body}", None, "none"
 
     fb = _FALLBACK.get(pid) or _PRESCRIPTION.get(pid, "해당 조문의 결함 부분 정비를 검토할 것.")
     fb = fb.replace("'{q}'", "해당 부분").replace("('{q}' 등)", "").format(q="해당 부분") \
         if "{q}" in fb else fb
     rec = f"{art_no} — {fb}"
     return rec, None, "none"
+
+
+# ── 조문 특성 분기 (gold 수정 사유 반영) ─────────────────────────────────
+# 호(號) 개수 — 줄머리 '  N. ' (백슬래시 이스케이프 허용).
+_HO_RX = re.compile(r"(?m)^\s*\d+\\?\.\s")
+# S-04: '대량 열거'와 '소량 열거'의 정비방식이 다르다 (gold: 64호=별표 채택 / 10호=별표 과도).
+_S04_BULK_THRESHOLD = 20
+
+# G-04 내부통제 5요소 — 룰과 동일 정의 재사용(없으면 로컬 폴백).
+try:
+    from engine.rules.g04_internal import _FIVE_ELEMENTS as _G04_ELEMENTS  # type: ignore
+except Exception:  # pragma: no cover - 독립 실행 안전망
+    _G04_ELEMENTS = {
+        "통제환경": re.compile(r"(내부통제기준|통제환경|윤리강령|행동강령|조직구조)"),
+        "위험평가": re.compile(r"(위험평가|위험관리|리스크|위험요인|취약점)"),
+        "통제활동": re.compile(r"(승인절차|직무분리|접근통제|결재|업무분장|업무지침)"),
+        "정보소통": re.compile(r"(보고체계|정보공유|경영공시|의사소통|내부\s*보고)"),
+        "모니터링": re.compile(r"(자체점검|자체평가|내부감사|모니터링|점검)"),
+    }
+
+
+def _g04_absent_elements(article) -> list[str]:
+    """본문에서 확인되지 않는 내부통제 요소명 목록."""
+    text = article.full_text or ""
+    return [name for name, rx in _G04_ELEMENTS.items() if not rx.search(text)]
+
+
+def _prescription_body(pid: str, verbatim: str, article) -> str:
+    """결함유형별 처방 본문. 조문 특성에 따라 분기(S-04 호개수, G-04 누락요소)."""
+    # S-04: 호 개수로 정비방식 분기 — 대량=별표 이관, 소량=정렬·문구 정비.
+    if pid == "S-04":
+        ho = len(_HO_RX.findall(article.full_text or ""))
+        if ho and ho < _S04_BULK_THRESHOLD:
+            return (f"각 호 나열(대표 도입절 '{verbatim}', 약 {ho}개 호)을 "
+                    f"체계적 정렬(가나다순·유형순)과 문구 정비로 가독성을 높이는 정비를 검토할 것.")
+        # 대량(또는 호수 불명) → 별표 이관/조문 분리 (자문위원 채택 정형).
+        return _PRESCRIPTION["S-04"].format(q=verbatim)
+    # G-04: 누락된 내부통제 요소를 직접 지목 (gold: '어느 요소가 빠졌는지 특정' 요구).
+    if pid == "G-04":
+        absent = _g04_absent_elements(article)
+        if absent:
+            return (f"내부통제 요소 중 {'·'.join(absent)}이(가) 본문에서 확인되지 않음 "
+                    f"— 해당 요소의 보완 필요성을 검토할 것.")
+        return _PRESCRIPTION["G-04"].format(q=verbatim)
+    return _PRESCRIPTION.get(pid, "해당 조문의 결함 부분 정비를 검토할 것.").format(q=verbatim)
 
 
 # ════════════════════════════════════════════════════════════════════════

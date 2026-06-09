@@ -151,10 +151,11 @@ def main() -> int:
             old_autospec = rec["mechanical"]["specificity"]  # 구 채점기 점수 (0/1/2)
 
             # 신(新) 채점기를 '검토된 그 권고문'에 적용 → gold 와 상관 검증.
-            new_score, feats = mr.score_adoption(reviewed_text, old_verbatim, old_method, finding, article)
+            new_score_on_reviewed, feats = mr.score_adoption(reviewed_text, old_verbatim, old_method, finding, article)
 
-            # 결정 3: 신 처방 재생성 (단정→근거기반).
+            # 결정 3 + 라운드2(코더): 신 처방 재생성 (단정→근거기반, 조문특성 분기).
             new_text, new_verb, new_method = mr.make_mechanical(article, finding)
+            new_score, _ = mr.score_adoption(new_text, new_verb, new_method, finding, article)
 
             rows.append({
                 "fid": f, "pattern_id": rec["pattern_id"], "verdict": verdict,
@@ -162,10 +163,14 @@ def main() -> int:
                 "reviewed_text": reviewed_text,
                 "old_verbatim": old_verbatim, "old_method": old_method,
                 "old_autospec": old_autospec,
-                "adoption_score": new_score, "adoption_features": feats,
+                "adoption_score": new_score_on_reviewed, "adoption_features": feats,
                 "old_has_unfounded_number": mr._has_unfounded_number(reviewed_text, article),
                 "new_text": new_text, "new_verbatim": new_verb, "new_method": new_method,
                 "new_has_unfounded_number": mr._has_unfounded_number(new_text, article),
+                "new_adoption_score": new_score,
+                "g04_absent_named": (rec["pattern_id"] == "G-04" and "확인되지 않음" in new_text),
+                "s04_branch": ("정렬" if "체계적 정렬" in new_text else
+                               ("별표" if "별표" in new_text else None)) if rec["pattern_id"] == "S-04" else None,
             })
 
     # ── 결정 2: 채택판정 판별력 (채택=1 vs 수정=0), 구 채점기 vs 신 채점기 ──
@@ -197,6 +202,16 @@ def main() -> int:
     cfg = json.loads(RECO_CONFIG.read_text(encoding="utf-8"))
     l01_cfg = cfg.get("L-01", {})
     l01_repealed_residue = any("폐지" in (v or "") for v in l01_cfg.values())
+
+    # ── 라운드2 (코더): G-04 누락요소 지목 / S-04 호개수 분기 ──
+    g04 = [r for r in rows if r["pattern_id"] == "G-04"]
+    g04_named = sum(1 for r in g04 if r["g04_absent_named"])
+    s04 = [r for r in rows if r["pattern_id"] == "S-04"]
+    s04_branch = {r["fid"].split("@")[0] + "@" + r["fid"].split("@")[1][:6]: r["s04_branch"] for r in s04}
+    # 신 처방의 '예측' 채택성(자문위원 재검 전, 단정 금지) — 검토된 권고 대비 상승분.
+    pred_old = [r["adoption_score"] for r in rows]
+    pred_new = [r["new_adoption_score"] for r in rows]
+    pred_delta = round(sum(pred_new) / len(pred_new) - sum(pred_old) / len(pred_old), 4) if rows else None
 
     report = {
         "_meta": {
@@ -230,6 +245,16 @@ def main() -> int:
             "config_still_has_폐지_assertion": l01_repealed_residue,
             "L-01_templates": l01_cfg,
         },
+        "round2_coder": {
+            "g04_n": len(g04), "g04_absent_named": g04_named,
+            "s04_branch_by_ho": s04_branch,
+            "predicted_adoption_on_new_text": {
+                "old_mean": round(sum(pred_old) / len(pred_old), 4) if rows else None,
+                "new_mean": round(sum(pred_new) / len(pred_new), 4) if rows else None,
+                "delta": pred_delta,
+                "caveat": "score_adoption(gold AUC 0.94)의 '예측'. 실제 채택률은 자문위원 재검 게이트 전까지 단정 금지.",
+            },
+        },
         "rows": rows,
     }
     REPORT_PATH.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -252,6 +277,12 @@ def main() -> int:
         print(f"      구: ({r['old_method']}) {str(r['old_verbatim'])[:55]}")
         print(f"      신: ({r['new_method']}) {str(r['new_verbatim'])[:55]}")
     print("\n[버그 L-01] config 폐지 단정 잔재:", l01_repealed_residue)
+    print("\n[라운드2/코더] G-04 누락요소 지목  {}/{}".format(g04_named, len(g04)))
+    print("              S-04 호개수 분기:", s04_branch)
+    print("              신 처방 예측 채택성(자문위원 재검 전 단정 금지): "
+          f"{report['round2_coder']['predicted_adoption_on_new_text']['old_mean']} "
+          f"→ {report['round2_coder']['predicted_adoption_on_new_text']['new_mean']} "
+          f"(Δ{pred_delta:+})")
     print(f"\nWrote {REPORT_PATH}")
     return 0
 
