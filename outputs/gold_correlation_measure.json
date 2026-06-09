@@ -84,8 +84,8 @@
       "S-04-002@치매관리법": "정렬"
     },
     "predicted_adoption_on_new_text": {
-      "old_mean": 0.5452,
-      "new_mean": 0.6012,
+      "old_mean": 0.5724,
+      "new_mean": 0.6285,
       "delta": 0.0561,
       "caveat": "score_adoption(gold AUC 0.94)의 '예측'. 실제 채택률은 자문위원 재검 게이트 전까지 단정 금지."
     }
@@ -721,9 +721,9 @@
       "old_verbatim": "「건축법」 제11조에 따른 건축허가, 같은 법 제14조에 따른 건축신고, 같은 법 제16조에 따른 허가ㆍ신고사항의 변경, 같은 법 제20조에 따른 가설건축물의 허가ㆍ신고 및 같은 법 제29조에 따른 건축 협의",
       "old_method": "sentence",
       "old_autospec": 2,
-      "adoption_score": 0.47,
+      "adoption_score": 0.65,
       "adoption_features": {
-        "aligned": 0,
+        "aligned": 1,
         "strength": 1,
         "canonical": 0,
         "no_number": 1,
@@ -735,7 +735,7 @@
       "new_verbatim": "「건축법」 제11조에 따른 건축허가, 같은 법 제14조에 따른 건축신고, 같은 법 제16조에 따른 허가ㆍ신고사항의 변경, 같은 법 제20조에 따른 가설건축물의 허가ㆍ신고 및 같은 법 제29조에 따른 건축 협의",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.47,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },
@@ -748,9 +748,9 @@
       "old_verbatim": "「국토의 계획 및 이용에 관한 법률」 제56조제1항에 따른 개발행위의 허가",
       "old_method": "sentence",
       "old_autospec": 2,
-      "adoption_score": 0.47,
+      "adoption_score": 0.65,
       "adoption_features": {
-        "aligned": 0,
+        "aligned": 1,
         "strength": 1,
         "canonical": 0,
         "no_number": 1,
@@ -762,7 +762,7 @@
       "new_verbatim": "「국토의 계획 및 이용에 관한 법률」 제56조제1항에 따른 개발행위의 허가",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.47,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },
@@ -775,9 +775,9 @@
       "old_verbatim": "「가축분뇨의 관리 및 이용에 관한 법률」 제11조에 따른 배출시설에 대한 설치허가 및 변경 허가ㆍ신고",
       "old_method": "sentence",
       "old_autospec": 2,
-      "adoption_score": 0.47,
+      "adoption_score": 0.65,
       "adoption_features": {
-        "aligned": 0,
+        "aligned": 1,
         "strength": 1,
         "canonical": 0,
         "no_number": 1,
@@ -789,7 +789,7 @@
       "new_verbatim": "「가축분뇨의 관리 및 이용에 관한 법률」 제11조에 따른 배출시설에 대한 설치허가 및 변경 허가ㆍ신고",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.47,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },
@@ -802,9 +802,9 @@
       "old_verbatim": "「국토의 계획 및 이용에 관한 법률」 제30조에 따른 도시ㆍ군관리계획의 결정",
       "old_method": "sentence",
       "old_autospec": 2,
-      "adoption_score": 0.47,
+      "adoption_score": 0.65,
       "adoption_features": {
-        "aligned": 0,
+        "aligned": 1,
         "strength": 1,
         "canonical": 0,
         "no_number": 1,
@@ -816,7 +816,7 @@
       "new_verbatim": "「국토의 계획 및 이용에 관한 법률」 제30조에 따른 도시ㆍ군관리계획의 결정",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.47,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },
@@ -829,9 +829,9 @@
       "old_verbatim": "등유, 부생연료유, 바이오디젤, 바이오에탄올, 용제, 윤활유, 윤활기유, 선박용 경유 및 석유중간제품을 「자동차관리법」 제2조제1호에 따른 자동차 및 대통령령으로 정하는 차량ㆍ기계의 연료로 판매하는 행위",
       "old_method": "sentence",
       "old_autospec": 2,
-      "adoption_score": 0.47,
+      "adoption_score": 0.65,
       "adoption_features": {
-        "aligned": 0,
+        "aligned": 1,
         "strength": 1,
         "canonical": 0,
         "no_number": 1,
@@ -843,7 +843,7 @@
       "new_verbatim": "등유, 부생연료유, 바이오디젤, 바이오에탄올, 용제, 윤활유, 윤활기유, 선박용 경유 및 석유중간제품을 「자동차관리법」 제2조제1호에 따른 자동차 및 대통령령으로 정하는 차량ㆍ기계의 연료로 판매하는 행위",
       "new_method": "sentence",
       "new_has_unfounded_number": false,
-      "new_adoption_score": 0.47,
+      "new_adoption_score": 0.65,
       "g04_absent_named": false,
       "s04_branch": null
     },

@@ -395,10 +395,12 @@ def adoption_features(rec_text: str, verbatim: str | None, extract_method: str,
     pid = finding.pattern_id
     aligned = 0
     if verbatim:
-        if pid in _CITATION_PATTERNS:
-            # 인용 결함: 추출이 matched_text 인용에 정합(anchored)이어야 지목 정합.
+        mt = getattr(finding, "matched_text", "") or ""
+        if pid in _CITATION_PATTERNS and "「" in mt:
+            # 특정 인용 결함(L-03 등): 추출이 matched_text 인용에 정합(anchored)이어야 지목 정합.
             aligned = 1 if extract_method == "anchored" else 0
         else:
+            # 그 외(L-01 'N개 법률' 다수인용·일반 패턴): verbatim 이 본문 부분문자열이면 정합.
             aligned = 1 if _normalize_for_match(verbatim) in _normalize_for_match(article.full_text) else 0
     strength = 1 if (verbatim and len(_normalize_for_match(verbatim)) >= 12) else 0
     canonical = 1 if _is_canonical(rec_text, pid, verbatim) else 0
