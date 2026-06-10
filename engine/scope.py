@@ -1,12 +1,14 @@
 """적용범위 신뢰도(Domain Scope Confidence) — 정직한 가드레일.
 
-팀장 probe(2026-06-10, 민법총칙): 행정규제법용 엔진에 사법(私法)·기본법을 넣으면
-발화가 적고 신뢰도가 낮다 — 이를 '깨끗함'으로 오인하지 않도록 정직하게 표시.
+팀장 probe(2026-06-10): 민법총칙은 발화 적고 FP 소지 → 정직 표시 필요.
+팀장 교정(2026-06-10): "주택법도 수집했는데 무슨 행정규제법 타령" — 정당한 지적.
+  코퍼스 78%가 위임형 규제법령(주택법·건축법·가맹법…)으로 정상 적용범위.
+  '행정규제법 전용'은 과소표현이었고, 위임율만으로 out_of_scope 판정은 과했다
+  (정당법·헌법재판소법까지 배제). 교정: 강한 out_of_scope 는 **기본법전(민법·형법·
+  상법·소송법류)** 에만, 그 외 저위임은 '참고(발화 적을 수 있음)'로 완화.
 
-측정 근거(실측):
-  행정규제법(가맹·119): 위임율(시행령·부령 위임 조문 비율) 0.39~0.58, 발화율 0.58~0.61
-  기본법(민법·상법·형법): 위임율 0.00~0.03, 발화율 0.03~0.07
-→ 위임 밀도가 적용범위의 강한 판별자. 엔진은 '하위법령에 위임하는 행정규제'가 대상.
+측정 근거(코퍼스 무작위 146개): in_scope 78% / borderline 12% / out_of_scope 10%.
+엔진 대상 = 하위법령에 위임하는 규제법령(코퍼스 대다수). 진짜 범위 밖은 기본법전.
 
 LLM 0회. 결함 판정·점수는 불변 — 본 모듈은 신뢰도 메타데이터만 부가(게이밍 0).
 """
@@ -17,17 +19,18 @@ import re
 from .schema import Law
 
 _DELEG_RX = re.compile(r"(대통령령|총리령|부령|시행령|시행규칙|고시)(?:으|)로\s*정")
-# 사법·기본법 표지(제목 기반 보조 신호) — 단독 판정 아님, 위임율과 결합.
+# 기본법전·절차법 표지 — 사법(私法)·형사·소송 등 엔진과 결이 다른 근본법.
+# 이것만이 강한 out_of_scope 신호(위임율과 무관하게 결함 taxonomy 자체가 다름).
 _BASIC_CODE_HINT = re.compile(r"^(민법|상법|형법|민사소송법|형사소송법|행정소송법|"
-                             r"국민의 형사재판|군사법원법)")
+                             r"민사집행법|비송사건절차법|국제사법|형의\s*집행)")
 
-# 임계(실측 경계): 위임율 0.03(기본법 최대) ~ 0.39(행정법 최소) 사이를 회색대로.
-_DELEG_LOW = 0.05
+# 위임율 임계 — '신뢰도' 등급용(하드 배제 아님).
 _DELEG_HIGH = 0.20
+_DELEG_LOW = 0.05
 
 
 def delegation_ratio(law: Law) -> float:
-    """시행령·부령 위임 조문 비율 — 적용범위 핵심 신호."""
+    """시행령·부령 위임 조문 비율 — 적용범위 신뢰도 신호."""
     arts = law.articles
     if not arts:
         return 0.0
@@ -36,35 +39,35 @@ def delegation_ratio(law: Law) -> float:
 
 
 def scope_confidence(law: Law, *, finding_count: int | None = None) -> dict:
-    """입력 법령이 엔진 적용범위(행정규제법)에 부합하는 신뢰도.
+    """입력 법령의 엔진 적용범위 신뢰도.
 
-    반환: {confidence: in_scope|borderline|out_of_scope, delegation_ratio,
-           reason, advisory} — 결함 판정 불변, 메타데이터만.
+    판정:
+      out_of_scope : 기본법전(민·형·상·소송법류) — 결함 taxonomy 자체가 다름(강한 경고).
+      in_scope     : 위임율 ≥ 0.20 — 위임형 규제법령(엔진 핵심 대상).
+      borderline   : 그 외(저위임 비기본법) — 발화 적을 수 있으나 적용 가능(참고).
+    결함 판정 불변, 메타데이터만.
     """
     dr = delegation_ratio(law)
     name = (law.name or "").strip()
     basic_hint = bool(_BASIC_CODE_HINT.match(name))
     n_arts = len(law.articles)
 
-    if dr >= _DELEG_HIGH and not basic_hint:
-        conf = "in_scope"
-        reason = f"위임율 {dr:.2f}(≥{_DELEG_HIGH}) — 하위법령 위임형 행정규제법 패턴."
-        advisory = ""
-    elif dr < _DELEG_LOW or basic_hint:
+    if basic_hint:
         conf = "out_of_scope"
-        why = []
-        if basic_hint:
-            why.append("기본법/사법(私法) 표지")
-        if dr < _DELEG_LOW:
-            why.append(f"위임율 {dr:.2f}(<{_DELEG_LOW}) — 거의 위임 없음")
-        reason = " + ".join(why) + " → 엔진 적용범위(행정규제법) 밖."
-        advisory = ("이 엔진의 룰·학습데이터는 행정규제법(포괄위임·청문누락·과도재량 등) "
-                    "전용입니다. 사법·기본법의 결함 판정은 신뢰도가 낮으며, 발화가 적은 것을 "
-                    "'결함 없음'으로 해석하지 마십시오. 발화한 결함도 오탐(FP) 소지가 큽니다.")
+        reason = (f"기본법전/사법(私法)·절차법 표지('{name[:6]}') — 엔진 결함 taxonomy"
+                  f"(포괄위임·청문누락·과도재량 등)와 결이 다름.")
+        advisory = ("이 엔진은 하위법령 위임형 규제법령에 맞춰 설계됐습니다. 민·형·상사 기본법전은 "
+                    "결함 개념 자체가 달라 신뢰도가 낮습니다 — 발화가 적은 것을 '결함 없음'으로, "
+                    "발화한 것을 확정 결함으로 단정하지 마십시오(FP 소지 큼).")
+    elif dr >= _DELEG_HIGH:
+        conf = "in_scope"
+        reason = f"위임율 {dr:.2f}(≥{_DELEG_HIGH}) — 하위법령 위임형 규제법령(엔진 핵심 대상)."
+        advisory = ""
     else:
         conf = "borderline"
-        reason = f"위임율 {dr:.2f}({_DELEG_LOW}~{_DELEG_HIGH}) — 경계 영역."
-        advisory = "적용범위 경계 — 결과를 비판적으로 검토하십시오."
+        reason = (f"위임율 {dr:.2f}(<{_DELEG_HIGH}) — 위임이 적은 규제법령. 적용 가능하나 "
+                  f"발화가 적을 수 있음.")
+        advisory = "위임 조항이 적어 탐지 결함 수가 적을 수 있습니다 — 결과를 참고로 검토하십시오."
 
     out = {
         "confidence": conf,
@@ -76,3 +79,4 @@ def scope_confidence(law: Law, *, finding_count: int | None = None) -> dict:
     if finding_count is not None:
         out["finding_rate"] = round(finding_count / max(n_arts, 1), 4)
     return out
+

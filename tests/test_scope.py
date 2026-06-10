@@ -25,13 +25,31 @@ def test_admin_law_in_scope():
     assert sc["advisory"] == ""
 
 
+def test_housing_act_in_scope():
+    """팀장 교정: 주택법은 적용범위 밖이 아니라 핵심 대상(위임율 높음)."""
+    law = _load("주택법")
+    if law is None:
+        return
+    sc = scope_confidence(law)
+    assert sc["confidence"] == "in_scope"
+
+
+def test_low_delegation_regulatory_law_is_borderline_not_excluded():
+    """팀장 교정: 저위임 비기본법(정당법 등)은 out_of_scope 가 아니라 borderline."""
+    law = _load("정당법")
+    if law is None:
+        return
+    sc = scope_confidence(law)
+    assert sc["confidence"] != "out_of_scope"
+
+
 def test_civil_code_out_of_scope_with_advisory():
     law = _load("민법")
     if law is None:
         return
     sc = scope_confidence(law)
     assert sc["confidence"] == "out_of_scope"
-    assert "행정규제법" in sc["advisory"]
+    assert "기본법전" in sc["advisory"]
     assert "결함 없음" in sc["advisory"]        # '적은 발화=깨끗'으로 오인 방지 명시
 
 

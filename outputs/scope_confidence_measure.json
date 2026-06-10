@@ -1,42 +1,56 @@
 {
-  "가맹사업거래의공정화에관한법률": {
-    "confidence": "in_scope",
-    "delegation_ratio": 0.3889,
-    "n_articles": 72,
-    "reason": "위임율 0.39(≥0.2) — 하위법령 위임형 행정규제법 패턴.",
-    "advisory": "",
-    "finding_rate": 0.6111
+  "corpus_distribution_146": {
+    "in_scope": 114,
+    "borderline": 31,
+    "out_of_scope": 1
   },
-  "119구조ㆍ구급에관한법률": {
-    "confidence": "in_scope",
-    "delegation_ratio": 0.5778,
-    "n_articles": 45,
-    "reason": "위임율 0.58(≥0.2) — 하위법령 위임형 행정규제법 패턴.",
-    "advisory": "",
-    "finding_rate": 0.5778
+  "corpus_n": 146,
+  "named": {
+    "주택법": {
+      "confidence": "in_scope",
+      "delegation_ratio": 0.5969,
+      "finding_rate": 0.6357
+    },
+    "건축법": {
+      "confidence": "in_scope",
+      "delegation_ratio": 0.6467,
+      "finding_rate": 0.497
+    },
+    "가맹사업거래의공정화에관한법률": {
+      "confidence": "in_scope",
+      "delegation_ratio": 0.3889,
+      "finding_rate": 0.6111
+    },
+    "119구조ㆍ구급에관한법률": {
+      "confidence": "in_scope",
+      "delegation_ratio": 0.5778,
+      "finding_rate": 0.5778
+    },
+    "공동주택관리법": {
+      "confidence": "in_scope",
+      "delegation_ratio": 0.5789,
+      "finding_rate": 0.4737
+    },
+    "정당법": {
+      "confidence": "borderline",
+      "delegation_ratio": 0.0,
+      "finding_rate": 0.2432
+    },
+    "민법": {
+      "confidence": "out_of_scope",
+      "delegation_ratio": 0.0,
+      "finding_rate": 0.0273
+    },
+    "형법": {
+      "confidence": "out_of_scope",
+      "delegation_ratio": 0.0,
+      "finding_rate": 0.0
+    },
+    "상법": {
+      "confidence": "out_of_scope",
+      "delegation_ratio": 0.0286,
+      "finding_rate": 0.0692
+    }
   },
-  "민법": {
-    "confidence": "out_of_scope",
-    "delegation_ratio": 0.0,
-    "n_articles": 1245,
-    "reason": "기본법/사법(私法) 표지 + 위임율 0.00(<0.05) — 거의 위임 없음 → 엔진 적용범위(행정규제법) 밖.",
-    "advisory": "이 엔진의 룰·학습데이터는 행정규제법(포괄위임·청문누락·과도재량 등) 전용입니다. 사법·기본법의 결함 판정은 신뢰도가 낮으며, 발화가 적은 것을 '결함 없음'으로 해석하지 마십시오. 발화한 결함도 오탐(FP) 소지가 큽니다.",
-    "finding_rate": 0.0273
-  },
-  "상법": {
-    "confidence": "out_of_scope",
-    "delegation_ratio": 0.0286,
-    "n_articles": 1257,
-    "reason": "기본법/사법(私法) 표지 + 위임율 0.03(<0.05) — 거의 위임 없음 → 엔진 적용범위(행정규제법) 밖.",
-    "advisory": "이 엔진의 룰·학습데이터는 행정규제법(포괄위임·청문누락·과도재량 등) 전용입니다. 사법·기본법의 결함 판정은 신뢰도가 낮으며, 발화가 적은 것을 '결함 없음'으로 해석하지 마십시오. 발화한 결함도 오탐(FP) 소지가 큽니다.",
-    "finding_rate": 0.0692
-  },
-  "형법": {
-    "confidence": "out_of_scope",
-    "delegation_ratio": 0.0,
-    "n_articles": 460,
-    "reason": "기본법/사법(私法) 표지 + 위임율 0.00(<0.05) — 거의 위임 없음 → 엔진 적용범위(행정규제법) 밖.",
-    "advisory": "이 엔진의 룰·학습데이터는 행정규제법(포괄위임·청문누락·과도재량 등) 전용입니다. 사법·기본법의 결함 판정은 신뢰도가 낮으며, 발화가 적은 것을 '결함 없음'으로 해석하지 마십시오. 발화한 결함도 오탐(FP) 소지가 큽니다.",
-    "finding_rate": 0.0
-  }
+  "note": "팀장 교정 반영: out_of_scope는 기본법전(민형상소송)만. 규제법령 78% in_scope."
 }
