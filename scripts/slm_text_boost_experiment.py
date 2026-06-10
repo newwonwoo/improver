@@ -293,7 +293,17 @@ def main():
                protocol="V0' 동일(StratifiedKFold k=5 seed=42, micro-F1, boot CI 1000)")
     Path("outputs/text_boost_measure.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-    print("\n(측정 산출물 outputs/text_boost_measure.json — 모델/룰/config 미수정)")
+
+    # LLM 벤치마크용 동일 표본 자산 (행 정렬 보존; texts 는 용량상 git 제외)
+    np.savez_compressed(
+        "outputs/text_boost_oof.npz", y=y, rule_pred=rule_pred,
+        **{f"oof_{k}": v for k, v in oof.items()})
+    with open("outputs/text_boost_rows.jsonl", "w", encoding="utf-8") as f:
+        for i, (ln, an) in enumerate(keys):
+            f.write(json.dumps(dict(i=i, law=ln, article=an, text=str(texts[i])),
+                               ensure_ascii=False) + "\n")
+    print("\n(측정 산출물 outputs/text_boost_measure.json + OOF 행렬/행 텍스트 — "
+          "모델/룰/config 미수정)")
 
 
 if __name__ == "__main__":
