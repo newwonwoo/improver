@@ -1,0 +1,23 @@
+{
+  "n": 40,
+  "laws": [
+    "가맹사업거래의공정화에관한법률",
+    "119구조ㆍ구급에관한법률",
+    "가맹사업진흥에관한법률"
+  ],
+  "template": {
+    "specificity": 0.037,
+    "actionability": 0.575,
+    "overall": 0.529
+  },
+  "mechanical": {
+    "specificity": 0.869,
+    "actionability": 1.0,
+    "overall": 0.956
+  },
+  "low_quality_rate": {
+    "template": 0.425,
+    "mechanical": 0.0
+  },
+  "note": "Layer2 조문맞춤 권고(LLM0회) vs Layer1 템플릿. 행동동사 보장+사회방향 결합."
+}
