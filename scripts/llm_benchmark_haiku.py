@@ -141,6 +141,8 @@ def main():
     systems = {"rule": npz["rule_pred"], "e1_text": npz["oof_e1_text"],
                "e2_boost": npz["oof_e2_boost"], "e3_combo": npz["oof_e3_combo"],
                "e4_select": npz["oof_e4_select"]}
+    if "oof_e4b" in npz:
+        systems["e4b_nested"] = npz["oof_e4b"]
 
     cases = build_sample(y, rows)
     print(f"벤치 표본: {len(cases)} 케이스 (카테고리별 양성≤25·음성≤25, seed 42)")
@@ -167,15 +169,16 @@ def main():
         sys_pred = np.array([mat[c["row"], c["cat"]] for c in cases])
         report[name] = micro_f1_ci(y_true, sys_pred)
 
-    # 카테고리별 분해 (하이쿠)
+    # 카테고리별 분해 (하이쿠 vs 자체 주력)
+    own_best = "e4b_nested" if "e4b_nested" in systems else "e4_select"
     per_cat = {}
     for ci, cat in enumerate(CATEGORIES):
         idx = [k for k, c in enumerate(cases) if c["cat"] == ci]
         per_cat[cat] = {
             "haiku": micro_f1_ci(y_true[idx], haiku_pred[idx], n_boot=500),
-            "e4_select": micro_f1_ci(
+            own_best: micro_f1_ci(
                 y_true[idx],
-                np.array([systems["e4_select"][cases[k]["row"], ci] for k in idx]),
+                np.array([systems[own_best][cases[k]["row"], ci] for k in idx]),
                 n_boot=500),
             "rule": micro_f1_ci(
                 y_true[idx],
@@ -189,7 +192,7 @@ def main():
 
     print(f"\n{'시스템':<12} {'micro-F1':>9}  {'95% CI':<18} {'응답률':>6}")
     print("-" * 50)
-    order = ["haiku", "rule", "e1_text", "e2_boost", "e3_combo", "e4_select"]
+    order = ["haiku"] + list(systems)
     for name in order:
         r = report[name]
         print(f"{name:<12} {r['f1']:>9.3f}  [{r['ci_lo']:.3f},{r['ci_hi']:.3f}]"
