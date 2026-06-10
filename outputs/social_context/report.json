@@ -1,0 +1,1160 @@
+{
+  "laws": [
+    {
+      "law": "가맹사업거래의공정화에관한법률",
+      "articles": [
+        {
+          "article": "제6조의2",
+          "title": "정보공개서의 등록 등",
+          "defects": [
+            "S-01/경고",
+            "G-02/주의",
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "정보공개서의",
+            "공정거래위원",
+            "개정",
+            "정하는",
+            "등록"
+          ],
+          "ssi": 0.598,
+          "salience_hits": 5,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론5건 정비요구1/보호요구1 reach=국민대면",
+          "sources": [
+            {
+              "title": "명륜진사갈비, 가맹본부 정보공개서 대출금리 의무 기재",
+              "url": "newsis_0013935459"
+            },
+            {
+              "title": "샐러디, 일회용품 구입 강제 공정위 시정명령 가맹점 자율권 침해",
+              "url": "pointe_78860"
+            },
+            {
+              "title": "신전떡볶이 젓가락까지 묶어 가맹점 구매 강제 공정위 과징금",
+              "url": "joongang_504715"
+            }
+          ]
+        },
+        {
+          "article": "제6조의5",
+          "title": "가맹금 예치 등",
+          "defects": [
+            "S-02/경고",
+            "F-09/개선",
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "가맹점사업자",
+            "경우에는",
+            "예치가맹금의",
+            "예치기관의",
+            "예치가맹금을"
+          ],
+          "ssi": 0.497,
+          "salience_hits": 3,
+          "valence": -1.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론3건 정비요구0/보호요구9 reach=국민대면",
+          "sources": [
+            {
+              "title": "실효성 없는 가맹점 예치제도 폐지해야",
+              "url": "shinilbo_2020923"
+            },
+            {
+              "title": "이준석 소상공인 가맹점주 보호 공약 갑질 횡포",
+              "url": "sisafocus_339453"
+            },
+            {
+              "title": "공정위 가맹금 예치없이 직접받은 가맹본부 제재",
+              "url": "newsis_0012533802"
+            }
+          ]
+        },
+        {
+          "article": "제6조",
+          "title": "가맹점사업자의 준수사항",
+          "defects": [
+            "E-01/주의"
+          ],
+          "topic_terms": [
+            "가맹본부의",
+            "상품",
+            "가맹점사업자",
+            "가맹본부가",
+            "필요한"
+          ],
+          "ssi": 0.448,
+          "salience_hits": 5,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론5건 정비요구1/보호요구1 reach=내부",
+          "sources": [
+            {
+              "title": "명륜진사갈비, 가맹본부 정보공개서 대출금리 의무 기재",
+              "url": "newsis_0013935459"
+            },
+            {
+              "title": "샐러디, 일회용품 구입 강제 공정위 시정명령 가맹점 자율권 침해",
+              "url": "pointe_78860"
+            },
+            {
+              "title": "신전떡볶이 젓가락까지 묶어 가맹점 구매 강제 공정위 과징금",
+              "url": "joongang_504715"
+            }
+          ]
+        },
+        {
+          "article": "제6조의3",
+          "title": "정보공개서 등록의 거부 등",
+          "defects": [
+            "S-03/주의"
+          ],
+          "topic_terms": [
+            "정보공개서",
+            "조의",
+            "공정거래위원",
+            "정보공개서의",
+            "정보공개서에"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제6조의4",
+          "title": "정보공개서 등록의 취소",
+          "defects": [
+            "L-06/주의",
+            "E-01/주의"
+          ],
+          "topic_terms": [
+            "정보공개서",
+            "해당하는",
+            "공정거래위원",
+            "정보공개서가",
+            "가맹본부가"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제12조의2",
+          "title": "부당한 점포환경개선 강요 금지 등",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "점포환경개선",
+            "가맹점사업자",
+            "정하는",
+            "가맹본부는",
+            "해당하는"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제13조",
+          "title": "가맹계약의 갱신 등",
+          "defects": [
+            "S-03/경고",
+            "E-03/심각"
+          ],
+          "topic_terms": [
+            "가맹점사업자",
+            "가맹계약기간",
+            "경우에는",
+            "가맹계약의",
+            "아니한"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제14조의3",
+          "title": "가맹점사업자단체의 등록 등",
+          "defects": [
+            "L-04/경고",
+            "L-06/개선",
+            "G-02/경고",
+            "E-01/경고"
+          ],
+          "topic_terms": [
+            "가맹점사업자",
+            "정하는",
+            "등록",
+            "공정거래위원",
+            "항에"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제15조",
+          "title": "자율규약",
+          "defects": [
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "규정에",
+            "하는",
+            "항의",
+            "사업자단체는",
+            "공정거래위원"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제15조의2",
+          "title": "가맹점사업자피해보상보험계약 등",
+          "defects": [
+            "S-02/경고",
+            "L-04/주의",
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "가맹점사업자",
+            "계약",
+            "피해보상보험",
+            "가맹본부는",
+            "표지를"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제15조의5",
+          "title": "신고포상금",
+          "defects": [
+            "L-04/주의",
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "신고포상금",
+            "포상금",
+            "공정거래위원",
+            "지급대상자의",
+            "위반행위를"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제19조",
+          "title": "협의회의 회의",
+          "defects": [
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "협의회의",
+            "대표하는",
+            "개정",
+            "의결한다",
+            "회의"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제23조",
+          "title": "조정 등",
+          "defects": [
+            "G-05/주의"
+          ],
+          "topic_terms": [
+            "협의회는",
+            "공정거래위원",
+            "경우에는",
+            "개정",
+            "조정신청을"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제24조",
+          "title": "조정조서의 작성과 그 효력",
+          "defects": [
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "항에",
+            "조정조서의",
+            "조정조서를",
+            "따른",
+            "신설"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제27조",
+          "title": "가맹거래사",
+          "defects": [
+            "L-04/경고"
+          ],
+          "topic_terms": [
+            "가맹거래사",
+            "아니한",
+            "받고",
+            "가맹거래사의",
+            "경과되지"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제29조",
+          "title": "가맹거래사의 등록",
+          "defects": [
+            "G-02/경고"
+          ],
+          "topic_terms": [
+            "가맹거래사의",
+            "공정거래위원",
+            "규정에",
+            "등록을",
+            "등록"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제29조의2",
+          "title": "가맹거래사 등록증의 대여 금지 등",
+          "defects": [
+            "F-01/경고"
+          ],
+          "topic_terms": [
+            "가맹거래사",
+            "아니",
+            "된다",
+            "등록증의",
+            "등록증을"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제31조",
+          "title": "가맹거래사의 등록취소와 자격정지",
+          "defects": [
+            "E-01/주의"
+          ],
+          "topic_terms": [
+            "등록을",
+            "가맹거래사의",
+            "공정거래위원",
+            "갱신등록을",
+            "경우에는"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제32조",
+          "title": "조사개시대상의 제한 등",
+          "defects": [
+            "E-01/주의"
+          ],
+          "topic_terms": [
+            "공정거래위원",
+            "항에",
+            "따른",
+            "조사개시대상",
+            "위반행위에"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제32조의2",
+          "title": "서면실태조사",
+          "defects": [
+            "G-05/주의",
+            "E-03/심각"
+          ],
+          "topic_terms": [
+            "서면실태조사",
+            "공정거래위원",
+            "자료의",
+            "항에",
+            "가맹점사업자"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제32조의3",
+          "title": "위반행위의 신고 등",
+          "defects": [
+            "E-03/심각"
+          ],
+          "topic_terms": [
+            "공정거래위원",
+            "경우에는",
+            "때에는",
+            "회는",
+            "따른"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제34조의2",
+          "title": "동의의결",
+          "defects": [
+            "E-03/심각"
+          ],
+          "topic_terms": [
+            "공정거래위원",
+            "따른",
+            "시정방안",
+            "행위가",
+            "가맹점사업자"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제9조",
+          "title": "허위ㆍ과장된 정보제공 등의 금지",
+          "defects": [
+            "E-03/심각"
+          ],
+          "topic_terms": [
+            "가맹점사업자",
+            "정보를",
+            "가맹본부는",
+            "예상매출액",
+            "제공하는"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제10조",
+          "title": "가맹금의 반환",
+          "defects": [
+            "E-03/심각"
+          ],
+          "topic_terms": [
+            "가맹금의",
+            "요구하는",
+            "가맹점사업자",
+            "가맹본부가",
+            "이내에"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제11조",
+          "title": "가맹계약서의 기재사항 등",
+          "defects": [
+            "F-09/개선"
+          ],
+          "topic_terms": [
+            "관한",
+            "가맹점사업자",
+            "가맹희망자가",
+            "경우에는",
+            "가맹계약서의"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제12조의6",
+          "title": "광고ㆍ판촉행사의 실시 및 집행 내역 통보",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "가맹점사업자",
+            "판촉행사의",
+            "집행",
+            "광고",
+            "내역"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제14조",
+          "title": "가맹계약해지의 제한",
+          "defects": [
+            "E-03/심각"
+          ],
+          "topic_terms": [
+            "가맹계약해지",
+            "경우에는",
+            "사실을",
+            "제한",
+            "가맹점사업자"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제15조의3",
+          "title": "공제조합의 설립",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "공제조합의",
+            "공제사업의",
+            "필요한",
+            "따른",
+            "관한"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제16조",
+          "title": "가맹사업거래분쟁조정협의회의 설치",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "가맹사업거래",
+            "분쟁조정협의",
+            "조정원",
+            "회의",
+            "설치"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제16조",
+          "title": "",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "협의회의",
+            "조정절차",
+            "조부터",
+            "조까지",
+            "필요한"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제31조의2",
+          "title": "가맹사업거래에 대한 교육 등",
+          "defects": [
+            "S-03/경고"
+          ],
+          "topic_terms": [
+            "공정거래위원",
+            "대한",
+            "교육",
+            "항에",
+            "따른"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제34조",
+          "title": "시정권고",
+          "defects": [
+            "F-03/개선"
+          ],
+          "topic_terms": [
+            "권고를",
+            "규정에",
+            "의한",
+            "시정조치를",
+            "개정"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "law": "119구조ㆍ구급에관한법률",
+      "articles": [
+        {
+          "article": "제10조의2",
+          "title": "119구급상황관리센터의 설치ㆍ운영 등",
+          "defects": [
+            "S-01/경고",
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "설치",
+            "운영",
+            "개정",
+            "대한",
+            "구급상황관리"
+          ],
+          "ssi": 0.747,
+          "salience_hits": 3,
+          "valence": 1.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론3건 정비요구1/보호요구0 reach=국민대면",
+          "sources": [
+            {
+              "title": "응급실 뺑뺑이 119가 이송병원 선정하게 법 바꿔야",
+              "url": "kbsm_488934"
+            },
+            {
+              "title": "응급환자 이송혁신 국무총리 확인 인프라 개선",
+              "url": "bosa_3002824"
+            },
+            {
+              "title": "임신부 응급 이송 비극 모자의료체계 개선 신속 이송",
+              "url": "cbci_572580"
+            }
+          ]
+        },
+        {
+          "article": "제10조",
+          "title": "119구급대의 편성과 운영",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "정하는",
+            "구급대원의",
+            "구급대의",
+            "소방청장은",
+            "응급처치를"
+          ],
+          "ssi": 0.597,
+          "salience_hits": 3,
+          "valence": 1.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론3건 정비요구1/보호요구0 reach=내부",
+          "sources": [
+            {
+              "title": "응급실 뺑뺑이 119가 이송병원 선정하게 법 바꿔야",
+              "url": "kbsm_488934"
+            },
+            {
+              "title": "응급환자 이송혁신 국무총리 확인 인프라 개선",
+              "url": "bosa_3002824"
+            },
+            {
+              "title": "임신부 응급 이송 비극 모자의료체계 개선 신속 이송",
+              "url": "cbci_572580"
+            }
+          ]
+        },
+        {
+          "article": "제7조",
+          "title": "시ㆍ도 구조ㆍ구급집행계획의 수립ㆍ시행",
+          "defects": [
+            "S-02/경고",
+            "L-04/주의",
+            "G-05/주의"
+          ],
+          "topic_terms": [
+            "구조",
+            "구급집행계획",
+            "소방본부장은",
+            "특별자치도지",
+            "집행계획"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제9조",
+          "title": "국제구조대의 편성과 운영",
+          "defects": [
+            "S-02/경고",
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "개정",
+            "소방청장은",
+            "있다",
+            "항에",
+            "따른"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제12조의2",
+          "title": "119항공운항관제실 설치ㆍ운영 등",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "항공운항관제",
+            "설치",
+            "관한",
+            "운영",
+            "출동"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제15조",
+          "title": "구조ㆍ구급활동을 위한 긴급조치",
+          "defects": [
+            "S-03/심각"
+          ],
+          "topic_terms": [
+            "구급활동을",
+            "구조",
+            "소방청장등은",
+            "긴급조치",
+            "손실을"
+          ],
+          "ssi": 0.15,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": true,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=국민대면",
+          "sources": []
+        },
+        {
+          "article": "제8조",
+          "title": "119구조대의 편성과 운영",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "구조대의",
+            "편성과",
+            "정하는",
+            "구조대",
+            "운영"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제12조",
+          "title": "119항공대의 편성과 운영",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "항공대의",
+            "편성과",
+            "운영",
+            "개정",
+            "항공대"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제12조의3",
+          "title": "119항공정비실의 설치ㆍ운영 등",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "관한",
+            "필요한",
+            "운영",
+            "설치",
+            "소방헬기"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제12조의4",
+          "title": "119구조견대의 편성과 운영",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "구조견",
+            "운영",
+            "구조견대의",
+            "따른",
+            "양성"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제13조",
+          "title": "구조ㆍ구급활동",
+          "defects": [
+            "F-01/경고"
+          ],
+          "topic_terms": [
+            "구조",
+            "소방청장등은",
+            "구급활동",
+            "구급대를",
+            "개정"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제19조",
+          "title": "가족 및 유관기관의 연락",
+          "defects": [
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "구조",
+            "구급대원은",
+            "응급환자의",
+            "없는",
+            "유관기관의"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제22조",
+          "title": "구조ㆍ구급활동의 기록관리",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "구조",
+            "구급활동상황",
+            "구급활동의",
+            "기록관리",
+            "개정"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제23조",
+          "title": "구조ㆍ구급대원에 대한 안전사고방지대책등 수립ㆍ시행",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "안전사고방지",
+            "대책등",
+            "구조",
+            "수립",
+            "구급대원에"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제23조의2",
+          "title": "감염병환자등의 이송 등",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "감염병환자등",
+            "이송",
+            "소방청장등은",
+            "감염병의사환",
+            "병원체보유자"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제23조의3",
+          "title": "감염병환자등의 통보 등",
+          "defects": [
+            "L-04/주의",
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "감염병환자등",
+            "통보",
+            "개정",
+            "항에",
+            "따른"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제25조",
+          "title": "구조ㆍ구급대원의 전문성 강화 등",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "구조",
+            "구급대원의",
+            "개정",
+            "필요한",
+            "소방청장은"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제26조",
+          "title": "구조ㆍ구급활동의 평가",
+          "defects": [
+            "L-04/주의",
+            "G-05/주의"
+          ],
+          "topic_terms": [
+            "구조",
+            "구급활동의",
+            "소방청장은",
+            "평가",
+            "개정"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제27조",
+          "title": "구조ㆍ구급정책협의회",
+          "defects": [
+            "L-04/주의"
+          ],
+          "topic_terms": [
+            "구조",
+            "구급정책협의",
+            "필요한",
+            "등과",
+            "협의하기"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제27조의2",
+          "title": "응급처치에 관한 교육",
+          "defects": [
+            "L-04/경고"
+          ],
+          "topic_terms": [
+            "교육",
+            "응급처치에",
+            "관한",
+            "소방청장등은",
+            "심폐소생술"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        },
+        {
+          "article": "제23조의3",
+          "title": "",
+          "defects": [
+            "L-04/주의",
+            "G-05/경고"
+          ],
+          "topic_terms": [
+            "아니하거나",
+            "통보를",
+            "통보한",
+            "이하의",
+            "벌금에"
+          ],
+          "ssi": 0.0,
+          "salience_hits": 0,
+          "valence": 0.0,
+          "reach_citizen": false,
+          "social_context": "기간=2026-05~06 거론0건 정비요구0/보호요구0 reach=내부",
+          "sources": []
+        }
+      ]
+    }
+  ],
+  "protocol": "SSI 실데이터 end-to-end, 점수 비곱셈(F1 불변), 감사 4조건(라벨미유입·출처보존·기간고정·수렴검증)"
+}
