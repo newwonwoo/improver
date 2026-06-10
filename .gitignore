@@ -22,3 +22,6 @@ outputs/verification_progress.md
 
 # 그래프 캐시 — corpus 에서 재생성 가능
 outputs/law_graph.pkl
+
+# 텍스트 행 캐시 — data/laws 에서 재생성 가능(5MB 조문 중복)
+outputs/text_boost_rows.jsonl
