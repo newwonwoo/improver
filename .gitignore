@@ -25,3 +25,4 @@ outputs/law_graph.pkl
 
 # 텍스트 행 캐시 — data/laws 에서 재생성 가능(5MB 조문 중복)
 outputs/text_boost_rows.jsonl
+outputs/text_brain_models.pkl

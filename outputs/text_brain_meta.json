@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "구조": {
+      "trained": true,
+      "n_pos": 42,
+      "n_neg": 383,
+      "text_win": true
+    },
+    "공정성": {
+      "trained": true,
+      "n_pos": 141,
+      "n_neg": 510,
+      "text_win": false
+    },
+    "적법성": {
+      "trained": true,
+      "n_pos": 51,
+      "n_neg": 496,
+      "text_win": true
+    },
+    "거버넌스": {
+      "trained": true,
+      "n_pos": 92,
+      "n_neg": 389,
+      "text_win": true
+    },
+    "효율성": {
+      "trained": true,
+      "n_pos": 185,
+      "n_neg": 364,
+      "text_win": true
+    }
+  },
+  "n_rows": 2588,
+  "measured_f1_round1": "E1 0.543[0.511,0.576], E4b 0.594[0.562,0.629] (OOF)",
+  "note": "활성화 기본 OFF — 회귀 0. 성능은 라운드1 OOF 측정 인용(자기평가 금지)."
+}
