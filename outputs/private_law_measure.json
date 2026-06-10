@@ -1,0 +1,76 @@
+{
+  "taxonomy": {
+    "P-DIGITAL": {
+      "name": "디지털 부적합(날인 강제)",
+      "status": "active"
+    },
+    "P-ARCHAIC": {
+      "name": "사문화·구시대 용어",
+      "status": "scaffold_pending_sme"
+    },
+    "P-DISCRIM": {
+      "name": "차별·비대칭 표현",
+      "status": "scaffold_pending_sme"
+    },
+    "P-CITATION": {
+      "name": "인용 정합성(타법 폐지·개정)",
+      "status": "scaffold_pending_sme"
+    },
+    "P-OBSOLETE-UNIT": {
+      "name": "구 도량형·화폐단위",
+      "status": "scaffold_pending_sme"
+    }
+  },
+  "active": [
+    "P-DIGITAL"
+  ],
+  "scaffold_pending_sme": [
+    "P-ARCHAIC",
+    "P-DISCRIM",
+    "P-CITATION",
+    "P-OBSOLETE-UNIT"
+  ],
+  "detections": {
+    "민법": {
+      "n_articles": 1245,
+      "p_digital": 5,
+      "examples": [
+        {
+          "article": "제40조",
+          "title": "사단법인의 정관",
+          "verbatim": "기명날인하여야 한다"
+        },
+        {
+          "article": "제43조",
+          "title": "재단법인의 정관",
+          "verbatim": "기명날인하여야 한다"
+        },
+        {
+          "article": "제76조",
+          "title": "총회의 의사록",
+          "verbatim": "기명날인하여야 한다"
+        },
+        {
+          "article": "제1063조",
+          "title": "피성년후견인의 유언능력",
+          "verbatim": "서명날인하여야 한다"
+        },
+        {
+          "article": "제1066조",
+          "title": "자필증서에 의한 유언",
+          "verbatim": "날인하여야 한다"
+        }
+      ]
+    },
+    "상법": {
+      "n_articles": 1257,
+      "p_digital": 0,
+      "examples": []
+    },
+    "가등기담보등에관한법률": {
+      "n_articles": 18,
+      "p_digital": 0,
+      "examples": []
+    }
+  }
+}
