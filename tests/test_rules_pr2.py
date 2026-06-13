@@ -183,10 +183,11 @@ def test_e03_paper_only_critical():
     assert findings and findings[0].severity == "심각"
 
 
-def test_e03_paper_with_digital_warning():
+def test_e03_paper_with_digital_no_finding():
+    # 정밀도 정리: 전자대안 병기 시 이미 현대화 → 결함 아님(발화 안 함).
     text = "제10조(신청) 신청은 서면으로 한다. 다만, 전자적 방법으로도 할 수 있다."
     findings = E03Analog().scan(_law(text))
-    assert findings and findings[0].severity == "경고"
+    assert findings == []
 
 
 # ── E-04 ─────────────────────────────────────────────────────────────────────

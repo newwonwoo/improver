@@ -107,14 +107,11 @@ class G03Supervision:
                     continue
             missing = [name for name, pat in _ELEMENTS.items() if not pat.search(text)]
             met = len(_ELEMENTS) - len(missing)
-            if met >= 4:
-                continue  # 양호
-            if met == 0:
-                severity = "심각"
-            elif met <= 2:
-                severity = "경고"
-            else:
-                severity = "주의"
+            # 정밀도 정리(2026-06-13): verdict 측정상 5요소 전무(met==0)인 단문 감독규정만
+            # 고정밀(TP율 1.00). 부분충족(met 1~3) 발화는 헛경보율이 높아 억제.
+            if met != 0:
+                continue
+            severity = "심각"
             idx += 1
             findings.append(
                 make_finding(

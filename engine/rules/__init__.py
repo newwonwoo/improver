@@ -42,9 +42,13 @@ from .s03_vague import S03Vague
 from .s04_enumeration import S04Enumeration
 
 
+# 정밀도 정리(2026-06-13): 아래 3룰은 verdict 측정상 발화의 99~100%가 헛경보
+# (S-01 TP 0/94, S-02 TP 0/92, L-03 TP 4/294=1%) → 기본 룰셋에서 제외.
+# 전제 자체가 결함이 아니거나(삽입조·포괄위임), 외부 인덱스 stale 의존(L-03 참조검증).
+# 클래스/단위테스트는 보존(직접 인스턴스화 가능) — 정밀 기준 확보 시 재투입.
+_DISABLED_LOW_PRECISION = (S01Insertion, S02Delegation, L03BrokenRef)
+
 ALL_RULES: list[Rule] = [
-    S01Insertion(),
-    S02Delegation(),
     S03Vague(),
     S04Enumeration(),
     F01Rights(),
@@ -57,7 +61,6 @@ ALL_RULES: list[Rule] = [
     F09Disclosure(),
     L01Citation(),
     L02CrossRef(),
-    L03BrokenRef(),
     L04BlanketDelegation(),
     L05Retroactive(),
     L06BindingDeadline(),

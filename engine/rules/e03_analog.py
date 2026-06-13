@@ -121,37 +121,22 @@ class E03Analog:
             text = art.full_text
             if _is_fp(text, art):
                 continue
+            # 정밀도 정리(2026-06-13): verdict 측정상 고정밀 가지(강한 아날로그 + 전자대안
+            # 부재 = 심각, TP율 0.78)만 결함으로 발화. 전자대안 병기(경고, TP율 0.00=이미
+            # 현대화)와 중/약 단계(TP율 0.25/소표본)는 헛경보율이 높아 억제.
             has_digital = bool(_DIGITAL.search(text))
-            if _STRONG.search(text):
-                severity = "심각" if not has_digital else "경고"
-                level = "강"
-                if re.search(r"(날인|인감)", text):
-                    sub = "E-03-b"
-                elif re.search(r"(대면하여|직접 출석)", text):
-                    sub = "E-03-c"
-                else:
-                    sub = "E-03-a"
-            elif _MID.search(text):
-                severity = "주의" if not has_digital else "개선"
-                level = "중"
-                sub = "E-03-d"
-            elif _WEAK.search(text) and not has_digital and _CITIZEN_FACING.search(text):
-                # 약 단계는 시민 신청 맥락이 있을 때만
-                severity = "개선"
-                level = "약"
-                sub = "E-03-a"
-            elif _WEAK.search(text) and not has_digital:
-                # R2: ActionKind.REGISTER + 시민 주체 = 시민 등록·기록 맥락
-                d = decompose(art)
-                if (ActionKind.REGISTER in d.actions
-                        and d.primary_subject == Subject.CITIZEN):
-                    severity = "개선"
-                    level = "약"
-                    sub = "E-03-a"
-                else:
-                    continue
+            if not _STRONG.search(text):
+                continue                      # 중·약 단계 억제
+            if has_digital:
+                continue                      # 전자대안 이미 존재 → 결함 아님
+            severity = "심각"
+            level = "강"
+            if re.search(r"(날인|인감)", text):
+                sub = "E-03-b"
+            elif re.search(r"(대면하여|직접 출석)", text):
+                sub = "E-03-c"
             else:
-                continue
+                sub = "E-03-a"
 
             idx += 1
             findings.append(
